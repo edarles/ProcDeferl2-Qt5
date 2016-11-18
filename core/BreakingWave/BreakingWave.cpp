@@ -31,11 +31,11 @@ BreakingWave::~BreakingWave()
 {
 	wg_acting.clear();
 	wg_acting.shrink_to_fit();
-	wg_acting.~vector();
+	//wg_acting.~vector();
 
 	wg_active.clear();
 	wg_active.shrink_to_fit();
-	wg_active.~vector();
+	//wg_active.~vector();
 
 	delete(solver);
 	isActive = false;

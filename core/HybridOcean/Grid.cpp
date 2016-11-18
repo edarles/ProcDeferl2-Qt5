@@ -1,9 +1,11 @@
 #include <iostream>
 #include <stdlib.h>
 #include <GL/gl.h> 
+#include <vector>
 
 #include <Grid.h>
 #include <GridSPH.h>
+using namespace std;
 /****************************************************************************/
 /****************************************************************************/
 Grid::Grid()
@@ -327,15 +329,15 @@ void Grid::createGrid()
 void Grid::merge(Grid* other)
 {
 	Vector3f Min, Max;
-	Min[0] = fmin(m_min[0],other->m_min[0]);
-	Min[2] = fmin(m_min[2],other->m_min[2]);
+	Min[0] = (float)fmin((double)m_min[0],(double)other->m_min[0]);
+	Min[2] = (float)fmin((double)m_min[2],(double)other->m_min[2]);
 
-	Max[0] = fmax(m_max[0],other->m_max[0]);
-	Max[2] = fmax(m_max[2],other->m_max[2]);
+	Max[0] = (double)fmax((double)m_max[0],(double)other->m_max[0]);
+	Max[2] = (double)fmax((double)m_max[2],(double)other->m_max[2]);
 
 	if(m_dy!=0){
-		Min[1] = fmin(m_min[1],other->m_min[1]);
-		Max[1] = fmax(m_max[1],other->m_max[1]);
+		Min[1] = (double)fmin((double)m_min[1],(double)other->m_min[1]);
+		Max[1] = (double)fmax((double)m_max[1],(double)other->m_max[1]);
 		m_dy = fmin(m_dy,other->m_dy);
 	}
 	else {

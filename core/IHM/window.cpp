@@ -9,7 +9,7 @@ Window::Window():QMainWindow()
     glWidget = new GLWidget() ;
 
     // MENU PARTICLES
-    menuParticles = new QMenu(tr("&Particles"));   
+    menuParticles = new QMenu(tr("&Particles"));
 
     addParticlesRendering_act = new QAction(tr("&Add Rendering Particles"),this);
     addParticlesRendering_act->setShortcut(tr("r"));
