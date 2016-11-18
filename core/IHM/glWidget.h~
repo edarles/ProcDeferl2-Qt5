@@ -1,0 +1,63 @@
+#ifndef GLWIDGET_H
+#define GLWIDGET_H
+
+//************************************************************************/
+//************************************************************************/
+
+#include <QWidget>
+#include <QtGui>
+#include <math.h>
+#include <QGLViewer/qglviewer.h>
+#include <QGLViewer/vec.h>
+#include <vector>
+#include <HybridOcean.h>
+
+//************************************************************************/
+//************************************************************************/
+
+using namespace qglviewer;
+
+//************************************************************************/
+//************************************************************************/
+ class GLWidget : public QGLViewer
+ {
+  
+ public:
+
+   //******************************************************************************
+   // GETTERS ET SETTERS
+   //******************************************************************************
+
+   HybridOcean* getHybridOcean();
+   void setHybridOcean(HybridOcean* hybridOcean);
+
+  //******************************************************************************
+  // SURCHARGE DES FONCTIONS
+  //******************************************************************************
+     virtual void  init();
+     virtual void  draw();
+     virtual void  animate();
+     virtual QSize minimumSizeHint() const;
+     virtual QSize sizeHint() const;
+     virtual void keyPressEvent( QKeyEvent *e );
+
+  //******************************************************************************
+  // FONCTIONS PROPRES
+  //******************************************************************************
+     void loadImage();
+     void drawBackground();
+
+     void clean();
+     void initRender();
+
+     void test();
+
+  private :
+
+      float  u_max, v_max, ratio;
+     //******************************************************************************
+     HybridOcean* _hybridOcean;
+
+ };
+
+#endif

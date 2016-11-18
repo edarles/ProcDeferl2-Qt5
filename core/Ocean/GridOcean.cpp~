@@ -1,0 +1,214 @@
+#include <GridOcean.h>
+#include <BreakingWave.h>
+
+/****************************************************************************/
+/****************************************************************************/
+GridOcean::GridOcean():Grid()
+{
+	m_initPos = NULL;
+	m_vel =  NULL;
+	m_dVel =  NULL;
+	init();
+	this->m_t = 0;
+}
+/****************************************************************************/
+GridOcean::GridOcean(Vector3f origin, Vector3f min, Vector3f max, float dx, float dz) : Grid(origin, min, max, dx, 0, dz)
+{
+	m_initPos = NULL;
+	m_vel =  NULL;
+	m_dVel =  NULL;
+	init();
+	this->m_t = 0;
+	
+}
+/****************************************************************************/
+GridOcean::~GridOcean()
+{
+	if(m_initPos!=NULL) free(m_initPos);
+	if(m_vel!=NULL) free(m_vel);
+	if(m_dVel==NULL) free(m_dVel);
+}
+/****************************************************************************/
+Vector3f* GridOcean::getInitPos()
+{
+	return m_initPos;
+}
+/****************************************************************************/
+Vector3f GridOcean::getInitPos(int ix, int iz)
+{
+	assert(ix<m_nx && iz<m_nz);
+	int indexCell = ix + iz*m_nx;
+	return m_initPos[indexCell];
+}
+/****************************************************************************/
+Vector3f GridOcean::getInitPos(int indexCell)
+{
+	assert(indexCell<m_n);
+	return m_initPos[indexCell];
+}
+/****************************************************************************/
+Vector3f* GridOcean::getVel()
+{
+	return m_vel;
+}
+/****************************************************************************/
+Vector3f GridOcean::getVel(int ix, int iz)
+{
+	assert(ix<m_nx && iz<m_nz);
+	int indexCell = ix + iz*m_nx;
+	return m_vel[indexCell];
+}
+/****************************************************************************/
+Vector3f* GridOcean::getDVel()
+{
+	return m_dVel;
+}
+/****************************************************************************/
+Vector3f GridOcean::getDVel(int ix, int iz)
+{
+	assert(ix<m_nx && iz<m_nz);
+	int indexCell = ix + iz*m_nx;
+	return m_dVel[indexCell];
+}
+/****************************************************************************/
+float GridOcean::getT()
+{
+	return m_t;
+}
+/****************************************************************************/
+/****************************************************************************/
+void GridOcean::setInitPos(int ix, int iz, Vector3f pos)
+{
+	int indexCell = ix + iz*m_nx;
+	m_initPos[indexCell] = pos;
+}
+/****************************************************************************/
+void GridOcean::setVel(int ix, int iz, Vector3f vel)
+{
+	int indexCell = ix + iz*m_nx;
+	m_vel[indexCell] = vel;
+}
+/****************************************************************************/
+void GridOcean::setDVel(int ix, int iz, Vector3f dVel)
+{
+	int indexCell = ix + iz*m_nx;
+	m_dVel[indexCell] = dVel;
+}
+/****************************************************************************/
+void GridOcean::setT(float t)
+{
+	this->m_t = t;
+}
+/****************************************************************************/
+// Version Cuda : A faire directement depuis le GPU
+/****************************************************************************/
+void GridOcean::init()
+{
+	//printf("INIT GRID OCEAN");
+	m_initPos = (Vector3f*) malloc(sizeof(Vector3f)*m_n);
+	m_vel = (Vector3f*) malloc(sizeof(Vector3f)*m_n);
+	m_dVel = (Vector3f*) malloc(sizeof(Vector3f)*m_n);
+
+	for(int ix=0; ix<m_nx; ix++){
+		 for(int iz=0; iz<m_nz; iz++){
+			int indexCell = ix + iz*m_nx;
+			m_initPos[indexCell] = m_pos[indexCell];
+			m_vel[indexCell] << 0, 0, 0;
+			m_dVel[indexCell] = m_vel[indexCell];
+		}
+	}
+}
+/****************************************************************************/
+// Version Cuda : A faire directement depuis le GPU
+/****************************************************************************/
+void GridOcean::reinitPos()
+{
+	for(int ix=0; ix<m_nx; ix++){
+		 for(int iz=0; iz<m_nz; iz++){
+			int indexCell = ix + iz*m_nx;
+			m_pos[indexCell] = m_initPos[indexCell];
+			m_vel[indexCell] << 0, 0, 0;
+			m_dVel[indexCell] = m_vel[indexCell];
+		}
+	}
+	m_t = 0;
+}
+/****************************************************************************/
+/****************************************************************************/
+void GridOcean::update(vector<WaveGroup*> waveGroups, float dt)
+{
+	for(int ix=0; ix<m_nx; ix++){
+		 for(int iz=0; iz<m_nz; iz++){
+			int indexCell = ix + iz*m_nx;
+			m_pos[indexCell] = m_initPos[indexCell];
+			Vector3f dPos(0,0,0);
+			for(int n=0; n<waveGroups.size(); n++)
+			{
+				waveGroups[n]->computeMovement(m_initPos[indexCell],m_t,&dPos,&m_vel[indexCell],&m_dVel[indexCell]);
+				dPos[0]*=waveGroups[n]->getCosTheta(); dPos[2]*=waveGroups[n]->getSinTheta(); 
+				m_vel[indexCell][0]*=waveGroups[n]->getCosTheta(); m_vel[indexCell][2]*=waveGroups[n]->getSinTheta(); 
+				m_pos[indexCell] += dPos;
+			}
+		}
+	}
+	m_t += dt;
+}
+/****************************************************************************/
+/****************************************************************************/
+void GridOcean::generateBreakingWaves(vector<WaveGroup*> waveGroups, vector<BreakingWave*> *breakingWaves)
+{
+	for(int ix=0; ix<m_nx; ix++){
+		 for(int iz=0; iz<m_nz; iz++){
+			int indexCell = ix + iz*m_nx;
+			bool toCreate = false;
+			vector<WaveGroup*> wgActing;
+			vector<bool> wgActive;
+			for(int n=0; n<waveGroups.size(); n++)
+			{
+				WaveGroup *wg = waveGroups[n];
+				// On regarde si on est dans une zone de déferlement -> On regarde parmi les déferlements si une grille contient le point
+				bool trouve = false;
+				int nB = 0;
+				while(!trouve && nB<breakingWaves->size()){
+					GridBreaking* gB = breakingWaves->at(nB)->getGridBreaking();
+					Vector3f min = gB->getMin(); Vector3f max = gB->getMax();
+					Vector3f local = gB->getLocalRotated(m_pos[indexCell]);
+					if(local[0]>=min[0] && local[2]>=min[2] 
+					   && local[0]<=max[0] && local[2]<=max[2])
+						trouve = true;
+					nB++;
+				}
+				// On teste si on doit créer ou non une zone de déferlement
+				float norm = m_vel[indexCell][0]*wg->getPs()*wg->getCosTheta()+m_vel[indexCell][2]*wg->getPs()*wg->getSinTheta();
+				if(!trouve && norm>=wg->getPs()*wg->getPs())
+					toCreate = true;
+			}
+			if(toCreate){
+				for(int n=0; n<waveGroups.size(); n++){
+					WaveGroup *wg = waveGroups[n];
+					// On regarde si le groupe de vague agit localement dans la zone de déferlement
+					// Et on regarde si ce groupe est actif ou non dans le déferlement (donne de l'énergie au déferlement)
+					float x = m_pos[indexCell][0];
+					float z = m_pos[indexCell][2];
+					Vector3f MG = Vector3f(x,0,z) - wg->getG();
+					float MG2 = MG[0]*MG[0]+MG[2]*MG[2];
+					float L = 2*(wg->getLambda()*wg->getN())*(wg->getLambda()*wg->getN());
+					if(MG2<=L){
+						wgActing.push_back(wg);
+						float norm = m_vel[indexCell][0]*wg->getPs()*wg->getCosTheta()+m_vel[indexCell][2]*wg->getPs()*wg->getSinTheta();
+						if(norm>=wg->getPs()*wg->getPs())
+							wgActive.push_back(true);
+						else 
+							wgActive.push_back(false);
+					}
+				}
+				BreakingWave* br = new BreakingWave(m_initPos[indexCell],wgActing,wgActive,this->m_t);
+				breakingWaves->push_back(br);
+				
+				// Note: la mise à jour front actif / front plus actif est faite dans la méthode update de l'objet Breaking Wave
+			}
+		}
+	}
+}
+/****************************************************************************/
+/****************************************************************************/
