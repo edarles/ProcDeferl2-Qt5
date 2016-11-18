@@ -3,11 +3,17 @@
 	<name>ProcDeferl2-Qt5</name>
 	<comment></comment>
 	<projects>
+		<project>RemoteSystemsTempFiles</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>org.eclipse.cdt.autotools.core.genmakebuilderV2</name>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
 			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/org.eclipse.cdt.autotools.core.genmakebuilderV2.launch</value>
+				</dictionary>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
