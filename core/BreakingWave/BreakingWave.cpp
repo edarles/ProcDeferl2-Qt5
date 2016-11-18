@@ -1,5 +1,6 @@
 #include <BreakingWave.h>
 #include <iostream>
+
 /****************************************************************************/
 /****************************************************************************/
 BreakingWave::BreakingWave(Vector3f center, vector<WaveGroup*> wg_acting, vector<bool> wg_active, float t)
