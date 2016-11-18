@@ -19,15 +19,15 @@ GridOcean::~GridOcean()
 {
 	m_initPos.clear();
 	m_initPos.shrink_to_fit();
-	m_initPos.~vector();
+	//m_initPos.~vector();
 
 	m_vel.clear();
 	m_vel.shrink_to_fit();
-	m_vel.~vector();
+	//m_vel.~vector();
 
 	m_dVel.clear();
 	m_dVel.shrink_to_fit();
-	m_dVel.~vector();
+	//m_dVel.~vector();
 }
 /****************************************************************************/
 Vector3f GridOcean::getInitPos(int ix, int iz)
