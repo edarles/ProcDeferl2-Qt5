@@ -7,8 +7,10 @@
 #include <WCSPH.h>
 #include <GridBreaking.h>
 
+#include <Eigen/Dense>
 #include <vector>
 
+using namespace Eigen;
 using namespace std;
 
 class BreakingWave
@@ -55,7 +57,7 @@ class BreakingWave
 		void merge(BreakingWave *br, float dt);
 
 		/**************** ROUTINE DE GENERATION DES PARTICULES ******/
-		void generateParticles(float dt);
+		void generateParticles();
 
 		/**************** ROUTINE DE MAJ ********************/
 		void update(float dt);

@@ -8,8 +8,6 @@
 #include <QtGui>
 #include <math.h>
 #include <QGLViewer/qglviewer.h>
-//#include <QGLViewer/vec.h>
-
 #include <HybridOcean.h>
 
 //************************************************************************/

@@ -5,6 +5,7 @@
 
 #include <Eigen/Dense>
 #include <vector>
+#include <GL/gl.h>
 using namespace Eigen;
 using namespace std;
 

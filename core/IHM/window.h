@@ -5,16 +5,12 @@
 #include <QtGui>
 #include <QMainWindow>
 #include <QtCore/QDir>
-#include <QtGui>
-#include <QMainWindow>
 #include <QHBoxLayout>
 #include <QMessageBox>
 #include <QMenuBar>
 #include <QFileDialog>
-
 #include <glWidget.h>
 
-using namespace std;
 //************************************************************************/
 //************************************************************************/
 class Window : public QMainWindow

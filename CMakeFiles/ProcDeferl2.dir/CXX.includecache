@@ -19,6 +19,8 @@ iostream
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/BreakingWave/GridBreaking.cpp
 GridBreaking.h
 -
+Grid.h
+-
 GL/gl.h
 -
 math.h
@@ -31,13 +33,13 @@ iostream
 -
 stdlib.h
 -
-GL/gl.h
--
 vector
 -
 Grid.h
 -
 GridSPH.h
+-
+GL/gl.h
 -
 
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/HybridOcean/HybridOcean.cpp
@@ -73,10 +75,6 @@ QMainWindow
 -
 QtCore/QDir
 -
-QtGui
--
-QMainWindow
--
 QHBoxLayout
 -
 QMessageBox
@@ -92,6 +90,10 @@ glWidget.h
 GridOcean.h
 -
 BreakingWave.h
+-
+Eigen/Dense
+-
+vector
 -
 
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Ocean/WaveGroup.cpp
@@ -110,6 +112,8 @@ WaveGroupMP.h
 
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/GridSPH.cpp
 GridSPH.h
+-
+Grid.h
 -
 iostream
 -
@@ -1617,6 +1621,8 @@ WCSPH.h
 -
 GridBreaking.h
 -
+Eigen/Dense
+-
 vector
 -
 
@@ -1625,11 +1631,15 @@ GridOcean.h
 -
 vector
 -
+Eigen/Dense
+-
 
 core/HybridOcean/Grid.h
 Eigen/Dense
 -
 vector
+-
+GL/gl.h
 -
 
 core/HybridOcean/HybridOcean.h
@@ -1674,10 +1684,6 @@ QtGui
 QMainWindow
 -
 QtCore/QDir
--
-QtGui
--
-QMainWindow
 -
 QHBoxLayout
 -
@@ -1725,8 +1731,6 @@ SPH.h
 -
 
 core/SPH/SPH.h
-types.h
--
 Particle.h
 -
 GridSPH.h
@@ -1744,17 +1748,11 @@ SESPH.h
 
 core/SPH/shaders.h
 
-core/SPH/types.h
-vector
--
-Eigen/Dense
--
-
 core/SPH/utils.h
+GL/glew.h
+-
 stdio.h
 -
 math.h
--
-GL/glew.h
 -
 

@@ -1,5 +1,6 @@
 #include <math.h>
 #include <WaveGroupMP.h> 
+using namespace Eigen;
 
 /****************************************************************************/
 /****************************************************************************/
@@ -25,7 +26,7 @@ void WaveGroupMP::computeMovement(Vector3f pos, float t, Vector3f *dPos, Vector3
   	double ekman=1; 
   	double gx = cosTheta*fs*t+g[0];
   	double gz = sinTheta*fs*t+g[2];
-  	double gauss = ekman*expf(-(powf(pos[0]-g[0],2)+powf(pos[2]-g[2],2))/(2*extens));
+  	double gauss = ekman*expf(-(powf((float)(pos[0]-g[0]),2.0)+powf((float)(pos[2]-g[2]),2.0))/(2*extens));
 
   	// phase instantannée
   	double f_phi = 0.5*powf(1-sin(phi),2)-1;

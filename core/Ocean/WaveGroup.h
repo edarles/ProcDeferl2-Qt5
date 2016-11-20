@@ -51,7 +51,7 @@ class WaveGroup
 		virtual void computeMovement(Vector3f pos, float t, 
                                      Vector3f *dPos, // delta position
                                      Vector3f *vel, // vitesse fluide
-                                     Vector3f *dVel);  // pentes surface isobarique)
+                                     Vector3f *dVel) = 0;  // pentes surface isobarique)
 
 		virtual void update();
 

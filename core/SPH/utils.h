@@ -1,6 +1,9 @@
+#include <GL/glew.h>
 #include <stdio.h>
 #include <math.h>
-#include <GL/glew.h>
+
+#pragma once
+#define MAX_PARTICLES 10000
 
 // fast 1/sqrtf(number) -> ONLY VALID for IEEE754simple precision float
 #pragma once

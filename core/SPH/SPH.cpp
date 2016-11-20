@@ -28,22 +28,21 @@ SPH::~SPH()
 	delete[] posP;
 	delete[] colors;
 	delete gridSPH; 
-	for(int i=0;i<particles.size();i++)
+	for(unsigned int i=0;i<particles.size();i++)
 		delete particles[i];
-
 	particles.clear();
 	particles.shrink_to_fit();
-	particles.~vector();
+	//particles.~vector();
 }
 
 /****************************************************************************/
-Particle* SPH::getParticle(int index) const
+Particle* SPH::getParticle(int index)
 {
-	assert (index < particles.size());
+	assert (index < (int)particles.size());
 	return particles[index];
 }
 /****************************************************************************/
-vector<Particle*> SPH::getParticles() const
+vector<Particle*> SPH::getParticles()
 {
 	return particles;
 }
@@ -51,13 +50,7 @@ vector<Particle*> SPH::getParticles() const
 void SPH::addParticle(Vector3f pos, Vector3f vel, float mass, float radius)
 {
 	if(particles.size()<MAX_PARTICLES){
-		Particle* P = new Particle();
-		P->pos = pos;
-		P->vel = vel;
-		P->forces = Vector3f(0,0,0);
-		P->mass = mass;
-		P->radius = radius;
-		P->rho = P->p = 0;
+		Particle *P = new Particle(pos,vel,mass,radius);
 		particles.push_back(P);
 	}
 }
@@ -65,13 +58,7 @@ void SPH::addParticle(Vector3f pos, Vector3f vel, float mass, float radius)
 void SPH::addParticle(Particle *P2)
 {
 	if(particles.size()<MAX_PARTICLES){
-		Particle* P = new Particle();
-		P->pos = P2->pos;
-		P->vel = P2->vel;
-		P->forces = P2->forces;
-		P->mass = P2->mass;
-		P->radius = P2->radius;
-		P->rho = P->p = 0;
+		Particle *P = new Particle((*P2));
 		particles.push_back(P);
 	}
 }
@@ -82,17 +69,17 @@ void SPH::deleteParticle(int index)
 	particles.erase(particles.begin()+index);
 }
 /****************************************************************************/
-void SPH::generateParticle(Vector3f pos, Vector3f vel, Vector3f dVel, float mass)
+void SPH::generateParticle(Vector3f pos, Vector3f vel, float mass)
 {
 	//On regarde si on a pas déjà généré une particule dans un rayon h 
 	bool trouve = false;
-	int i=particles.size()-1;
+	int i= particles.size()-1;
 	float h = powf((60*mass)/(4*M_PI*rho0),0.333);
 	Vector3f velP = vel; 
 	velP[0] = 2*powf(vel[0]*0.5,2); velP[1] = -powf(vel[1]*0.5,2); velP[2] = powf(vel[2]*0.5,2);
 	while(i>=0 && !trouve)
 	{
-		Vector3f pI_pos = this->particles[i]->pos - pos;
+		Vector3f pI_pos = this->particles[i]->getPos() - pos;
 		if(pI_pos.norm()<=h)
 			trouve = true;
 		else i--;
@@ -104,16 +91,17 @@ void SPH::generateParticle(Vector3f pos, Vector3f vel, Vector3f dVel, float mass
 	Si on a trouvé une particule
 	****************/
 	else {
-		float newMass = this->particles[i]->mass+mass;
+		float newMass = this->particles[i]->getMass()+mass;
 		// Si on ne dépasse pas la masse maxi, on ajoute à la particule déjà existante le petit paquet d'eau supplémentaire
 		// -> conservation de la quantité de mouvement
 		if(newMass<=massMaxi){ 
 	  		float invnewmass=1.f/newMass;
-	  		this->particles[i]->vel[0] = (this->particles[i]->mass*this->particles[i]->vel[0]+mass*velP[0])*invnewmass;
-	  		this->particles[i]->vel[1] = (this->particles[i]->mass*this->particles[i]->vel[1]+mass*velP[1])*invnewmass;
-	  		this->particles[i]->vel[2] = (this->particles[i]->mass*this->particles[i]->vel[2]+mass*velP[2])*invnewmass;
-	  		this->particles[i]->mass = newMass;
-	  		this->particles[i]->radius = powf((60*this->particles[i]->mass)/(4*M_PI*rho0),0.333);
+			Vector3f vel((this->particles[i]->getMass()*this->particles[i]->getVel()[0]+mass*velP[0])*invnewmass,
+				     (this->particles[i]->getMass()*this->particles[i]->getVel()[1]+mass*velP[1])*invnewmass,
+				     (this->particles[i]->getMass()*this->particles[i]->getVel()[2]+mass*velP[2])*invnewmass);
+	  		this->particles[i]->setVel(vel);
+	  		this->particles[i]->setMass(newMass);
+	  		this->particles[i]->setRadius(powf((60*this->particles[i]->getMass())/(4*M_PI*rho0),0.333));
 	  	}
 		// Sinon on réparti la masse entre les particules existantes
 	 	else {
@@ -122,18 +110,18 @@ void SPH::generateParticle(Vector3f pos, Vector3f vel, Vector3f dVel, float mass
 			float massReparti = mass/nbCreate;
 			int j = 0;
 			float massToCreate = mass;
-			if(particles[i]->vois.size()>0)
+			if(particles[i]->getNbVois()>0)
 			{ 
-			   	while(j<particles[i]->vois.size() && j<nbCreate && massToCreate>0){
-					int index = particles[i]->vois[j];
-					float newMass = this->particles[index]->mass+massReparti;
+			   	while(j<(int)particles[i]->getNbVois() && j<nbCreate && massToCreate>0){
+					int index = particles[i]->getVois(j);
+					float newMass = this->particles[index]->getMass()+massReparti;
 					massToCreate-=massReparti;
 					float invnewmass=1.f/newMass;
 	  				//this->particles[index]->vel[0] = (this->particles[index]->mass*this->particles[index]->vel[0]+mass*velP[0])*invnewmass;
 	  				//this->particles[index]->vel[1] = (this->particles[index]->mass*this->particles[index]->vel[1]+mass*velP[1])*invnewmass;
 	  				//this->particles[index]->vel[2] = (this->particles[index]->mass*this->particles[index]->vel[2]+mass*velP[2])*invnewmass;
-	  				this->particles[index]->mass = newMass;
-	  				this->particles[index]->radius = powf((60*this->particles[index]->mass)/(4*M_PI*rho0),0.333);
+	  				this->particles[index]->setMass(newMass);
+	  				this->particles[index]->setRadius(powf((60*this->particles[index]->getMass())/(4*M_PI*rho0),0.333));
 					j++;
 			    	}
 			}
@@ -157,7 +145,7 @@ void SPH::generateParticle(Vector3f pos, Vector3f vel, Vector3f dVel, float mass
 /****************************************************************************/
 void SPH::constraintGridSPH()
 {
-	if(particles.size()>0){
+  if(particles.size()>0){
 	Vector3f min = Vector3f(INF,INF,INF); 
 	Vector3f max = Vector3f(-INF,-INF,-INF);
 	Vector3f min0 = gridSPH->getMin();
@@ -165,18 +153,18 @@ void SPH::constraintGridSPH()
 	Vector3f s = Vector3f(1,1,1);
 	float rMax = -INF;
 	Vector3f barycenter(0,0,0);
-	for(int i=0;i<particles.size();i++)
+	for(unsigned int i=0;i<particles.size();i++)
 	{
-		Vector3f pt = gridSPH->getLocalRotated(particles[i]->pos);
+		Vector3f pt = gridSPH->getLocalRotated(particles[i]->getPos());
 		barycenter+= pt;
-		rMax = fmax(rMax,particles[i]->radius);
+		rMax = fmax(rMax,particles[i]->getRadius());
 	}
 	barycenter/=particles.size();
 	gridSPH->translate(barycenter-gridSPH->getCenter());
 
-	for(int i=0;i<particles.size();i++)
+	for(unsigned int i=0;i<particles.size();i++)
 	{
-		Vector3f pt = gridSPH->getLocalRotated(particles[i]->pos);
+		Vector3f pt = gridSPH->getLocalRotated(particles[i]->getPos());
 		
 		min[0] = fmin(min[0],pt[0]-rMax);
 		min[1] = fmin(min[1],pt[1]-rMax);
@@ -186,12 +174,12 @@ void SPH::constraintGridSPH()
 		max[1] = fmax(max[1],pt[1]+rMax);
 		max[2] = fmax(max[2],pt[2]+rMax);
 	}
-	if(max0[0]-min0[0]!=0) s[0] = fabs((max[0]-min[0])/(max0[0]-min0[0]));
-	if(max0[1]-min0[1]!=0) s[1] = fabs((max[1]-min[1])/(max0[1]-min0[1]));
-	if(max0[2]-min0[2]!=0) s[2] = fabs((max[2]-min[2])/(max0[2]-min0[2]));
+	if(max0[0]-min0[0]!=0) s[0] = (float)fabs((double)((max[0]-min[0])/(max0[0]-min0[0])));
+	if(max0[1]-min0[1]!=0) s[1] = (float)fabs((double)((max[1]-min[1])/(max0[1]-min0[1])));
+	if(max0[2]-min0[2]!=0) s[2] = (float)fabs((double)((max[2]-min[2])/(max0[2]-min0[2])));
 	gridSPH->scale(s);
 
-	}	
+  }	
 }
 /****************************************************************************/
 /****************************************************************************/
@@ -199,14 +187,14 @@ void SPH::merge(SPH* other)
 {
 	//std::cout << "debut merge " << std::endl;
 	// On ajoute les particules de l'autre solveur dans le solveur
-	for(int i=0;i<other->particles.size();i++){
-		Vector3f posP = other->particles[i]->pos;
-		float h = other->particles[i]->radius;
+	for(unsigned int i=0;i<other->particles.size();i++){
+		Vector3f posP = other->particles[i]->getPos();
+		float h = other->particles[i]->getRadius();
 		int j = particles.size()-1;
 		bool trouve = false;
 		while(j>=0 && !trouve)
 		{
-			Vector3f pI_pos = this->particles[j]->pos - posP;
+			Vector3f pI_pos = this->particles[j]->getPos() - posP;
 			if(pI_pos.norm()==0)
 				trouve = true;
 			else j--;
@@ -256,28 +244,28 @@ bool SPH::computeNeighborhood()
 /****************************************************************************/
 void SPH::computeForces()
 {
-	for(int i=0;i<particles.size();i++)
+	for(unsigned int i=0;i<particles.size();i++)
 	{
 		Vector3f fP(0,0,0),fV(0,0,0),N(0,0,0);
 		float fS = 0;
 
-		Vector3f pos1 = particles[i]->pos;
-		Vector3f vel1 = particles[i]->vel;
-		float rho1 = particles[i]->rho;
-		float p1 = particles[i]->p;
-		float h1 = particles[i]->radius;
+		Vector3f pos1 = particles[i]->getPos();
+		Vector3f vel1 = particles[i]->getVel();
+		float rho1 = particles[i]->getRho();
+		float p1 = particles[i]->getP();
+		float h1 = particles[i]->getRadius();
 
-		for(int j=0;j<particles[i]->vois.size();j++){
-			int index = particles[i]->vois[j];
-			Vector3f pos2 = particles[index]->pos;
+		for(unsigned int j=0;j<particles[i]->getNbVois();j++){
+			int index = particles[i]->getVois(j);
+			Vector3f pos2 = particles[index]->getPos();
 			float d = (pos1-pos2).norm();
 
 			if(d>0) {
-				float rho2 = particles[index]->rho;
-				float p2 = particles[index]->p;
-				float h2 = particles[index]->radius;
-				float m2 = particles[index]->mass;
-			        Vector3f vel2 = particles[index]->vel;
+				float rho2 = particles[index]->getRho();
+				float p2 = particles[index]->getP();
+				float h2 = particles[index]->getRadius();
+				float m2 = particles[index]->getMass();
+			        Vector3f vel2 = particles[index]->getVel();
 				// pas bon...
                 		float h = (h1+h2)/2;//max(h1,h2);///2;
                 
@@ -304,23 +292,27 @@ void SPH::computeForces()
 		}
 		//cout << "fP: " << -fP[0]/rho1 << " " << -fP[1]/rho1 << " " << -fP[2]/rho1 << endl;
 		//cout << "fV: " << fV[0] << " " << fV[1] << " " << fV[2] << endl;
-		particles[i]->forces = (-fP/rho1) + fV + gravity*rho1; 
+		Vector3f forces = (-fP/rho1) + fV + gravity*rho1; 
 		float lN = N.norm();
 		if(lN>=ltS)
-			particles[i]->forces += -fS*tS*N/lN;
+			forces += -fS*tS*N/lN;
+		particles[i]->setForces(forces);
 	}
 }
 /****************************************************************************/
 void SPH::integrate(float dt)
 {
-	for(int i=0;i<particles.size();i++)
+	for(unsigned int i=0;i<particles.size();i++)
     	{
-      		if(particles[i]->rho!=0)
+      		if(particles[i]->getRho()!=0)
 		{
 	  		// Integration numérique => Euler simplectique
-	  		particles[i]->vel = particles[i]->vel+(particles[i]->forces/particles[i]->rho)*dt;
-	  		particles[i]->pos = particles[i]->pos+particles[i]->vel*dt;
-			posP[i*4] = particles[i]->pos[0]; posP[i*4+1] = particles[i]->pos[1]; posP[i*4+2] = particles[i]->pos[2]; posP[i*4+3] = particles[i]->radius;
+	  		particles[i]->setVel(particles[i]->getVel()+(particles[i]->getForces()/particles[i]->getRho())*dt);
+	  		particles[i]->setPos(particles[i]->getPos()+particles[i]->getVel()*dt);
+			posP[i*4] = particles[i]->getPos()[0]; 
+			posP[i*4+1] = particles[i]->getPos()[1]; 
+			posP[i*4+2] = particles[i]->getPos()[2]; 
+			posP[i*4+3] = particles[i]->getRadius();
 		}
 	}
 }
@@ -328,18 +320,18 @@ void SPH::integrate(float dt)
 void SPH::collideExterior(vector<WaveGroup*> waveGroups, float time)
 {
 	// On supprime les particules du solveur quand elles passent en dessous de la surface
-	for(int i=0;i<particles.size();i++)
+	for(unsigned int i=0;i<particles.size();i++)
 	{
-		Vector3f pos2 = particles[i]->pos;
+		Vector3f pos2 = particles[i]->getPos();
 		Vector3f pos = Vector3f(pos2[0],0,pos2[2]);
 		Vector3f dPos(0,0,0);
-		for(int j=0;j<waveGroups.size();j++){
+		for(unsigned int j=0;j<waveGroups.size();j++){
 			Vector3f dP, vel, dVel;
 			waveGroups[j]->computeMovement(pos, time, &dP, &vel, &dVel);
 			dP[0]*=waveGroups[j]->getCosTheta(); dP[2]*=waveGroups[j]->getSinTheta(); 
 			dPos+=dP;
 		}
-		if(pos2[1] + particles[i]->radius < dPos[1])	
+		if(pos2[1] + particles[i]->getRadius() < dPos[1])	
 			deleteParticle(i);
 	}
 }
@@ -370,8 +362,8 @@ void SPH::displayParticlesByField(int field)
 		if(mmin>m) mmin = m;
 	}*/
 	#pragma omp parallel for
-    	for(uint i=0;i<particles.size();i++){
-		float m = particles[i]->mass;
+    	for(unsigned i=0;i<particles.size();i++){
+		float m = particles[i]->getMass();
 		float hue = 240 * (mmax - fmin(m,mmax)) / (mmax-mmin);
 		Vector3d Hsv(hue,1,1);
 		Vector3d Rgb = convertHsvToRgb(Hsv);
@@ -385,14 +377,14 @@ void SPH::displayParticlesByField(int field)
    if(field==1){
 	float vmax, vmin;
 	vmax = 0; vmin = 1000000;
-	for(uint i=0;i<particles.size();i++){
-		float length = particles[i]->vel.norm();
+	for(unsigned i=0;i<particles.size();i++){
+		float length = particles[i]->getVel().norm();
 		if(vmax<length) vmax = length;
 		if(vmin>length) vmin = length;
 	}
 	#pragma omp parallel for
-    	for(uint i=0;i<particles.size();i++){
-		float length = particles[i]->vel.norm();
+    	for(unsigned i=0;i<particles.size();i++){
+		float length = particles[i]->getVel().norm();
 		float hue = 240 * (vmax - fmin(length,vmax)) / (vmax-vmin);
 		Vector3d Hsv(hue,1,1);
 		Vector3d Rgb = convertHsvToRgb(Hsv);
@@ -408,7 +400,7 @@ void SPH::displayParticlesByField(int field)
 Vector3d SPH::convertHsvToRgb(Vector3d Hsv)
 {
    Vector3d result;
-   int t = (int)(floor(Hsv[0]/60))%6;
+   int t = (int)(floor((double)(Hsv[0]/60)))%6;
    double f = (Hsv[0]/60)-t;
    double l = Hsv[2]*(1-Hsv[1]);
    double m = Hsv[2]*(1-f*Hsv[1]);
@@ -429,34 +421,36 @@ void SPH::exportParticlesHoudini(const char* filename)
 		fprintf(f,"houdini\n");
 		fprintf(f,"%lu\n",particles.size());
 		fprintf(f,"32 32 32\n");
-		for (int i=0; i<particles.size(); i++) 
-			fprintf(f,"%d %f %f %f %f %f %f 0\n",i,particles[i]->pos[0],particles[i]->pos[1],particles[i]->pos[2],
-			        particles[i]->vel[0],particles[i]->vel[1],particles[i]->vel[2]);
+		for (unsigned int i=0; i<particles.size(); i++){
+			Vector3f pos = particles[i]->getPos();
+			Vector3f vel = particles[i]->getVel();
+			fprintf(f,"%d %f %f %f %f %f %f 0\n",i,pos[0],pos[1],pos[2],vel[0],vel[1],vel[2]);
+		}
 	}
 }
 /****************************************************************************/
 /****************************************************************************/
-const float SPH::getRho0()
+float SPH::getRho0()
 {
 	return rho0;
 }
 /****************************************************************************/
-const float SPH::getMu()
+float SPH::getMu()
 {
 	return mu;
 }
 /****************************************************************************/
-const float SPH::getTS()
+float SPH::getTS()
 {
 	return tS;
 }
 /****************************************************************************/
-const float SPH::getLTS()
+float SPH::getLTS()
 {
 	return ltS;
 }
 /****************************************************************************/
-int   SPH::getNbParticles() const
+int   SPH::getNbParticles()
 {
 	return particles.size();
 }

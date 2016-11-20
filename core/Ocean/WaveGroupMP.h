@@ -4,6 +4,7 @@
 #define _WAVE_GROUP_MP_H__
 
 #include <WaveGroup.h>
+using namespace Eigen;
 
 class WaveGroupMP : public WaveGroup
 {

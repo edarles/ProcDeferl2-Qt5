@@ -1,5 +1,11 @@
 #include <GridOcean.h>
 #include <BreakingWave.h>
+#include <Eigen/Dense>
+
+#include <vector>
+
+using namespace Eigen;
+using namespace std;
 
 /****************************************************************************/
 /****************************************************************************/
@@ -9,7 +15,7 @@ GridOcean::GridOcean():Grid()
 	this->m_t = 0;
 }
 /****************************************************************************/
-GridOcean::GridOcean(Vector3f origin, Vector3f min, Vector3f max, float dx, float dz) : Grid(origin, min, max, dx, 0, dz)
+GridOcean::GridOcean(Vector3f center, Vector3f min, Vector3f max, float dx, float dz) : Grid(center, min, max, dx, 0, dz)
 {
 	init();
 	this->m_t = 0;
@@ -107,7 +113,7 @@ void GridOcean::init()
 	m_vel.clear();
 	m_dVel.clear();
 
-	for(int i=0;i<m_pos.size();i++){
+	for(unsigned int i=0;i<m_pos.size();i++){
 		Vector3f pos = m_pos[i];
 		m_initPos.push_back(pos);
 		m_vel.push_back(Vector3f(0,0,0));
@@ -124,7 +130,7 @@ void GridOcean::reinitPos()
 	m_vel.clear();
 	m_dVel.clear();
 
-	for(int i=0;i<m_pos.size();i++){
+	for(unsigned int i=0;i<m_pos.size();i++){
 		m_pos.push_back(m_initPos[i]);
 		m_vel.push_back(Vector3f(0,0,0));
 		m_dVel.push_back(Vector3f(0,0,0));
@@ -133,13 +139,13 @@ void GridOcean::reinitPos()
 }
 /****************************************************************************/
 /****************************************************************************/
-void GridOcean::update(vector<WaveGroup*> waveGroups, float dt)
+void GridOcean::update(std::vector<WaveGroup*> waveGroups, float dt)
 {
 	for(int i=0; i<m_n; i++){
 		m_pos[i] = m_initPos[i];
 		m_vel[i]=Vector3f(0,0,0);
 		m_dVel[i]=Vector3f(0,0,0);
-		for(int n=0; n<waveGroups.size(); n++)
+		for(unsigned int n=0; n<waveGroups.size(); n++)
 		{
 			  Vector3f dPos(0,0,0);
 			  Vector3f vel(0,0,0);
@@ -165,12 +171,12 @@ void GridOcean::generateBreakingWaves(vector<WaveGroup*> waveGroups, vector<Brea
 			bool toCreate = false;
 			vector<WaveGroup*> wgActing;
 			vector<bool> wgActive;
-			for(int n=0; n<waveGroups.size(); n++)
+			for(unsigned int n=0; n<waveGroups.size(); n++)
 			{
 				WaveGroup *wg = waveGroups[n];
 				// On regarde si on est dans une zone de déferlement -> On regarde parmi les déferlements si une grille contient le point
 				bool trouve = false;
-				int nB = 0;
+				unsigned int nB = 0;
 				while(!trouve && nB<breakingWaves->size()){
 					GridBreaking* gB = breakingWaves->at(nB)->getGridBreaking();
 					Vector3f min = gB->getMin(); Vector3f max = gB->getMax();
@@ -186,7 +192,7 @@ void GridOcean::generateBreakingWaves(vector<WaveGroup*> waveGroups, vector<Brea
 					toCreate = true;
 			}
 			if(toCreate){
-				for(int n=0; n<waveGroups.size(); n++){
+				for(unsigned int n=0; n<waveGroups.size(); n++){
 					WaveGroup *wg = waveGroups[n];
 					// On regarde si le groupe de vague agit localement dans la zone de déferlement
 					// Et on regarde si ce groupe est actif ou non dans le déferlement (donne de l'énergie au déferlement)

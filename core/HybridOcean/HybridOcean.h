@@ -26,7 +26,7 @@ class HybridOcean
 		HybridOcean();
 		HybridOcean(vector<WaveGroup*> waveGroups, float dt);
 		HybridOcean(GridOcean* gridOcean, vector<WaveGroup*> waveGroups, float dt);
-		~HybridOcean();
+		virtual ~HybridOcean();
 
 	/**************** GETTERS AND SETTERS ***************************/
 		WaveGroup*  getWaveGroup(int index);

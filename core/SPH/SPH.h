@@ -3,7 +3,6 @@
 #ifndef _SPH_H__
 #define _SPH_H__
 
-#include <types.h>
 #include <Particle.h>
 #include <GridSPH.h>
 #include <shaders.h>
@@ -20,14 +19,14 @@ class SPH
 		virtual ~SPH();
 
 		/**************** GETTERS ***************************/		
-		Particle* 	  getParticle(int index) const;
-		vector<Particle*> getParticles() const;
-		int        	  getNbParticles() const;
-		GridSPH*    	  getGrid() const;
-		const float 	  getRho0();
-		const float 	  getMu();
-		const float 	  getTS();
-		const float 	  getLTS(); 
+		Particle* 	   getParticle(int index);
+		vector<Particle*>  getParticles();
+		int        	   getNbParticles();
+		GridSPH*    	   getGrid() const;
+		float 	   	   getRho0();
+		float 	   	   getMu();
+		float 	   	   getTS();
+		float 	   	   getLTS(); 
 
 		/**************** ROUTINE D'AJOUT / SUPRESSION D'UNE PARTICULE *****/
 		virtual void addParticle(Vector3f pos, Vector3f vel, float mass, float radius);
@@ -35,7 +34,7 @@ class SPH
 		virtual void deleteParticle(int index);
 
 		/**************** ROUTINE DE GENERATION D'UNE PARTICULE *****/
-		virtual void generateParticle(Vector3f pos, Vector3f vel, Vector3f dVel, float mass);
+		virtual void generateParticle(Vector3f pos, Vector3f vel, float mass);
 
 		/**************** ROUTINE DE MERGING ****************/
 		virtual void merge(SPH* other);
@@ -64,6 +63,7 @@ class SPH
 		GridSPH *gridSPH;
 
 		// Statics attributes
+		static GLuint m_program;
 		static const Vector3f gravity;
 		static const float rho0;
 		static const float mu;
@@ -71,14 +71,10 @@ class SPH
 		static const float ltS;
 		static const float massMaxi;
 
-		//Array of structure
 		vector<Particle*> particles;
 
 		//Arrays for GLSL shader 
 		float* posP, *colors;
-
-		// GLSL shader program 
-		static GLuint m_program;
 
 		// Protected Methods
 		virtual bool computeNeighborhood();

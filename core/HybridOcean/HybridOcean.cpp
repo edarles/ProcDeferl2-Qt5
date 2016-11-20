@@ -21,7 +21,7 @@ HybridOcean::HybridOcean(vector<WaveGroup*> waveGroups, float dt)
 	colorBreakingWaves << 1,1,1,1;
 
 	this->m_waveGroups.clear();
-	for(int i=0; i<waveGroups.size(); i++)
+	for(unsigned int i=0; i<waveGroups.size(); i++)
 		addWaveGroup(waveGroups[i]);
 
 	m_visuGrid = new GridOcean(Vector3f(0,0,0), Vector3f(-100,0,-100), Vector3f(100,0,100),1.0,1.0);
@@ -37,7 +37,7 @@ HybridOcean::HybridOcean(GridOcean* gridOcean, vector<WaveGroup*> waveGroups, fl
 	colorOcean << 0,0,1,1;
 	colorBreakingWaves << 1,1,1,1;
 	this->m_waveGroups.clear();
-	for(int i=0; i<waveGroups.size(); i++)
+	for(unsigned int i=0; i<waveGroups.size(); i++)
 		addWaveGroup(waveGroups[i]);
 	m_visuGrid = gridOcean;
 	m_visuGrid->setColor(colorOcean);	
@@ -49,13 +49,13 @@ HybridOcean::HybridOcean(GridOcean* gridOcean, vector<WaveGroup*> waveGroups, fl
 /****************************************************************************/
 HybridOcean::~HybridOcean()
 {
-	for(int i=0; i<m_waveGroups.size(); i++)
+	for(unsigned int i=0; i<m_waveGroups.size(); i++)
 		delete(m_waveGroups[i]);
 	m_waveGroups.clear();
 	m_waveGroups.shrink_to_fit();
 	m_waveGroups.~vector();
 	delete(m_visuGrid);
-	for(int i=0;i<m_breakingWaves.size();i++)
+	for(unsigned int i=0;i<m_breakingWaves.size();i++)
 		delete(m_breakingWaves[i]);
 	m_breakingWaves.clear();
 	m_breakingWaves.shrink_to_fit();
@@ -65,7 +65,7 @@ HybridOcean::~HybridOcean()
 /****************************************************************************/
 WaveGroup* HybridOcean::getWaveGroup(int index)
 {
-	assert(index < m_waveGroups.size());
+	assert(index < (int)m_waveGroups.size());
 	return m_waveGroups[index];
 }
 /****************************************************************************/
@@ -97,7 +97,7 @@ void HybridOcean::addWaveGroup(WaveGroup *waveGroup)
 /****************************************************************************/
 void HybridOcean::addWaveGroups(vector<WaveGroup*> waveGroups)
 {
-	for(int i=0; i<waveGroups.size(); i++)
+	for(unsigned int i=0; i<waveGroups.size(); i++)
 		m_waveGroups.push_back(waveGroups[i]);
 }
 /****************************************************************************/
@@ -106,7 +106,7 @@ void HybridOcean::loadSpectrum(const char* filename)
 {
 	FILE * f = fopen(filename,"r");
 	if(f!=NULL){
-		for(int i=0; i<m_waveGroups.size(); i++)
+		for(unsigned int i=0; i<m_waveGroups.size(); i++)
 			delete(m_waveGroups[i]);
 		m_waveGroups.clear();
 		int nbWaves;
@@ -126,7 +126,7 @@ void HybridOcean::saveSpectrum(const char* filename)
 	FILE *f = fopen(filename, "w");
 	if(f!=NULL){
 		fprintf(f,"%lu\n",m_waveGroups.size());
-		for(int i=0; i<m_waveGroups.size();i++)
+		for(unsigned int i=0; i<m_waveGroups.size();i++)
 			m_waveGroups[i]->save(f);
 		fclose(f);
 	}
@@ -145,7 +145,7 @@ void HybridOcean::addBreakingWave(BreakingWave* breakingWave)
 /****************************************************************************/
 void HybridOcean::deleteBreakingWave(int index)
 {
-	assert(index<m_breakingWaves.size());
+	assert(index<(int)m_breakingWaves.size());
 	m_breakingWaves[index] = m_breakingWaves[m_breakingWaves.size()-1];
 	m_breakingWaves.pop_back();
 }
@@ -159,9 +159,9 @@ void HybridOcean::mergeBreakingWaves()
 
 	merge = false;
 
-	for(int i=0;i<m_breakingWaves.size();i++){
+	for(unsigned int i=0;i<m_breakingWaves.size();i++){
 
-		for(int j=0;j<m_breakingWaves.size();j++){
+		for(unsigned int j=0;j<m_breakingWaves.size();j++){
 
 			BreakingWave *bI = m_breakingWaves[i];
 			if(bI!=NULL){
@@ -229,7 +229,7 @@ void HybridOcean::animate()
 {
 	//cout << "animate" << endl;
 	// Update des groupes de vagues
-	for(int i=0;i<m_waveGroups.size();i++)
+	for(unsigned int i=0;i<m_waveGroups.size();i++)
 		m_waveGroups[i]->update();
 
 	// Update de grille de l'océan
@@ -241,18 +241,18 @@ void HybridOcean::animate()
 	mergeBreakingWaves();
 
 	// Update des vagues déferlantes
-	for(int i=0;i<m_breakingWaves.size();i++){
+	for(unsigned int i=0;i<m_breakingWaves.size();i++){
 		m_breakingWaves[i]->checkActiveWgs();
 		m_breakingWaves[i]->checkActivePts();
 		m_breakingWaves[i]->transform();
 		m_breakingWaves[i]->update(dt);
 	}
 
-	for(int i=0;i<m_breakingWaves.size();i++)
-		m_breakingWaves[i]->generateParticles(dt);
+	for(unsigned int i=0;i<m_breakingWaves.size();i++)
+		m_breakingWaves[i]->generateParticles();
 
 	// Suppression des vagues déferlantes qui ne sont plus actifs
-	for(int i=0;i<m_breakingWaves.size();i++){
+	for(unsigned int i=0;i<m_breakingWaves.size();i++){
 		if(!m_breakingWaves[i]->checkIfActive()){
 			delete m_breakingWaves[i]; 
 			m_breakingWaves.erase(m_breakingWaves.begin()+i);
@@ -271,7 +271,7 @@ void HybridOcean::display()
 {
 	m_visuGrid->display();
 
-	for(int i=0;i<m_breakingWaves.size();i++)
+	for(unsigned int i=0;i<m_breakingWaves.size();i++)
 		m_breakingWaves[i]->display();
 	
 }
@@ -290,7 +290,7 @@ void HybridOcean::exportData(const char* rep, char filenameOBJ[100], char filena
 
 	// Export particles positions for houdini mesher
 	sprintf(filenameP, "%s/Particles/particles_%s%d.txt",rep,frameF,frame-1);
-	for(int i=0;i<m_breakingWaves.size();i++)
+	for(unsigned int i=0;i<m_breakingWaves.size();i++)
 		m_breakingWaves[i]->getSolver()->exportParticlesHoudini(filenameP);
 }
 /****************************************************************************/

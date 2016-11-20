@@ -1,12 +1,14 @@
 #include <BreakingWave.h>
 #include <iostream>
 
+using namespace Eigen;
+
 /****************************************************************************/
 /****************************************************************************/
 BreakingWave::BreakingWave(Vector3f center, vector<WaveGroup*> wg_acting, vector<bool> wg_active, float t)
 {
 	this->center = center;
-	for(int i=0;i<wg_acting.size();i++){
+	for(unsigned int i=0;i<wg_acting.size();i++){
 		this->wg_acting.push_back(wg_acting[i]);
 		this->wg_active.push_back(wg_active[i]);
 	}
@@ -60,7 +62,7 @@ int BreakingWave::getNbWgActing()
 /****************************************************************************/
 bool BreakingWave::getWgActive(int index)
 {
-	assert(index<wg_active.size());
+	assert(index<(int)wg_active.size());
 	return wg_active[index];
 }
 /****************************************************************************/
@@ -90,11 +92,11 @@ int BreakingWave::addWgActing(WaveGroup* wg)
 int BreakingWave::wgActingContains(WaveGroup* wg)
 {
 	int i = 0;
-	while(i<wg_acting.size()){
+	while(i<(int)wg_acting.size()){
 		WaveGroup *wg1 = wg_acting[i];
 		if(wg->getN()==wg1->getN() && wg->getK()==wg1->getK() && wg->getTheta()==wg1->getTheta()
 		&& wg->getR()==wg1->getR() && wg->getPhi0()==wg1->getPhi0() && wg->getZeta()==wg1->getZeta())
-			return i;
+			return (int) i;
 		i++;
 	}
 	return -1;
@@ -107,7 +109,7 @@ void BreakingWave::addWgActive(bool active)
 /***************************************************************************/	
 void BreakingWave::setWgActive(int index, bool active)
 {
-	assert(index<wg_active.size());
+	assert(index<(int)wg_active.size());
 	wg_active[index] = active;
 }
 /***************************************************************************/
@@ -138,7 +140,7 @@ bool BreakingWave::checkIfActive()
 		return true;
 	else {
 		int n = 0;
-		while(n<wg_active.size()){
+		while(n<(int)wg_active.size()){
 			if(wg_active[n]==true)
 				return true;
 			n++;
@@ -147,7 +149,7 @@ bool BreakingWave::checkIfActive()
 	return false;
 }
 /****************************************************************************/
-void BreakingWave::generateParticles(float dt)
+void BreakingWave::generateParticles()
 {
 	int indexWg = gridBreaking->getIndexMaxLambda();
 	WaveGroup* wg = wg_acting[indexWg];
@@ -159,8 +161,8 @@ void BreakingWave::generateParticles(float dt)
 		Vector3f pos = gridBreaking->getPos(index);
 		Vector3f vel = gridBreaking->getVel(index);
 		Vector3f dVel = gridBreaking->getDVel(index);
-		float mass = solver->getRho0()*S*hypot(vel[0]-ps[0],vel[2]-ps[1]);
-		solver->generateParticle(pos,vel,dVel,mass);
+		float mass = solver->getRho0()*S*((float)hypot((double)(vel[0]-ps[0]),(double)(vel[2]-ps[1])));
+		solver->generateParticle(pos,vel,mass);
 	}
 }
 /****************************************************************************/

@@ -1,7 +1,9 @@
 #include <GridBreaking.h>
+#include <Grid.h>
 #include <GL/gl.h> 
 #include <math.h> 
 #include <iostream>
+using namespace Eigen;
 
 /****************************************************************************/
 /****************************************************************************/
@@ -24,7 +26,7 @@ GridBreaking::~GridBreaking()
 /****************************************************************************/
 int GridBreaking::getActivePt(int i)
 {
-	assert(i<activePts.size());
+	assert(i<(int)activePts.size());
 	return activePts[i];
 }
 /****************************************************************************/
@@ -68,7 +70,7 @@ void GridBreaking::createGrid(vector<WaveGroup*> wg, vector<bool> wg_active)
 	maxExtens = 0;
 	int maxNx,maxNz;
 	bool toCreate = false;
-	for(int i=0; i<wg.size();i++){
+	for(unsigned int i=0; i<wg.size();i++){
 		if(wg_active[i]){
 			float lambda = wg[i]->getK()*2*M_PI;
 			if(lambda>=maxLambda){
@@ -100,7 +102,7 @@ void GridBreaking::createGrid(vector<WaveGroup*> wg, vector<bool> wg_active)
 /****************************************************************************/
 void GridBreaking::checkActiveWgs(vector<WaveGroup*> wgs, vector<bool> *wg_active)
 {
-	for(int n=0; n<wgs.size(); n++)
+	for(unsigned int n=0; n<wgs.size(); n++)
 	{
 		WaveGroup *wg = wgs[n];
 		float lambda = wg->getK()*2*M_PI;
@@ -134,7 +136,7 @@ void GridBreaking::checkActivePts(vector<WaveGroup*> wgs, vector<bool> wg_active
 		for(int j=0;j<m_nz;j++){
 			int indexCell = i + j*m_nx;
 			bool actif = false;
-			int n = 0;
+			unsigned int n = 0;
 			while(!actif && n<wgs.size()){
 				if(wg_active[n]){
 					WaveGroup *wg = wgs[n];
@@ -157,15 +159,15 @@ Vector3f GridBreaking::calculScale()
 	Vector3f min, max;
 	min << INF,m_min[1],INF; max <<-INF,m_max[1],-INF;
 	if(activePts.size()>0){
-		for(int i=0;i<activePts.size();i++){
+		for(unsigned int i=0;i<activePts.size();i++){
 			Vector3f pt = getLocalRotated(m_pos[activePts[i]]);
-			min[0] = fmin(min[0],pt[0]);
-			min[2] = fmin(min[2],pt[2]);
-			max[0] = fmax(max[0],pt[0]);
-			max[2] = fmax(max[2],pt[2]);
+			min[0] = (float)fmin((double)min[0],(double)pt[0]);
+			min[2] = (float)fmin((double)min[2],(double)pt[2]);
+			max[0] = (float)fmax((double)max[0],(double)pt[0]);
+			max[2] = (float)fmax((double)max[2],(double)pt[2]);
 		}
-		if(m_max[0]-m_min[0]!=0) scale[0] = fabs((max[0]-min[0])/(m_max[0]-m_min[0]))*2;
-		if(m_max[2]-m_min[2]!=0) scale[2] = fabs((max[2]-min[2])/(m_max[2]-m_min[2]))*2;
+		if(m_max[0]-m_min[0]!=0) scale[0] = (float)fabs((double)((max[0]-min[0])/(m_max[0]-m_min[0])))*2;
+		if(m_max[2]-m_min[2]!=0) scale[2] = (float)fabs((double)((max[2]-min[2])/(m_max[2]-m_min[2])))*2;
 		
 		
 		if(scale[0]<maxLambda) scale[0]=1;
@@ -180,7 +182,7 @@ Vector3f GridBreaking::calculTranslation()
 {
 	barycenter << 0,0,0;
 	if(activePts.size()>0){
-		for(int i=0;i<activePts.size();i++){
+		for(unsigned int i=0;i<activePts.size();i++){
 			Vector3f pt = m_pos[activePts[i]];
 			barycenter+=pt;
 		}
@@ -198,7 +200,7 @@ float GridBreaking::calculRotation()
 	if(activePts.size()>0){
 		float maxVel = 0;
 		int indexMaxVel = 0;
-		for(int i=0;i<activePts.size();i++){
+		for(unsigned int i=0;i<activePts.size();i++){
 			Vector3f vel = m_vel[activePts[i]];
 			if(vel.norm()>maxVel){
 				maxVel = vel.norm();
@@ -207,7 +209,7 @@ float GridBreaking::calculRotation()
 		}
 		if(m_vel[indexMaxVel].norm()>0){
 			Vector3f pt = m_vel[indexMaxVel]/m_vel[indexMaxVel].norm();
-			double angle = atan2(pt[2],pt[0]);
+			double angle = atan2((double)pt[2],(double)pt[0]);
 			indexMax = indexMaxVel;
 			double d_angle = angle - angleRotation;
 			angleRotation = angle;
@@ -229,7 +231,7 @@ void GridBreaking::scale(Vector3f s)
 	for(int ix=0; ix<m_nx; ix++){
 		for(int iz=0; iz<m_nz; iz++){
 			int indexCell = ix + iz*m_nx;
-			Vector3f posAv = getLocalRotated(m_initPos[indexCell]) - m_center;
+			Vector3f posAv = this->getLocalRotated(m_initPos[indexCell]) - m_center;
 			posAv[0]= m_center[0] + posAv[0]*s[0]; 
 			posAv[2]= m_center[2] + posAv[2]*s[2];
 			m_initPos[indexCell] = getLocalRotate(posAv);

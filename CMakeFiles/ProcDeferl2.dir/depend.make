@@ -264,7 +264,6 @@ CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: core/SPH/WCSPH.h
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: core/SPH/shaders.h
-CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: core/SPH/types.h
 
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/BreakingWave/BreakingWave.cpp
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: /opt/local/include/GL/gl.h
@@ -483,7 +482,6 @@ CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/SPH/SESPH.
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/SPH/WCSPH.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/SPH/shaders.h
-CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/SPH/types.h
 
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: core/BreakingWave/GridBreaking.cpp
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: /opt/local/include/GL/gl.h
@@ -1146,7 +1144,6 @@ CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/SPH/WCSPH.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/SPH/shaders.h
-CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/SPH/types.h
 
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/IHM/glWidget.cpp
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/include/GL/gl.h
@@ -1400,7 +1397,6 @@ CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/SPH/WCSPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/SPH/shaders.h
-CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/SPH/types.h
 
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/IHM/main.cpp
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/include/GL/gl.h
@@ -1665,7 +1661,6 @@ CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/SPH/WCSPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/SPH/shaders.h
-CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/SPH/types.h
 
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/IHM/window.cpp
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/include/GL/gl.h
@@ -1929,7 +1924,6 @@ CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/SPH/WCSPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/SPH/shaders.h
-CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/SPH/types.h
 
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/Ocean/GridOcean.cpp
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/GL/gl.h
@@ -2148,7 +2142,6 @@ CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/WCSPH.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/shaders.h
-CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/types.h
 
 CMakeFiles/ProcDeferl2.dir/core/Ocean/WaveGroup.cpp.o: core/Ocean/WaveGroup.cpp
 CMakeFiles/ProcDeferl2.dir/core/Ocean/WaveGroup.cpp.o: /opt/local/include/eigen3/Eigen/Cholesky
@@ -2562,6 +2555,9 @@ CMakeFiles/ProcDeferl2.dir/core/Ocean/WaveGroupMP.cpp.o: core/Ocean/WaveGroup.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/WaveGroupMP.cpp.o: core/Ocean/WaveGroupMP.h
 
 CMakeFiles/ProcDeferl2.dir/core/SPH/GridSPH.cpp.o: core/SPH/GridSPH.cpp
+CMakeFiles/ProcDeferl2.dir/core/SPH/GridSPH.cpp.o: /opt/local/include/GL/gl.h
+CMakeFiles/ProcDeferl2.dir/core/SPH/GridSPH.cpp.o: /opt/local/include/GL/gl_mangle.h
+CMakeFiles/ProcDeferl2.dir/core/SPH/GridSPH.cpp.o: /opt/local/include/GL/glext.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/GridSPH.cpp.o: /opt/local/include/eigen3/Eigen/Cholesky
 CMakeFiles/ProcDeferl2.dir/core/SPH/GridSPH.cpp.o: /opt/local/include/eigen3/Eigen/Core
 CMakeFiles/ProcDeferl2.dir/core/SPH/GridSPH.cpp.o: /opt/local/include/eigen3/Eigen/Dense
@@ -3186,7 +3182,6 @@ CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/SPH/shaders.h
-CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/SPH/types.h
 
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/SPH.cpp
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: /opt/local/include/GL/gl.h
@@ -3403,7 +3398,6 @@ CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/GridSPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/shaders.h
-CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/types.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/utils.h
 
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/WCSPH.cpp
@@ -3620,7 +3614,6 @@ CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/WCSPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/shaders.h
-CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/types.h
 
 CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o: core/SPH/shaders.cpp
 

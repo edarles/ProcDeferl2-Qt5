@@ -1,10 +1,10 @@
 #include <iostream>
 #include <stdlib.h>
-#include <GL/gl.h> 
 #include <vector>
-
 #include <Grid.h>
 #include <GridSPH.h>
+#include <GL/gl.h>
+
 using namespace std;
 /****************************************************************************/
 /****************************************************************************/
@@ -393,7 +393,7 @@ void Grid::exportOBJ(const char* filename)
 /****************************************************************************/
 void Grid::display()
 {
-	glColor4f(color[0],color[1],color[2],color[3]);
+	glColor4f((float)color[0],(float)color[1],(float)color[2],(float)color[3]);
 	glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 	for(int i=0;i<m_nx-1;i++){
 		for(int j=0;j<m_nz-1;j++){

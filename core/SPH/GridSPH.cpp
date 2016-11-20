@@ -1,4 +1,5 @@
 #include <GridSPH.h>
+#include <Grid.h>
 #include <iostream>
 /****************************************************************************/
 /****************************************************************************/
@@ -32,29 +33,29 @@ void GridSPH::computeNeighborhood(vector<Particle*> particles)
 			}
 		}
 	}
-	for(int i=0;i<particles.size();i++){
-		Vector3f pos = getLocalRotated(particles[i]->pos);
-	  	int iC = floor((pos[0]-m_min[0])/m_dx);
-	  	int jC = floor((pos[1]-m_min[1])/m_dy);
-	  	int kC = floor((pos[2]-m_min[2])/m_dz);
+	for(unsigned int i=0;i<particles.size();i++){
+		Vector3f pos = getLocalRotated(particles[i]->getPos());
+	  	int iC = (int) floor((double)(pos[0]-m_min[0])/m_dx);
+	  	int jC = (int) floor((double)(pos[1]-m_min[1])/m_dy);
+	  	int kC = (int) floor((double)(pos[2]-m_min[2])/m_dz);
 	  	int indexCell = iC + kC*m_nx + jC*m_nx*m_nz;
 		if(indexCell<m_n)
 			indexs[indexCell].push_back(i);
 	}
 	// Compute neighboorhood for each particle
-	for(int iP=0;iP<particles.size();iP++){
+	for(unsigned int iP=0;iP<particles.size();iP++){
 
-		particles[iP]->vois.clear();
+		particles[iP]->clearVois();
 		
-		Vector3f pos = getLocalRotated(particles[iP]->pos);
-		float h = particles[iP]->radius;
+		Vector3f pos = getLocalRotated(particles[iP]->getPos());
+		float h = particles[iP]->getRadius();
 		float x = pos[0]; 
 		float y = pos[1];
 		float z = pos[2];
 
-		int ix = floor((x-m_min[0])/m_dx);
-		int iy = floor((y-m_min[1])/m_dy);
-		int iz = floor((z-m_min[2])/m_dz);
+		int ix = (int)floor((double)(x-m_min[0])/m_dx);
+		int iy = (int)floor((double)(y-m_min[1])/m_dy);
+		int iz = (int)floor((double)(z-m_min[2])/m_dz);
 		//cout << "ix: " << ix << " iy: " << iy << " iz: " << iz << endl;
 	        int nbcx = floor(h/m_dx);
 	        int nbcy = floor(h/m_dy);
@@ -70,15 +71,15 @@ void GridSPH::computeNeighborhood(vector<Particle*> particles)
 
 						 	int indexCell = i + j*m_nx + k*m_nx*m_nz;
 						 	if(indexCell>=0 && indexCell<m_n){
-						 		for(int n=0;n<indexs[indexCell].size();n++)
+						 		for(unsigned int n=0;n<indexs[indexCell].size();n++)
 						 		{
 									short iP2 = indexs[indexCell][n];
-									Vector3f pos2 = getLocalRotated(particles[iP2]->pos);
+									Vector3f pos2 = getLocalRotated(particles[iP2]->getPos());
 									Vector3f PP = pos - pos2;
-									float h2 = particles[iP2]->radius;
+									float h2 = particles[iP2]->getRadius();
 									float r = (h+h2)/2;//max(h,h2);
 									if(PP.norm()<=r)
-											particles[iP]->vois.push_back(iP2);
+											particles[iP]->setVois(iP2);
 								  		
 								}
 							}
@@ -88,7 +89,7 @@ void GridSPH::computeNeighborhood(vector<Particle*> particles)
 			}
 		}
 	}
-	for(int i=0;i<indexs.size();i++){
+	for(unsigned int i=0;i<indexs.size();i++){
 		indexs[i].clear();
 		indexs[i].shrink_to_fit();
 		indexs[i].~vector();
