@@ -1940,7 +1940,10 @@ CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o
  /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Ocean/GridOcean.cpp
  /opt/local/include/GL/gl.h
  /opt/local/include/GL/gl_mangle.h
+ /opt/local/include/GL/glew.h
  /opt/local/include/GL/glext.h
+ /opt/local/include/GL/glu.h
+ /opt/local/include/GL/glu_mangle.h
  /opt/local/include/eigen3/Eigen/Cholesky
  /opt/local/include/eigen3/Eigen/Core
  /opt/local/include/eigen3/Eigen/Dense
@@ -2157,6 +2160,8 @@ CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o
  core/SPH/SESPH.h
  core/SPH/SPH.h
  core/SPH/WCSPH.h
+ core/Utils/shaders.h
+ core/Utils/utils.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/WaveGroup.cpp.o
  /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Ocean/WaveGroup.cpp
  /opt/local/include/eigen3/Eigen/Cholesky

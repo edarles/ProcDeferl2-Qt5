@@ -93,6 +93,8 @@ glWidget.h
 -
 
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Ocean/GridOcean.cpp
+utils.h
+-
 GridOcean.h
 -
 BreakingWave.h
@@ -100,6 +102,10 @@ BreakingWave.h
 Eigen/Dense
 -
 QGLWidget
+-
+GL/gl.h
+-
+shaders.h
 -
 vector
 -
@@ -1805,8 +1811,10 @@ core/Utils/shaders.h
 core/Utils/utils.h
 GL/glew.h
 -
-stdio.h
+iostream
 -
 math.h
+-
+QImage
 -
 

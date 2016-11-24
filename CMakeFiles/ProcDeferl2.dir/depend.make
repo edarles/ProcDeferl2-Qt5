@@ -1939,7 +1939,10 @@ CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/SPH/WCSPH.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/Ocean/GridOcean.cpp
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/GL/gl.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/GL/gl_mangle.h
+CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/GL/glew.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/GL/glext.h
+CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/GL/glu.h
+CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/GL/glu_mangle.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/eigen3/Eigen/Cholesky
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/eigen3/Eigen/Core
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/eigen3/Eigen/Dense
@@ -2156,6 +2159,8 @@ CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/WCSPH.h
+CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/Utils/shaders.h
+CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/Utils/utils.h
 
 CMakeFiles/ProcDeferl2.dir/core/Ocean/WaveGroup.cpp.o: core/Ocean/WaveGroup.cpp
 CMakeFiles/ProcDeferl2.dir/core/Ocean/WaveGroup.cpp.o: /opt/local/include/eigen3/Eigen/Cholesky

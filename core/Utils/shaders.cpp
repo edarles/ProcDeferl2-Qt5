@@ -1,11 +1,9 @@
 #define STRINGIFY(A) #A
 #include <stdio.h>
 // vertex shader
-const char *vertexShader = STRINGIFY(
+const char *sphereVertexShader = STRINGIFY(
 //uniform float pointRadius;  // point size in world space
 uniform float pointScale;   // scale to calculate size in pixels
-uniform float densityScale;
-uniform float densityOffset;
 void main()
 {
     // calculate window-space point size
@@ -18,19 +16,11 @@ void main()
 }
 );
 
-const float blurSize = 1.0/512.0;
 // pixel shader for rendering points as shaded spheres
 const char *spherePixelShader = STRINGIFY(
-//uniform float pointRadius;  // point size in world space
-uniform float pointScale;   // scale to calculate size in pixels
-uniform float densityScale;
-uniform float densityOffset;
-uniform float near;
-uniform float far;
 void main()
 {   
     const vec3 lightDir = vec3(0.577, 0.577, 0.577);
-
     // calculate normal from texture coordinates
     vec3 N;
     N.xy = gl_TexCoord[0].xy*vec2(2.0, -2.0) + vec2(-1.0, 1.0);
@@ -43,4 +33,43 @@ void main()
 
 }
 );
+
+const char *quadVertexShader = STRINGIFY(
+void main()
+{
+    gl_TexCoord[0] = gl_MultiTexCoord0;
+    gl_Position = ftransform();//gl_ModelViewProjectionMatrix * gl_Vertex;  
+    gl_FrontColor = gl_Color;
+   // printf("color: %f %f\n", gl_TexCoord[0].s, gl_TexCoord[0].t);
+}
+);
+
+// pixel shader for rendering quad
+const char *quadPixelShaderWithTexture = STRINGIFY(
+uniform sampler2D texture0;
+void main()
+{   
+    /*const vec3 lightDir = vec3(0.577, 0.577, 0.577);
+    //calculate normal from texture coordinates
+    vec3 N;
+    N.xy = gl_TexCoord[0].xy*vec2(2.0, -2.0) + vec2(-1.0, 1.0);
+    float mag = dot(N.xy, N.xy);
+    // calculate lighting
+    float diffuse = max(0.0, dot(lightDir, N));
+   */
+    vec4 color = texture2D(texture0,gl_TexCoord[0].st);
+    gl_FragColor = color;
+
+}
+);
+
+// pixel shader for rendering quad
+const char *quadPixelShaderWithoutTexture = STRINGIFY(
+void main()
+{   
+    gl_FragColor = gl_Color;
+
+}
+);
+
 

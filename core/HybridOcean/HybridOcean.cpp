@@ -12,7 +12,7 @@ int    HybridOcean::nP = 0;
 /****************************************************************************/
 HybridOcean::HybridOcean()
 {
-	if(m_program==0) m_program = _compileProgram(vertexShader, spherePixelShader);
+	if(m_program==0) m_program = _compileProgram(sphereVertexShader, spherePixelShader);
 
 	colorOcean << 0,0,1,1;
 	colorBreakingWaves << 1,1,1,1;
@@ -28,7 +28,7 @@ HybridOcean::HybridOcean()
 /****************************************************************************/
 HybridOcean::HybridOcean(vector<WaveGroup*> waveGroups, float dt)
 {
-	if(m_program==0) m_program = _compileProgram(vertexShader, spherePixelShader);
+	if(m_program==0) m_program = _compileProgram(sphereVertexShader, spherePixelShader);
 
 	colorOcean << 0,0,1,1;
 	colorBreakingWaves << 1,1,1,1;
@@ -48,7 +48,7 @@ HybridOcean::HybridOcean(vector<WaveGroup*> waveGroups, float dt)
 /****************************************************************************/
 HybridOcean::HybridOcean(GridOcean* gridOcean, vector<WaveGroup*> waveGroups, float dt)
 {
-	if(m_program==0) m_program = _compileProgram(vertexShader, spherePixelShader);
+	if(m_program==0) m_program = _compileProgram(sphereVertexShader, spherePixelShader);
 
 	colorOcean << 0,0,1,1;
 	colorBreakingWaves << 1,1,1,1;

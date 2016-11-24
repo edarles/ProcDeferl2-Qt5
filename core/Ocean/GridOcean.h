@@ -63,11 +63,12 @@ class GridOcean : public Grid
 		 vector<Vector3f> m_vel;
 		 vector<Vector3f> m_dVel;
 		 vector<float>    lifeTimeBubbles;
-
+		 float* posDisplay, *colors, *uv;
+		 int nb;
+		 static GLuint m_program1, m_program2, tex1;
 		 float m_t;
 		 float tx, tz;
 
-		 GLuint tex1, tex2;
 		 QImage texBubbles, texOcean;
 		 void initTexture();
 };

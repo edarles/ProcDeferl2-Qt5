@@ -1,8 +1,6 @@
 #include <GL/glew.h>
-#include <iostream>
+#include <stdio.h>
 #include <math.h>
-#include <QImage>
-using namespace std;
 
 #pragma once
 #define MAX_PARTICLES 100000
@@ -92,73 +90,3 @@ inline void displaySpheres(GLuint m_program, float* pos, float* colors, int nbPo
         glDisable(GL_POINT_SPRITE_ARB);
 }
 
-#pragma once
-inline void displayPatchesWithTexture(GLuint m_program, GLuint tex1, QImage texBubbles, float* pos, float* colors, float* uv, int nb)
-{
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_ALPHA_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-
-	// Binding de la texture pour pouvoir la modifier.
-	glBindTexture(GL_TEXTURE_2D, tex1);
-
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
-
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, texBubbles.width(), texBubbles.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texBubbles.bits());
-
-	//glActiveTexture(GL_TEXTURE0);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-       	
-        glUseProgram(m_program);
-      
-	glUniform1i(glGetUniformLocation(m_program,"texture0"), 0);
-
-	glEnableClientState(GL_VERTEX_ARRAY); 
-	glEnableClientState(GL_COLOR_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-
-	glVertexPointer(3, GL_FLOAT, 0, pos);
-	glColorPointer(3, GL_FLOAT, 0, colors);
-	glTexCoordPointer(2,GL_FLOAT,0, uv);
-
-	glDrawArrays(GL_QUADS, 0, nb);
-	
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-        glUseProgram(0);
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_ALPHA_TEST);
-	glDisable(GL_BLEND);
-
-}
-
-#pragma once
-inline void displayPatchesWithoutTexture(GLuint m_program, float* pos, float* colors, int nb)
-{
-	glLineWidth(2.0);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        		
-        glUseProgram(m_program);
-      
-	glEnableClientState(GL_VERTEX_ARRAY); 
-	glEnableClientState(GL_COLOR_ARRAY);
-
-	glVertexPointer(3, GL_FLOAT, 0, pos);
-	glColorPointer(3, GL_FLOAT, 0, colors);
-
-	glDrawArrays(GL_QUADS, 0, nb);
-	
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
-
-        glUseProgram(0);
-
-	glLineWidth(1.0);
-}

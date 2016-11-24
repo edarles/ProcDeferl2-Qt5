@@ -1,7 +1,14 @@
+
+#include <utils.h>
+
 #include <GridOcean.h>
 #include <BreakingWave.h>
 #include <Eigen/Dense>
 #include <QGLWidget>
+
+#include <GL/gl.h>
+#include <shaders.h>
+
 
 #include <vector>
 #include <iostream>
@@ -9,6 +16,9 @@
 using namespace Eigen;
 using namespace std;
 
+GLuint GridOcean::m_program1 = 0;
+GLuint GridOcean::m_program2 = 0;
+GLuint GridOcean::tex1 = 0;
 /****************************************************************************/
 /****************************************************************************/
 GridOcean::GridOcean():Grid()
@@ -20,6 +30,57 @@ GridOcean::GridOcean():Grid()
 	tz = m_max[2]-m_min[2];
 	
 	initTexture();
+
+	if(m_program1==0) m_program1 = _compileProgram(quadVertexShader, quadPixelShaderWithTexture);
+	if(m_program2==0) m_program2 = _compileProgram(quadVertexShader, quadPixelShaderWithoutTexture);
+
+	posDisplay = (float*) malloc(3*m_initPos.size()*4*sizeof(float));
+	colors = (float*) malloc(3*m_initPos.size()*4*sizeof(float));
+	uv = (float*) malloc(2*m_initPos.size()*4*sizeof(float));
+
+	nb=0;
+	int indexs[4];
+        float u[2], v[2];
+	for(int i=0;i<=m_nx-1;i++){
+		for(int j=0;j<=m_nz-1;j++){
+			int index = i + j*m_nx;
+
+			indexs[0] = i + j*m_nx;
+			indexs[1] = i + (j+1)*m_nx;
+			indexs[2] = (i+1) + (j+1)*m_nx;
+			indexs[3] = (i+1) + j*m_nx;
+
+			u[0] = i/(float)(m_nx-1);
+			u[1] = (i+1)/(float)(m_nx-1);
+
+			v[0] = j/(float)(m_nz-1);
+			v[1] = (j+1)/(float)(m_nz-1);
+
+			Vector3f pos1 = m_pos[indexs[0]];
+			Vector3f pos2 = m_pos[indexs[1]];
+			Vector3f pos3 = m_pos[indexs[2]];
+			Vector3f pos4 = m_pos[indexs[3]];
+
+			posDisplay[nb*3] = pos1[0]; posDisplay[nb*3+1] = pos1[1]; posDisplay[nb*3+2] = pos1[2];
+			posDisplay[(nb+1)*3] = pos2[0]; posDisplay[(nb+1)*3+1] = pos2[1]; posDisplay[(nb+1)*3+2] = pos2[2];
+			posDisplay[(nb+2)*3] = pos3[0]; posDisplay[(nb+2)*3+1] = pos3[1]; posDisplay[(nb+2)*3+2] = pos3[2];
+			posDisplay[(nb+3)*3] = pos4[0]; posDisplay[(nb+3)*3+1] = pos4[1]; posDisplay[(nb+3)*3+2] = pos4[2];
+
+			colors[nb*3] = 1; colors[nb*3+1] = 0; colors[nb*3+2] = 1;
+			colors[(nb+1)*3] = 1; colors[(nb+1)*3+1] = 0; colors[(nb+1)*3+2] = 1; 
+			colors[(nb+2)*3] = 1; colors[(nb+2)*3+1] = 0; colors[(nb+2)*3+2] = 1; 
+			colors[(nb+3)*3] = 1; colors[(nb+3)*3+1] = 0; colors[(nb+3)*3+2] = 1;
+
+			uv[nb*2] = u[0]; uv[nb*2+1] = v[0]; 
+			uv[(nb+1)*2] = u[0]; uv[(nb+1)*2+1] = v[1]; 
+			uv[(nb+2)*2] = u[1]; uv[(nb+2)*2+1] = v[1]; 
+			uv[(nb+3)*2] = u[1]; uv[(nb+3)*2+1] = v[0]; 
+
+			nb+=4;
+		}
+	}
+	
+
 }
 /****************************************************************************/
 GridOcean::GridOcean(Vector3f min, Vector3f max, float dx, float dz) : Grid(min, max, dx, 0, dz)
@@ -30,6 +91,55 @@ GridOcean::GridOcean(Vector3f min, Vector3f max, float dx, float dz) : Grid(min,
 	tz = m_max[2]-m_min[2];
 	
 	initTexture();
+	if(m_program1==0) m_program1 = _compileProgram(quadVertexShader, quadPixelShaderWithTexture);
+	if(m_program2==0) m_program2 = _compileProgram(quadVertexShader, quadPixelShaderWithoutTexture);
+
+	posDisplay = (float*) malloc(3*(m_nx-1)*(m_nz-1)*4*sizeof(float));
+	colors = (float*) malloc(3*(m_nx-1)*(m_nz-1)*4*sizeof(float));
+	uv = (float*) malloc(2*(m_nx-1)*(m_nz-1)*4*sizeof(float));
+
+	nb=0;
+	int indexs[4];
+        float u[2], v[2];
+	for(int i=0;i<m_nx-1;i++){
+		for(int j=0;j<m_nz-1;j++){
+			int index = i + j*m_nx;
+
+			indexs[0] = i + j*m_nx;
+			indexs[1] = i + (j+1)*m_nx;
+			indexs[2] = (i+1) + (j+1)*m_nx;
+			indexs[3] = (i+1) + j*m_nx;
+
+			u[0] = i/(float)(m_nx-1);
+			u[1] = (i+1)/(float)(m_nx-1);
+
+			v[0] = j/(float)(m_nz-1);
+			v[1] = (j+1)/(float)(m_nz-1);
+
+			Vector3f pos1 = m_pos[indexs[0]];
+			Vector3f pos2 = m_pos[indexs[1]];
+			Vector3f pos3 = m_pos[indexs[2]];
+			Vector3f pos4 = m_pos[indexs[3]];
+
+			posDisplay[nb*3] = pos1[0]; posDisplay[nb*3+1] = pos1[1]; posDisplay[nb*3+2] = pos1[2];
+			posDisplay[(nb+1)*3] = pos2[0]; posDisplay[(nb+1)*3+1] = pos2[1]; posDisplay[(nb+1)*3+2] = pos2[2];
+			posDisplay[(nb+2)*3] = pos3[0]; posDisplay[(nb+2)*3+1] = pos3[1]; posDisplay[(nb+2)*3+2] = pos3[2];
+			posDisplay[(nb+3)*3] = pos4[0]; posDisplay[(nb+3)*3+1] = pos4[1]; posDisplay[(nb+3)*3+2] = pos4[2];
+
+			colors[nb*3] = 1; colors[nb*3+1] = 0; colors[nb*3+2] = 1;
+			colors[(nb+1)*3] = 1; colors[(nb+1)*3+1] = 0; colors[(nb+1)*3+2] = 1; 
+			colors[(nb+2)*3] = 1; colors[(nb+2)*3+1] = 0; colors[(nb+2)*3+2] = 1; 
+			colors[(nb+3)*3] = 1; colors[(nb+3)*3+1] = 0; colors[(nb+3)*3+2] = 1;
+
+			uv[nb*2] = u[0]; uv[nb*2+1] = v[0]; 
+			uv[(nb+1)*2] = u[0]; uv[(nb+1)*2+1] = v[1]; 
+			uv[(nb+2)*2] = u[1]; uv[(nb+2)*2+1] = v[1]; 
+			uv[(nb+3)*2] = u[1]; uv[(nb+3)*2+1] = v[0]; 
+
+			nb+=4;
+		}
+	}
+	printf("NB: %d  R:%d ",nb,(m_nx-1)*(m_nz-1)*4);
 }
 /****************************************************************************/
 GridOcean::~GridOcean()
@@ -45,29 +155,33 @@ GridOcean::~GridOcean()
 	m_dVel.clear();
 	vector<Vector3f>().swap(m_dVel);
 	m_dVel.shrink_to_fit();
+
+	free(posDisplay);
+	free(colors);
+	free(uv);
+
+	glDeleteTextures( 1, &tex1);
 }
 /****************************************************************************/
 void GridOcean::initTexture()
 {
+	QImage img("mousse2.jpg");
+	texBubbles = QGLWidget::convertToGLFormat(img);
+	for(int i=0; i<texBubbles.width(); i++){
+		for(int j=0; j<texBubbles.height(); j++){
+			QRgb rgb = texBubbles.pixel(i,j);
+			texBubbles.setPixel(i,j,qRgba(qRed(rgb),qGreen(rgb),qBlue(rgb),0));
+		}
+	}	
+	if(tex1==0) glGenTextures(1, &tex1);
 	glEnable(GL_TEXTURE_2D);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
 
-	QImage img("mousse2.jpg");
-	texBubbles = QGLWidget::convertToGLFormat(img);
-	unsigned int rgb;
-	for(int x=0;x<texBubbles.width();x++){
-  		for(int y=0;y<texBubbles.height();y++){
-    			QRgb rgb = texBubbles.pixel(x,y);
-    			texBubbles.setPixel(x,y,qRgba(qRed(rgb),qGreen(rgb),qBlue(rgb),0));
-  		}
-	}
 	glTexImage2D(GL_TEXTURE_2D, 0, 4, texBubbles.width(), texBubbles.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texBubbles.bits());
-/*
-	QImage img2("ocean.jpg");
-	texOcean = QGLWidget::convertToGLFormat(img2);	
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, texOcean.width(), texOcean.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texOcean.bits());*/
+	glActiveTexture(GL_TEXTURE0);
+		
 }
 /****************************************************************************/
 Vector3f GridOcean::getInitPos(int ix, int iz)
@@ -152,7 +266,6 @@ void GridOcean::setT(float t)
 void GridOcean::setTexBubbles(QImage tex)
 {
 	texBubbles = tex;
-	//glTexImage2D(GL_TEXTURE_2D, 0, 4, texBubbles.width(), texBubbles.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texBubbles.bits());
 }
 /****************************************************************************/
 void GridOcean::setLifeTimeBubbles(int index, float lifeTime)
@@ -200,6 +313,8 @@ void GridOcean::reinitPos()
 /****************************************************************************/
 void GridOcean::update(std::vector<WaveGroup*> waveGroups, float dt)
 {
+	int indexs[4];
+	int nb=0;
 	for(int i=0;i<m_nx;i++){
 		for(int j=0;j<m_nz;j++){
 			int index = i + j*m_nx;
@@ -219,12 +334,30 @@ void GridOcean::update(std::vector<WaveGroup*> waveGroups, float dt)
 			  	m_vel[index] += vel;
 			  	m_dVel[index] += dVel;
 			}
-			if(i<m_nx-1 && j<m_nz-1)
+			if(i<m_nx-1 && j<m_nz-1){
+
+				indexs[0] = i + j*m_nx;
+				indexs[1] = i + (j+1)*m_nx;
+				indexs[2] = (i+1) + (j+1)*m_nx;
+				indexs[3] = (i+1) + j*m_nx;
+
+				Vector3f pos1 = m_pos[indexs[0]];
+				Vector3f pos2 = m_pos[indexs[1]];
+				Vector3f pos3 = m_pos[indexs[2]];
+				Vector3f pos4 = m_pos[indexs[3]];
+
+				posDisplay[nb*3] = pos1[0]; posDisplay[nb*3+1] = pos1[1]; posDisplay[nb*3+2] = pos1[2];
+				posDisplay[(nb+1)*3] = pos2[0]; posDisplay[(nb+1)*3+1] = pos2[1]; posDisplay[(nb+1)*3+2] = pos2[2];
+				posDisplay[(nb+2)*3] = pos3[0]; posDisplay[(nb+2)*3+1] = pos3[1]; posDisplay[(nb+2)*3+2] = pos3[2];
+				posDisplay[(nb+3)*3] = pos4[0]; posDisplay[(nb+3)*3+1] = pos4[1]; posDisplay[(nb+3)*3+2] = pos4[2];
+
+				nb+=4;
+
 				relaxBubbles(i,j);
+			}
 		}
 	}
 	m_t += dt;
-	//glTexImage2D(GL_TEXTURE_2D, 0, 4, texBubbles.width(), texBubbles.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texBubbles.bits());	
 }
 /****************************************************************************/
 /****************************************************************************/
@@ -326,112 +459,8 @@ void GridOcean::relaxBubbles(int ix, int iz)
 /****************************************************************************/
 void GridOcean::display()
 {
-	glTexImage2D(GL_TEXTURE_2D, 0, 4, texBubbles.width(), texBubbles.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texBubbles.bits());	
-	int indexs[4];
-	float u[2], v[2];
-
-	glEnable(GL_ALPHA_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex2);
-	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-	
-	for(int i=0;i<m_nx-1;i++){
-		for(int j=0;j<m_nz-1;j++){
-
-			indexs[0] = i + j*m_nx;
-			indexs[1] = i + (j+1)*m_nx;
-			indexs[2] = (i+1) + (j+1)*m_nx;
-			indexs[3] = (i+1) + j*m_nx;
-
-			u[0] = i/(float)(m_nx-1);
-			u[1] = (i+1)/(float)(m_nx-1);
-
-			v[0] = j/(float)(m_nz-1);
-			v[1] = (j+1)/(float)(m_nz-1);
-
-			Vector3f pos1 = m_pos[indexs[0]];
-			Vector3f pos2 = m_pos[indexs[1]];
-			Vector3f pos3 = m_pos[indexs[2]];
-			Vector3f pos4 = m_pos[indexs[3]];
-
-			glBegin(GL_QUADS);
-			glTexCoord2f(u[0],v[0]);
-			glVertex3f(pos1[0],pos1[1],pos1[2]);
-			glTexCoord2f(u[0],v[1]);
-			glVertex3f(pos2[0],pos2[1],pos2[2]);
-			glTexCoord2f(u[1],v[1]);
-			glVertex3f(pos3[0],pos3[1],pos3[2]);
-			glTexCoord2f(u[1],v[0]);
-			glVertex3f(pos4[0],pos4[1],pos4[2]);
-			glEnd();
-		}
-	}
-	/*glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, tex1);
-	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-	for(int i=0;i<m_nx-1;i++){
-		for(int j=0;j<m_nz-1;j++){
-
-			indexs[0] = i + j*m_nx;
-			indexs[1] = i + (j+1)*m_nx;
-			indexs[2] = (i+1) + (j+1)*m_nx;
-			indexs[3] = (i+1) + j*m_nx;
-
-			u[0] = i/(float)(m_nx-1);
-			u[1] = (i+1)/(float)(m_nx-1);
-
-			v[0] = j/(float)(m_nz-1);
-			v[1] = (j+1)/(float)(m_nz-1);
-
-			Vector3f pos1 = m_pos[indexs[0]];
-			Vector3f pos2 = m_pos[indexs[1]];
-			Vector3f pos3 = m_pos[indexs[2]];
-			Vector3f pos4 = m_pos[indexs[3]];
-
-			glBegin(GL_QUADS);
-			glTexCoord2f(u[0],v[0]);
-			glVertex3f(pos1[0],pos1[1],pos1[2]);
-			glTexCoord2f(u[0],v[1]);
-			glVertex3f(pos2[0],pos2[1],pos2[2]);
-			glTexCoord2f(u[1],v[1]);
-			glVertex3f(pos3[0],pos3[1],pos3[2]);
-			glTexCoord2f(u[1],v[0]);
-			glVertex3f(pos4[0],pos4[1],pos4[2]);
-			glEnd();
-		}
-	}*/
-	glDisable(GL_ALPHA_TEST);
-	glDisable(GL_BLEND);
-	glLineWidth(3.0);
-	glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-	glColor3f(1,0,1);
-	for(int i=0;i<m_nx-1;i++){
-		for(int j=0;j<m_nz-1;j++){
-
-			indexs[0] = i + j*m_nx;
-			indexs[1] = i + (j+1)*m_nx;
-			indexs[2] = (i+1) + (j+1)*m_nx;
-			indexs[3] = (i+1) + j*m_nx;
-
-			Vector3f pos1 = m_pos[indexs[0]];
-			Vector3f pos2 = m_pos[indexs[1]];
-			Vector3f pos3 = m_pos[indexs[2]];
-			Vector3f pos4 = m_pos[indexs[3]];
-
-			glBegin(GL_QUADS);
-			
-			glVertex3f(pos1[0],pos1[1],pos1[2]);
-			glVertex3f(pos2[0],pos2[1],pos2[2]);
-			glVertex3f(pos3[0],pos3[1],pos3[2]);
-			glVertex3f(pos4[0],pos4[1],pos4[2]);
-
-			glEnd();
-		}
-	}
-	glLineWidth(1.0);
+	displayPatchesWithTexture(m_program1,tex1,texBubbles, posDisplay,colors,uv,nb);
+	displayPatchesWithoutTexture(m_program2,posDisplay,colors,nb);
 }
 /****************************************************************************/
 /****************************************************************************/
