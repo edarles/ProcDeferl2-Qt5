@@ -3,9 +3,8 @@
 #include <iostream>
 /****************************************************************************/
 /****************************************************************************/
-GLuint SPH::m_program = 0;
 const Vector3f SPH::gravity = Vector3f(0,-9.81,0);
-const float SPH::massMaxi = 1000.0;
+const float SPH::massMaxi = 500.0;
 const float SPH::rho0 = 998.29;
 const float SPH::mu = 3.5;
 const float SPH::tS = 0.0728;
@@ -14,37 +13,21 @@ const float SPH::ltS = 7.065;
 /****************************************************************************/
 SPH::SPH(Vector3f origin, Vector3f min, Vector3f max)
 {
-	if(m_program==0) m_program = _compileProgram(vertexShader, spherePixelShader);
-
-	gridSPH = new GridSPH(origin,min,max,0.5,0.5,0.5); 
-
-	posP = new float[4*MAX_PARTICLES];
-	colors = new float[4*MAX_PARTICLES];
+	gridSPH = new GridSPH(min,max,0.5,0.5,0.5); 
+	gridSPH->setCenter(origin);
+	totalMass = 0;
 	particles.clear();
+	srand(time(NULL));
 }
 /****************************************************************************/
 SPH::~SPH()
 {
-	delete[] posP;
-	delete[] colors;
 	delete gridSPH; 
 	for(unsigned int i=0;i<particles.size();i++)
 		delete particles[i];
 	particles.clear();
+	vector<Particle*>().swap(particles);
 	particles.shrink_to_fit();
-	//particles.~vector();
-}
-
-/****************************************************************************/
-Particle* SPH::getParticle(int index)
-{
-	assert (index < (int)particles.size());
-	return particles[index];
-}
-/****************************************************************************/
-vector<Particle*> SPH::getParticles()
-{
-	return particles;
 }
 /****************************************************************************/
 void SPH::addParticle(Vector3f pos, Vector3f vel, float mass, float radius)
@@ -52,6 +35,7 @@ void SPH::addParticle(Vector3f pos, Vector3f vel, float mass, float radius)
 	if(particles.size()<MAX_PARTICLES){
 		Particle *P = new Particle(pos,vel,mass,radius);
 		particles.push_back(P);
+		totalMass += mass;
 	}
 }
 /****************************************************************************/
@@ -60,17 +44,22 @@ void SPH::addParticle(Particle *P2)
 	if(particles.size()<MAX_PARTICLES){
 		Particle *P = new Particle((*P2));
 		particles.push_back(P);
+		totalMass += P2->getMass();
 	}
 }
 /****************************************************************************/
 void SPH::deleteParticle(int index)
 {
+	totalMass -= particles[index]->getMass();
 	delete particles[index];
 	particles.erase(particles.begin()+index);
+	particles.shrink_to_fit();
 }
 /****************************************************************************/
 void SPH::generateParticle(Vector3f pos, Vector3f vel, float mass)
 {
+	float massToCreate = mass;
+
 	//On regarde si on a pas déjà généré une particule dans un rayon h 
 	bool trouve = false;
 	int i= particles.size()-1;
@@ -79,66 +68,52 @@ void SPH::generateParticle(Vector3f pos, Vector3f vel, float mass)
 	velP[0] = 2*powf(vel[0]*0.5,2); velP[1] = -powf(vel[1]*0.5,2); velP[2] = powf(vel[2]*0.5,2);
 	while(i>=0 && !trouve)
 	{
+		
 		Vector3f pI_pos = this->particles[i]->getPos() - pos;
 		if(pI_pos.norm()<=h)
 			trouve = true;
 		else i--;
 	}
 	// Si on a pas trouvé une particule alors on la génère
-	if(!trouve)
+	if(!trouve){
 		addParticle(pos, velP, mass, h);
+		massToCreate -= mass;
+	}
 	/****************
 	Si on a trouvé une particule
 	****************/
 	else {
+		//cout << "trouve i: " << i << " m: " << this->particles[i]->getMass() << endl;
 		float newMass = this->particles[i]->getMass()+mass;
 		// Si on ne dépasse pas la masse maxi, on ajoute à la particule déjà existante le petit paquet d'eau supplémentaire
 		// -> conservation de la quantité de mouvement
 		if(newMass<=massMaxi){ 
 	  		float invnewmass=1.f/newMass;
+			massToCreate -= mass;
 			Vector3f vel((this->particles[i]->getMass()*this->particles[i]->getVel()[0]+mass*velP[0])*invnewmass,
 				     (this->particles[i]->getMass()*this->particles[i]->getVel()[1]+mass*velP[1])*invnewmass,
 				     (this->particles[i]->getMass()*this->particles[i]->getVel()[2]+mass*velP[2])*invnewmass);
 	  		this->particles[i]->setVel(vel);
 	  		this->particles[i]->setMass(newMass);
 	  		this->particles[i]->setRadius(powf((60*this->particles[i]->getMass())/(4*M_PI*rho0),0.333));
+			totalMass += mass;
 	  	}
-		// Sinon on réparti la masse entre les particules existantes
-	 	else {
-	 		// distribue la masse en nombre de particules de masse au plus massMaxi
-		        int nbCreate = ceil(mass/massMaxi);
-			float massReparti = mass/nbCreate;
-			int j = 0;
-			float massToCreate = mass;
-			if(particles[i]->getNbVois()>0)
-			{ 
-			   	while(j<(int)particles[i]->getNbVois() && j<nbCreate && massToCreate>0){
-					int index = particles[i]->getVois(j);
-					float newMass = this->particles[index]->getMass()+massReparti;
-					massToCreate-=massReparti;
-					float invnewmass=1.f/newMass;
-	  				//this->particles[index]->vel[0] = (this->particles[index]->mass*this->particles[index]->vel[0]+mass*velP[0])*invnewmass;
-	  				//this->particles[index]->vel[1] = (this->particles[index]->mass*this->particles[index]->vel[1]+mass*velP[1])*invnewmass;
-	  				//this->particles[index]->vel[2] = (this->particles[index]->mass*this->particles[index]->vel[2]+mass*velP[2])*invnewmass;
-	  				this->particles[index]->setMass(newMass);
-	  				this->particles[index]->setRadius(powf((60*this->particles[index]->getMass())/(4*M_PI*rho0),0.333));
-					j++;
-			    	}
-			}
-			// Si on a pas pu distribuer la masse sur les particules existantes
-			// On créer une nouvelle particule de masse restante
-			if(massToCreate>0){ 
-				//cout << "Mass To Create: " << massToCreate << endl;
-		        	float hR = powf((60*massToCreate)/(4*M_PI*rho0),0.333);
-				float rndcoeff=hR/(RAND_MAX+1.0);
-        			float invnv = Q_rsqrt(velP[0]*velP[0]+velP[1]*velP[1]+velP[2]*velP[2]);
-	 	 		pos[0] += (rand()*rndcoeff)*vel[0]*invnv;
-	  	 		pos[1] += (rand()*rndcoeff)*vel[1]*invnv;
-	  	 		pos[2] += (rand()*rndcoeff)*vel[2]*invnv;
-				//cout << "Pos " << pos << endl;
-	  	 		addParticle(pos, velP, massToCreate, hR);
-			}
-		}
+	}
+	/****************
+	 Si on a pas pu distribuer la masse sur les particules existantes
+	 On créer une nouvelle particule de masse restante
+	****************/
+	if(massToCreate>0){ 
+		//cout << "Mass To Create: " << massToCreate << endl;
+		float hR = powf((60*massToCreate)/(4*M_PI*rho0),0.333);
+		float rndcoeff=hR/(RAND_MAX+1.0);
+        	float invnv = Q_rsqrt(velP[0]*velP[0]+velP[1]*velP[1]+velP[2]*velP[2]);
+		Vector3f velR = gridSPH->getLocalRotated(vel);
+	 	pos[0] += (rand()*rndcoeff)*velR[0]*invnv;
+	  	pos[1] += (rand()*rndcoeff)*velR[1]*invnv;
+	  	pos[2] += (rand()*rndcoeff)*velR[2]*invnv;
+		//cout << "Pos " << pos << endl;
+	  	addParticle(pos, velP, massToCreate, hR);
 	}
 }
 /****************************************************************************/
@@ -161,6 +136,7 @@ void SPH::constraintGridSPH()
 	}
 	barycenter/=particles.size();
 	gridSPH->translate(barycenter-gridSPH->getCenter());
+        rMax*=2;
 
 	for(unsigned int i=0;i<particles.size();i++)
 	{
@@ -185,7 +161,6 @@ void SPH::constraintGridSPH()
 /****************************************************************************/
 void SPH::merge(SPH* other)
 {
-	//std::cout << "debut merge " << std::endl;
 	// On ajoute les particules de l'autre solveur dans le solveur
 	for(unsigned int i=0;i<other->particles.size();i++){
 		Vector3f posP = other->particles[i]->getPos();
@@ -205,31 +180,23 @@ void SPH::merge(SPH* other)
 	}
 	// On merge la grille de voisinage avec la grille de voisinage de l'autre solveur
 	gridSPH->merge(other->gridSPH);
-	//std::cout << "Fin Merge solver" << std::endl;	
 }
 /****************************************************************************/
 /****************************************************************************/
-void SPH::update(vector<WaveGroup*> waveGroups, float time, float dt)
+void SPH::update(vector<WaveGroup*> waveGroups, float time, float dt, GridOcean* ocean)
 {
-	//std::cout << "debut update " << std::endl;
 	if(particles.size()>0){
 		// On contraint la grille pour que toutes les particules puissent y etre présente
 		constraintGridSPH();
 
 		// Boucle de simulation
-	//	std::cout << "neigh " << std::endl;
 		if(computeNeighborhood()){
-	//	std::cout << "dens P " << std::endl;
 			computeRhoP();
-	//	std::cout << "forces " << std::endl;
 			computeForces();
-	//	std::cout << "integrate " << std::endl;
 			integrate(dt);
-	//	std::cout << "collide " << std::endl;
-			collideExterior(waveGroups,time);
+			generateBubbles(waveGroups,time,ocean);
 		}
 	}
-	//std::cout << "fin update " << std::endl;
 }
 /****************************************************************************/
 bool SPH::computeNeighborhood()
@@ -254,49 +221,47 @@ void SPH::computeForces()
 		float rho1 = particles[i]->getRho();
 		float p1 = particles[i]->getP();
 		float h1 = particles[i]->getRadius();
+		float pV1 = p1/(rho1*rho1);
 
 		for(unsigned int j=0;j<particles[i]->getNbVois();j++){
 			int index = particles[i]->getVois(j);
 			Vector3f pos2 = particles[index]->getPos();
-			float d = (pos1-pos2).norm();
+			Vector3f P1P2 = pos1 - pos2;
+			float d = P1P2.norm();
 
 			if(d>0) {
 				float rho2 = particles[index]->getRho();
 				float p2 = particles[index]->getP();
 				float h2 = particles[index]->getRadius();
 				float m2 = particles[index]->getMass();
+				float pV2 = p2/(rho2*rho2);
 			        Vector3f vel2 = particles[index]->getVel();
 				// pas bon...
-                		float h = (h1+h2)/2;//max(h1,h2);///2;
+                		float h = (h1+h2)/2;
                 
-				// Todo : faire plutot (grad_Wij(rij,hi) + grad_Wij(rij,hj))/2
 				// Pressure force
-				float WP = (-45*pow(h-d,2)/(M_PI*powf(h,6)))*((p1/(rho1*rho1))+(p2/(rho2*rho2)))*m2;
-				fP += ((pos1-pos2)/d)*WP;
+				Vector3f WP = (-45*pow(h-d,2)/(M_PI*powf(h,6)))*(P1P2/d);
+				fP += m2*(pV1+pV2)*WP;
 		
-				// Todo : faire plutot (lapl_Wij(rij,hi) + lapl_Wij(rij,hj))/2
                 		// Viscosity force
 				float WV  = mu*(45*(h-d)/(M_PI*pow(h,6)))*m2/rho2;
 				fV += (vel2-vel1)*WV;
 			
-				// Todo : idem
 				// Surface tension force
 				float WS = -(945/(32*M_PI*powf(h,9)))*((h*h)-(d*d))*((3*h*h)-(7*d*d));
 				fS += WS*(m2/rho2);
 	
-				// Todo : idem
 				// normale evaluation
 				float WN = (-945/(32*M_PI*powf(h,9)))*(m2/rho2)*powf(h*h-d*d,2);
 				N += (pos1-pos2)*WN;
 			}
 		}
-		//cout << "fP: " << -fP[0]/rho1 << " " << -fP[1]/rho1 << " " << -fP[2]/rho1 << endl;
-		//cout << "fV: " << fV[0] << " " << fV[1] << " " << fV[2] << endl;
 		Vector3f forces = (-fP/rho1) + fV + gravity*rho1; 
 		float lN = N.norm();
 		if(lN>=ltS)
 			forces += -fS*tS*N/lN;
 		particles[i]->setForces(forces);
+		particles[i]->clearVois();
 	}
 }
 /****************************************************************************/
@@ -309,43 +274,79 @@ void SPH::integrate(float dt)
 	  		// Integration numérique => Euler simplectique
 	  		particles[i]->setVel(particles[i]->getVel()+(particles[i]->getForces()/particles[i]->getRho())*dt);
 	  		particles[i]->setPos(particles[i]->getPos()+particles[i]->getVel()*dt);
-			posP[i*4] = particles[i]->getPos()[0]; 
-			posP[i*4+1] = particles[i]->getPos()[1]; 
-			posP[i*4+2] = particles[i]->getPos()[2]; 
-			posP[i*4+3] = particles[i]->getRadius();
 		}
 	}
 }
 /****************************************************************************/
-void SPH::collideExterior(vector<WaveGroup*> waveGroups, float time)
+void SPH::generateBubbles(vector<WaveGroup*> waveGroups, float time, GridOcean* ocean)
 {
+	float lifeTimeMax = 200;
+	float lifeTimeMin = 100;
 	// On supprime les particules du solveur quand elles passent en dessous de la surface
+	Vector3f dP, vel, dVel;
+
+	QImage tex = ocean->getTexBubbles();
+
+
 	for(unsigned int i=0;i<particles.size();i++)
 	{
-		Vector3f pos2 = particles[i]->getPos();
+		Vector3f pos2 = gridSPH->getLocalRotated(particles[i]->getPos());
 		Vector3f pos = Vector3f(pos2[0],0,pos2[2]);
 		Vector3f dPos(0,0,0);
 		for(unsigned int j=0;j<waveGroups.size();j++){
-			Vector3f dP, vel, dVel;
 			waveGroups[j]->computeMovement(pos, time, &dP, &vel, &dVel);
 			dP[0]*=waveGroups[j]->getCosTheta(); dP[2]*=waveGroups[j]->getSinTheta(); 
 			dPos+=dP;
 		}
-		if(pos2[1] + particles[i]->getRadius() < dPos[1])	
+		if(pos2[1] + particles[i]->getRadius() < dPos[1]){
+			// On augmente l'alpha dans la texture de la grille de visualisation
+			// Augmentation de la transparence en corrélation avec la masse de la particule et de la vitesse
+			float mass = particles[i]->getMass();
+			//cout << "dAlpha " << dAlpha << endl;
+			int ix = (int)floor((double)(pos2[0]-ocean->getMin()[0])/ocean->getDx());
+			int iz = (int)floor((double)(pos2[2]-ocean->getMin()[2])/ocean->getDz());
+			
+			int x = (int) floor((ix/(float)(ocean->getNx()-1))*tex.width());
+			int y = (int) floor((iz/(float)(ocean->getNz()-1))*tex.height());
+
+			QRgb rgb = tex.pixel(x,y);
+			int alpha = qAlpha(rgb);
+			// Ajout d'une durée de vie par texel
+			if(alpha==0){
+				int indexC = ix + iz*ocean->getNx();
+				float lifeTime = (rand()/(double)RAND_MAX) * (lifeTimeMax-lifeTimeMin) + lifeTimeMin;
+				ocean->setLifeTimeBubbles(indexC,lifeTime);
+				//cout << "lifeT: " << lifeTime << endl;				
+			}
+			int nbx = (rand()/(double)RAND_MAX) *2*(tex.width()/(2*ocean->getNx()));
+ 			int nby = (rand()/(double)RAND_MAX) *2*(tex.height()/(2*ocean->getNz()));
+			// Augmentation de la transparence pour chaque pixel du texel
+			for(int xM=x-nbx; xM<=x+nbx; xM++){
+				for(int yM=y-nby; yM<=y+nby; yM++){
+					QRgb rgb = tex.pixel(xM,yM);
+					int alpha = qAlpha(rgb);
+					if(alpha<=255){
+						float dAlpha = (rand()/(double)RAND_MAX)*10;//powf((mass/totalMass)*particles[i]->getVel().norm(),0.5)*255;	
+						//cout << "noise " << dAlpha << endl;
+						alpha = fmin(alpha+dAlpha,255); 
+    						tex.setPixel(xM,yM,qRgba(qRed(rgb),qGreen(rgb),qBlue(rgb),alpha));
+					}
+				}
+			}
+			// On supprime la particule
 			deleteParticle(i);
+		}
 	}
+	ocean->setTexBubbles(tex);
 }
 /****************************************************************************/
 void SPH::display()
 {
-	//if(particles.size()>0){
 		// Affichage de la grille
 		//gridSPH->display();
 
 		// Affichage des particules
 		displayParticlesByField(1);
-		displaySpheres(m_program,posP,colors,particles.size());
-	//}
 }
 /****************************************************************************/
 /****************************************************************************/
@@ -363,14 +364,12 @@ void SPH::displayParticlesByField(int field)
 	}*/
 	#pragma omp parallel for
     	for(unsigned i=0;i<particles.size();i++){
-		float m = particles[i]->getMass();
+		Particle *p = particles[i];
+		float m = p->getMass();
 		float hue = 240 * (mmax - fmin(m,mmax)) / (mmax-mmin);
 		Vector3d Hsv(hue,1,1);
-		Vector3d Rgb = convertHsvToRgb(Hsv);
-		colors[i*4] = Rgb[0];
-		colors[i*4+1] = Rgb[1];
-		colors[i*4+2] = Rgb[2];
-		colors[i*4+3] = 0.9;
+		
+		p->setColor(convertHsvToRgb(Hsv));
     	}
    }
    //DISPLAY BY VELOCITY FIELD
@@ -384,22 +383,19 @@ void SPH::displayParticlesByField(int field)
 	}
 	#pragma omp parallel for
     	for(unsigned i=0;i<particles.size();i++){
-		float length = particles[i]->getVel().norm();
+		Particle *p = particles[i];
+		float length = p->getVel().norm();
 		float hue = 240 * (vmax - fmin(length,vmax)) / (vmax-vmin);
 		Vector3d Hsv(hue,1,1);
-		Vector3d Rgb = convertHsvToRgb(Hsv);
-		colors[i*4] = Rgb[0];
-		colors[i*4+1] = Rgb[1];
-		colors[i*4+2] = Rgb[2];
-		colors[i*4+3] = 0.9;
+		p->setColor(convertHsvToRgb(Hsv));
     	}
    }
 }
 /****************************************************************************/
 /****************************************************************************/
-Vector3d SPH::convertHsvToRgb(Vector3d Hsv)
+Vector3f SPH::convertHsvToRgb(Vector3d Hsv)
 {
-   Vector3d result;
+   Vector3f result;
    int t = (int)(floor((double)(Hsv[0]/60)))%6;
    double f = (Hsv[0]/60)-t;
    double l = Hsv[2]*(1-Hsv[1]);
@@ -430,27 +426,27 @@ void SPH::exportParticlesHoudini(const char* filename)
 }
 /****************************************************************************/
 /****************************************************************************/
-float SPH::getRho0()
+float SPH::getRho0() const
 {
 	return rho0;
 }
 /****************************************************************************/
-float SPH::getMu()
+float SPH::getMu() const
 {
 	return mu;
 }
 /****************************************************************************/
-float SPH::getTS()
+float SPH::getTS() const
 {
 	return tS;
 }
 /****************************************************************************/
-float SPH::getLTS()
+float SPH::getLTS() const
 {
 	return ltS;
 }
 /****************************************************************************/
-int   SPH::getNbParticles()
+int  SPH::getNbParticles() const
 {
 	return particles.size();
 }
@@ -458,6 +454,17 @@ int   SPH::getNbParticles()
 GridSPH* SPH::getGrid() const
 {
 	return gridSPH;
+}
+/****************************************************************************/
+Particle* SPH::getParticle(int index) const
+{
+	assert (index < (int)particles.size());
+	return particles[index];
+}
+/****************************************************************************/
+vector<Particle*> SPH::getParticles() const
+{
+	return particles;
 }
 /****************************************************************************/
 /****************************************************************************/

@@ -2,7 +2,7 @@
 using namespace Eigen;
 /****************************************************************************/
 /****************************************************************************/
-SESPH::SESPH(Vector3f origin, Vector3f min, Vector3f max, float k):SPH(origin,min,max)
+SESPH::SESPH(Vector3f origin, Vector3f min, Vector3f max, float k):SPH(origin, min,max)
 {
 	this->k = k;
 }

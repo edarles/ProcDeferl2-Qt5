@@ -3,7 +3,7 @@
 #include <math.h>
 
 #pragma once
-#define MAX_PARTICLES 10000
+#define MAX_PARTICLES 100000
 
 // fast 1/sqrtf(number) -> ONLY VALID for IEEE754simple precision float
 #pragma once

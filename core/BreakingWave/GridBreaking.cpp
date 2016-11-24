@@ -7,10 +7,12 @@ using namespace Eigen;
 
 /****************************************************************************/
 /****************************************************************************/
-GridBreaking::GridBreaking(Vector3f center, vector<WaveGroup*> wg, vector<bool> wg_active)
+GridBreaking::GridBreaking(Vector3f center, vector<WaveGroup*> wg, vector<bool> wg_active, float tx, float tz)
 {
 	m_center = center;
 	angleRotation = 0;
+	this->tx = tx;
+	this->tz = tz;
 	createGrid(wg, wg_active);
 	init();
 	this->m_t = 0;
@@ -20,8 +22,8 @@ GridBreaking::GridBreaking(Vector3f center, vector<WaveGroup*> wg, vector<bool> 
 GridBreaking::~GridBreaking()
 {
 	activePts.clear();
+	vector<int>().swap(activePts);
 	activePts.shrink_to_fit();
-	activePts.~vector();
 }
 /****************************************************************************/
 int GridBreaking::getActivePt(int i)
@@ -53,6 +55,16 @@ float GridBreaking::getMaxExtens()
 int GridBreaking::getIndexMaxLambda()
 {
 	return indexMaxLambda;
+}
+/****************************************************************************/
+Vector3f GridBreaking::getMinAct()
+{
+	return minAct;
+}
+/****************************************************************************/
+Vector3f GridBreaking::getMaxAct()
+{
+	return maxAct;
 }
 /****************************************************************************/
 /****************************************************************************/
@@ -89,9 +101,11 @@ void GridBreaking::createGrid(vector<WaveGroup*> wg, vector<bool> wg_active)
 	}
 	if(toCreate){ 
 		maxExtens /= 2;
-		m_min << m_center[0] - maxLambda/2, m_center[1]-sumA, m_center[2] - maxExtens;
-		m_max << m_center[0] + maxLambda/2, m_center[1]+sumA, m_center[2] + maxExtens;
-		m_dx = m_dz = powf((maxLambda/2)*sumA*maxExtens,(1/3.0))/20;
+		m_min = Vector3f(m_center[0] - maxLambda/2, m_center[1]-sumA, m_center[2] - maxExtens);
+		m_max = Vector3f(m_center[0] + maxLambda/2, m_center[1]+sumA, m_center[2] + maxExtens);
+		
+		m_dx = powf((maxLambda/2)*sumA*maxExtens,(1/3.0))*wg[indexMaxLambda]->getN()/tx;
+		m_dz = powf((maxLambda/2)*sumA*maxExtens,(1/3.0))*wg[indexMaxLambda]->getN()/tz;
 		m_dy = 0;
 		m_center = (m_min+m_max)/2;
 		GridOcean::createGrid();
@@ -131,18 +145,28 @@ void GridBreaking::checkActiveWgs(vector<WaveGroup*> wgs, vector<bool> *wg_activ
 /****************************************************************************/
 void GridBreaking::checkActivePts(vector<WaveGroup*> wgs, vector<bool> wg_active)
 {
+	minAct = Vector3f(INF,m_center[1],INF);
+	maxAct = Vector3f(-INF,m_center[1],-INF);
+
 	activePts.clear();
 	for(int i=0;i<m_nx;i++){
 		for(int j=0;j<m_nz;j++){
 			int indexCell = i + j*m_nx;
+			Vector3f pos = getLocalRotated(m_pos[indexCell]);
 			bool actif = false;
 			unsigned int n = 0;
 			while(!actif && n<wgs.size()){
 				if(wg_active[n]){
 					WaveGroup *wg = wgs[n];
 					float norm = m_vel[indexCell][0]*wg->getPs()*wg->getCosTheta()+m_vel[indexCell][2]*wg->getPs()*wg->getSinTheta();
-					if(norm>=wg->getPs()*wg->getPs())
-						actif = true;		
+					if(norm>=wg->getPs()*wg->getPs()){
+						actif = true;
+						minAct[0] = fmin(minAct[0],pos[0]);
+						minAct[2] = fmin(minAct[2],pos[2]);
+	
+						maxAct[0] = fmax(maxAct[0],pos[0]);
+						maxAct[2] = fmax(maxAct[2],pos[2]);	
+					}
 				}
 				n++;
 			}
@@ -281,6 +305,12 @@ void GridBreaking::merge(GridBreaking* other)
 void GridBreaking::update(vector<WaveGroup*> waveGroups, float dt)
 {
 	GridOcean::update(waveGroups,dt);
+}
+/****************************************************************************/
+/****************************************************************************/
+void GridBreaking::display()
+{
+	Grid::display();
 }
 /****************************************************************************/
 /****************************************************************************/

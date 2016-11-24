@@ -6,13 +6,12 @@ const char *vertexShader = STRINGIFY(
 uniform float pointScale;   // scale to calculate size in pixels
 uniform float densityScale;
 uniform float densityOffset;
-
 void main()
 {
     // calculate window-space point size
     vec3 posEye = vec3(gl_ModelViewMatrix * vec4(gl_Vertex.xyz, 1.0));
     float dist = length(posEye);
-    gl_PointSize = gl_Vertex.w* (pointScale / dist);//pointRadius * (pointScale / dist);
+    gl_PointSize = gl_Vertex.w* (pointScale / dist);
     gl_TexCoord[0] = gl_MultiTexCoord0;
     gl_Position = gl_ModelViewProjectionMatrix * vec4(gl_Vertex.xyz, 1.0);
     gl_FrontColor = gl_Color;
@@ -20,7 +19,6 @@ void main()
 );
 
 const float blurSize = 1.0/512.0;
-
 // pixel shader for rendering points as shaded spheres
 const char *spherePixelShader = STRINGIFY(
 //uniform float pointRadius;  // point size in world space
@@ -44,5 +42,5 @@ void main()
     gl_FragColor = gl_Color * diffuse;
 
 }
-
 );
+

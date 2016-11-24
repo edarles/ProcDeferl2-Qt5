@@ -16,7 +16,7 @@ class GridBreaking : public GridOcean
 /****************************************************************************/
 	public : 
 
-		GridBreaking(Vector3f center, vector<WaveGroup*> wg, vector<bool> wg_active);
+		GridBreaking(Vector3f center, vector<WaveGroup*> wg, vector<bool> wg_active, float tx, float tz);
 		~GridBreaking();
 
 		void init();
@@ -33,7 +33,9 @@ class GridBreaking : public GridOcean
 		float 	    getMaxLambda();
 		float       getMaxExtens();
 		int         getIndexMaxLambda();
-		
+		Vector3f    getMinAct();
+		Vector3f    getMaxAct();
+
 		Vector3f calculScale();
 		Vector3f calculTranslation();
 		float    calculRotation();
@@ -44,6 +46,7 @@ class GridBreaking : public GridOcean
 
 		void  merge(GridBreaking *other);
 
+		void  display();
 
 	private :
 		vector<int> activePts;
@@ -51,6 +54,8 @@ class GridBreaking : public GridOcean
 		Vector3f barycenter;
 		int indexMax; int indexMaxLambda;
 		float maxLambda, maxExtens;
+
+		Vector3f minAct, maxAct;
 /****************************************************************************/
 };
 #endif

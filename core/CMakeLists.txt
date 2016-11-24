@@ -1,4 +1,5 @@
 include_directories(core)
+include_directories(core/Utils)
 include_directories(core/Ocean)
 include_directories(core/SPH)
 include_directories(core/BreakingWave)
@@ -20,12 +21,13 @@ SET(APP_SOURCES
 			core/SPH/SPH.cpp
 			core/SPH/SESPH.cpp
 			core/SPH/WCSPH.cpp
-			core/SPH/shaders.cpp
 
 			core/BreakingWave/GridBreaking.cpp
 			core/BreakingWave/BreakingWave.cpp
 
 			core/HybridOcean/Grid.cpp
 			core/HybridOcean/HybridOcean.cpp
+
+			core/Utils/shaders.cpp
 )
 

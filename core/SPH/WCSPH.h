@@ -13,7 +13,7 @@ class WCSPH : public SESPH
 /****************************************************************************/
 	public : 
 
-		WCSPH(Vector3f origin, Vector3f min, Vector3f max);
+		WCSPH(Vector3f origin,Vector3f min, Vector3f max);
 		virtual ~WCSPH();
 
 

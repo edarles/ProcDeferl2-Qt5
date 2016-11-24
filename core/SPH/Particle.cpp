@@ -5,6 +5,7 @@ Particle::Particle()
 {
 	pos = vel = forces = Vector3f(0,0,0);
 	rho = p = mass = radius = 0;
+	color = Vector3f(0,0,1);
 }
 /****************************************************************************/
 Particle::Particle(Vector3f pos, Vector3f vel, float mass, float radius)
@@ -15,6 +16,7 @@ Particle::Particle(Vector3f pos, Vector3f vel, float mass, float radius)
 	this->radius = radius;
 	this->rho = 0;
 	this->p = 0;
+	this->color = Vector3f(0,0,1);
 	vois.clear();
 }
 /****************************************************************************/
@@ -27,6 +29,7 @@ Particle::Particle(Particle &P)
 	radius = P.radius;
 	rho = P.rho;
 	p = P.p;
+	color = P.color;
 	vois.clear();
 	for(unsigned int i=0;i<P.vois.size();i++)
 		vois.push_back(P.vois[i]);
@@ -35,8 +38,7 @@ Particle::Particle(Particle &P)
 Particle::~Particle()
 {
 	vois.clear();
-	vois.shrink_to_fit();
-	//vois.~vector();
+	vector<short>().swap(vois);
 }
 /****************************************************************************/
 /****************************************************************************/
@@ -73,6 +75,11 @@ float Particle::getRho()
 float Particle::getP()
 {
 	return p;
+}
+/****************************************************************************/
+Vector3f Particle::getColor()
+{
+	return color;
 }
 /****************************************************************************/
 short Particle::getVois(unsigned int index)
@@ -121,6 +128,11 @@ void Particle::setP(float p)
 	this->p = p;
 }
 /****************************************************************************/
+void Particle::setColor(Vector3f c)
+{
+	this->color = c;
+}
+/****************************************************************************/
 void Particle::setVois(short vois)
 {
 	this->vois.push_back(vois);
@@ -129,6 +141,8 @@ void Particle::setVois(short vois)
 void Particle::clearVois()
 {
 	this->vois.clear();
+	vector<short>().swap(this->vois);
+	this->vois.shrink_to_fit();
 }
 /****************************************************************************/
 /****************************************************************************/

@@ -43,7 +43,13 @@ GL/gl.h
 -
 
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/HybridOcean/HybridOcean.cpp
+utils.h
+-
 HybridOcean.h
+-
+GL/gl.h
+-
+shaders.h
 -
 
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/IHM/glWidget.cpp
@@ -93,7 +99,11 @@ BreakingWave.h
 -
 Eigen/Dense
 -
+QGLWidget
+-
 vector
+-
+iostream
 -
 
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Ocean/WaveGroup.cpp
@@ -140,7 +150,7 @@ WCSPH.h
 iostream
 -
 
-/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/shaders.cpp
+/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Utils/shaders.cpp
 stdio.h
 -
 
@@ -1416,11 +1426,55 @@ QtCore/qpoint.h
 qclipboard.h
 /opt/local/lib/QtGui.framework/Headers/qclipboard.h
 
+/opt/local/lib/QtGui.framework/Headers/QImage
+qimage.h
+/opt/local/lib/QtGui.framework/Headers/qimage.h
+
 /opt/local/lib/QtGui.framework/Headers/qclipboard.h
 QtCore/qobject.h
 -
 
+/opt/local/lib/QtGui.framework/Headers/qimage.h
+QtGui/qcolor.h
+-
+QtGui/qrgb.h
+-
+QtGui/qpaintdevice.h
+-
+QtGui/qpixelformat.h
+-
+QtGui/qtransform.h
+-
+QtCore/qbytearray.h
+-
+QtCore/qrect.h
+-
+QtCore/qstring.h
+-
+QtCore/qstringlist.h
+-
+
 /opt/local/lib/QtGui.framework/QtGui
+
+/opt/local/lib/QtOpenGL.framework/Headers/QGLWidget
+qgl.h
+/opt/local/lib/QtOpenGL.framework/Headers/qgl.h
+
+/opt/local/lib/QtOpenGL.framework/Headers/qgl.h
+QtGui/qopengl.h
+-
+QtWidgets/qwidget.h
+-
+QtGui/qpaintengine.h
+-
+QtOpenGL/qglcolormap.h
+-
+QtCore/qmap.h
+-
+QtCore/qscopedpointer.h
+-
+QtGui/QSurfaceFormat
+-
 
 /opt/local/lib/QtWidgets.framework/Headers/QFileDialog
 qfiledialog.h
@@ -1703,6 +1757,8 @@ WaveGroup.h
 -
 vector
 -
+QImage
+-
 
 core/Ocean/WaveGroup.h
 stdio.h
@@ -1735,20 +1791,18 @@ Particle.h
 -
 GridSPH.h
 -
-shaders.h
--
-GL/gl.h
--
 WaveGroup.h
+-
+GridOcean.h
 -
 
 core/SPH/WCSPH.h
 SESPH.h
 -
 
-core/SPH/shaders.h
+core/Utils/shaders.h
 
-core/SPH/utils.h
+core/Utils/utils.h
 GL/glew.h
 -
 stdio.h

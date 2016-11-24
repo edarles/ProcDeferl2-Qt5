@@ -18,7 +18,7 @@ class BreakingWave
 /****************************************************************************/
 	public : 
 
-		BreakingWave(Vector3f center, vector<WaveGroup*> wg_acting, vector<bool> wg_active, float t);
+		BreakingWave(Vector3f center, vector<WaveGroup*> wg_acting, vector<bool> wg_active, float t, float tx, float tz);
 		virtual ~BreakingWave();
 
 		/**************** GETTERS ***************************/
@@ -60,7 +60,7 @@ class BreakingWave
 		void generateParticles();
 
 		/**************** ROUTINE DE MAJ ********************/
-		void update(float dt);
+		void update(float dt, GridOcean* gridOcean);
 
 		/**************** ROUTINE D'AFFICHAGE ****************/
 		void display();

@@ -12,7 +12,7 @@ class GridSPH : public Grid
 	public : 
 
 		GridSPH();
-		GridSPH(Vector3f center, Vector3f min, Vector3f max, float dx, float dy, float dz);
+		GridSPH(Vector3f min, Vector3f max, float dx, float dy, float dz);
 		virtual ~GridSPH();
 
 		/**************** ROUTINE DE CALCUL DE VOISINAGE *******/

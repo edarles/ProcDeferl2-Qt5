@@ -20,7 +20,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/SESPH.cpp" "/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o"
   "/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/SPH.cpp" "/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o"
   "/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/WCSPH.cpp" "/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o"
-  "/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/shaders.cpp" "/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o"
+  "/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Utils/shaders.cpp" "/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "Clang")
 
@@ -52,6 +52,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/opt/local/lib/QtXml.framework"
   "/opt/local/lib/QtXml.framework/Headers"
   "core"
+  "core/Utils"
   "core/Ocean"
   "core/SPH"
   "core/BreakingWave"

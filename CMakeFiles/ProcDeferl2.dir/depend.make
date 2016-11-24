@@ -227,7 +227,9 @@ CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: /opt/local/lib/QtCore.fram
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: /opt/local/lib/QtCore.framework/Headers/qtimer.h
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: /opt/local/lib/QtCore.framework/Headers/qvector.h
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: /opt/local/lib/QtGui.framework/Headers/QClipboard
+CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: /opt/local/lib/QtGui.framework/Headers/QImage
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: /opt/local/lib/QtGui.framework/Headers/qclipboard.h
+CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: /opt/local/lib/QtGui.framework/Headers/qimage.h
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: /opt/local/lib/QtGui.framework/QtGui
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: /opt/local/lib/QtWidgets.framework/Headers/QFileDialog
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: /opt/local/lib/QtWidgets.framework/Headers/QHBoxLayout
@@ -263,7 +265,6 @@ CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: core/SPH/WCSPH.h
-CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: core/SPH/shaders.h
 
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/BreakingWave/BreakingWave.cpp
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: /opt/local/include/GL/gl.h
@@ -471,6 +472,8 @@ CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: /opt/local/incl
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: /opt/local/lib/QtGui.framework/Headers/QImage
+CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: /opt/local/lib/QtGui.framework/Headers/qimage.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/BreakingWave/BreakingWave.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/BreakingWave/GridBreaking.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/HybridOcean/Grid.h
@@ -481,7 +484,6 @@ CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/SPH/Partic
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/SPH/WCSPH.h
-CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/SPH/shaders.h
 
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: core/BreakingWave/GridBreaking.cpp
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: /opt/local/include/GL/gl.h
@@ -689,6 +691,8 @@ CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: /opt/local/incl
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: /opt/local/lib/QtGui.framework/Headers/QImage
+CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: /opt/local/lib/QtGui.framework/Headers/qimage.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: core/BreakingWave/GridBreaking.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: core/HybridOcean/Grid.h
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: core/Ocean/GridOcean.h
@@ -907,6 +911,7 @@ CMakeFiles/ProcDeferl2.dir/core/HybridOcean/Grid.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/HybridOcean/HybridOcean.cpp
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/include/GL/gl.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/include/GL/gl_mangle.h
+CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/include/GL/glew.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/include/GL/glext.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/include/GL/glu.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/include/GL/glu_mangle.h
@@ -1123,6 +1128,8 @@ CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/lib/Qt
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/lib/QtCore.framework/Headers/qstring.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/lib/QtCore.framework/Headers/qtimer.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/lib/QtCore.framework/Headers/qvector.h
+CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/lib/QtGui.framework/Headers/QImage
+CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /opt/local/lib/QtGui.framework/Headers/qimage.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /usr/local/include/QGLViewer/camera.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /usr/local/include/QGLViewer/config.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: /usr/local/include/QGLViewer/constraint.h
@@ -1143,7 +1150,8 @@ CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/SPH/Particle
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/SPH/WCSPH.h
-CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/SPH/shaders.h
+CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/Utils/shaders.h
+CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/Utils/utils.h
 
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/IHM/glWidget.cpp
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/include/GL/gl.h
@@ -1370,7 +1378,9 @@ CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/lib/QtCore.framew
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/lib/QtCore.framework/Headers/qtimer.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/lib/QtCore.framework/Headers/qvector.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/lib/QtGui.framework/Headers/QClipboard
+CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/lib/QtGui.framework/Headers/QImage
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/lib/QtGui.framework/Headers/qclipboard.h
+CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/lib/QtGui.framework/Headers/qimage.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/lib/QtGui.framework/QtGui
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/lib/QtWidgets.framework/Headers/QWidget
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: /opt/local/lib/QtWidgets.framework/Headers/qwidget.h
@@ -1396,7 +1406,6 @@ CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/SPH/WCSPH.h
-CMakeFiles/ProcDeferl2.dir/core/IHM/glWidget.cpp.o: core/SPH/shaders.h
 
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/IHM/main.cpp
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/include/GL/gl.h
@@ -1622,7 +1631,9 @@ CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/lib/QtCore.framework/
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/lib/QtCore.framework/Headers/qtimer.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/lib/QtCore.framework/Headers/qvector.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/lib/QtGui.framework/Headers/QClipboard
+CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/lib/QtGui.framework/Headers/QImage
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/lib/QtGui.framework/Headers/qclipboard.h
+CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/lib/QtGui.framework/Headers/qimage.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/lib/QtGui.framework/QtGui
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/lib/QtWidgets.framework/Headers/QFileDialog
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: /opt/local/lib/QtWidgets.framework/Headers/QHBoxLayout
@@ -1660,7 +1671,6 @@ CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/SPH/WCSPH.h
-CMakeFiles/ProcDeferl2.dir/core/IHM/main.cpp.o: core/SPH/shaders.h
 
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/IHM/window.cpp
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/include/GL/gl.h
@@ -1886,7 +1896,9 @@ CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/lib/QtCore.framewor
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/lib/QtCore.framework/Headers/qtimer.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/lib/QtCore.framework/Headers/qvector.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/lib/QtGui.framework/Headers/QClipboard
+CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/lib/QtGui.framework/Headers/QImage
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/lib/QtGui.framework/Headers/qclipboard.h
+CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/lib/QtGui.framework/Headers/qimage.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/lib/QtGui.framework/QtGui
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/lib/QtWidgets.framework/Headers/QFileDialog
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: /opt/local/lib/QtWidgets.framework/Headers/QHBoxLayout
@@ -1923,7 +1935,6 @@ CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/SPH/WCSPH.h
-CMakeFiles/ProcDeferl2.dir/core/IHM/window.cpp.o: core/SPH/shaders.h
 
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/Ocean/GridOcean.cpp
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/GL/gl.h
@@ -2131,6 +2142,10 @@ CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/eigen3
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/lib/QtGui.framework/Headers/QImage
+CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/lib/QtGui.framework/Headers/qimage.h
+CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/lib/QtOpenGL.framework/Headers/QGLWidget
+CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: /opt/local/lib/QtOpenGL.framework/Headers/qgl.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/BreakingWave/BreakingWave.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/BreakingWave/GridBreaking.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/HybridOcean/Grid.h
@@ -2141,7 +2156,6 @@ CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/WCSPH.h
-CMakeFiles/ProcDeferl2.dir/core/Ocean/GridOcean.cpp.o: core/SPH/shaders.h
 
 CMakeFiles/ProcDeferl2.dir/core/Ocean/WaveGroup.cpp.o: core/Ocean/WaveGroup.cpp
 CMakeFiles/ProcDeferl2.dir/core/Ocean/WaveGroup.cpp.o: /opt/local/include/eigen3/Eigen/Cholesky
@@ -3175,13 +3189,15 @@ CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: /opt/local/include/eigen3/Eigen
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: /opt/local/lib/QtGui.framework/Headers/QImage
+CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: /opt/local/lib/QtGui.framework/Headers/qimage.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/HybridOcean/Grid.h
+CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/Ocean/GridOcean.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/Ocean/WaveGroup.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/SPH/GridSPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/SPH/SPH.h
-CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o: core/SPH/shaders.h
 
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/SPH.cpp
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: /opt/local/include/GL/gl.h
@@ -3392,13 +3408,15 @@ CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: /opt/local/include/eigen3/Eigen/s
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: /opt/local/lib/QtGui.framework/Headers/QImage
+CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: /opt/local/lib/QtGui.framework/Headers/qimage.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/HybridOcean/Grid.h
+CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/Ocean/GridOcean.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/Ocean/WaveGroup.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/GridSPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/SPH.h
-CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/shaders.h
-CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/SPH/utils.h
+CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o: core/Utils/utils.h
 
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/WCSPH.cpp
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: /opt/local/include/GL/gl.h
@@ -3606,14 +3624,16 @@ CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: /opt/local/include/eigen3/Eigen
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: /opt/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: /opt/local/lib/QtGui.framework/Headers/QImage
+CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: /opt/local/lib/QtGui.framework/Headers/qimage.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/HybridOcean/Grid.h
+CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/Ocean/GridOcean.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/Ocean/WaveGroup.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/GridSPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/Particle.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/SESPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/SPH.h
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/WCSPH.h
-CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o: core/SPH/shaders.h
 
-CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o: core/SPH/shaders.cpp
+CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o: core/Utils/shaders.cpp
 

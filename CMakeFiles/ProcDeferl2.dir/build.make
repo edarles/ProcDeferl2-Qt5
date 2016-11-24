@@ -321,33 +321,9 @@ CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o.provides: CMakeFiles/ProcDeferl2
 CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o.provides.build: CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o
 
 
-CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o: CMakeFiles/ProcDeferl2.dir/flags.make
-CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o: core/SPH/shaders.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o"
-	/usr/bin/g++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o -c /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/shaders.cpp
-
-CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.i"
-	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/shaders.cpp > CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.i
-
-CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.s"
-	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/shaders.cpp -o CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.s
-
-CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o.requires:
-
-.PHONY : CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o.requires
-
-CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o.provides: CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o.requires
-	$(MAKE) -f CMakeFiles/ProcDeferl2.dir/build.make CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o.provides.build
-.PHONY : CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o.provides
-
-CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o.provides.build: CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o
-
-
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: CMakeFiles/ProcDeferl2.dir/flags.make
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o: core/BreakingWave/GridBreaking.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o"
 	/usr/bin/g++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o -c /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/BreakingWave/GridBreaking.cpp
 
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.i: cmake_force
@@ -371,7 +347,7 @@ CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o.provides.build: 
 
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: CMakeFiles/ProcDeferl2.dir/flags.make
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o: core/BreakingWave/BreakingWave.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o"
 	/usr/bin/g++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o -c /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/BreakingWave/BreakingWave.cpp
 
 CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.i: cmake_force
@@ -395,7 +371,7 @@ CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o.provides.build: 
 
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/Grid.cpp.o: CMakeFiles/ProcDeferl2.dir/flags.make
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/Grid.cpp.o: core/HybridOcean/Grid.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/ProcDeferl2.dir/core/HybridOcean/Grid.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/ProcDeferl2.dir/core/HybridOcean/Grid.cpp.o"
 	/usr/bin/g++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProcDeferl2.dir/core/HybridOcean/Grid.cpp.o -c /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/HybridOcean/Grid.cpp
 
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/Grid.cpp.i: cmake_force
@@ -419,7 +395,7 @@ CMakeFiles/ProcDeferl2.dir/core/HybridOcean/Grid.cpp.o.provides.build: CMakeFile
 
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: CMakeFiles/ProcDeferl2.dir/flags.make
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o: core/HybridOcean/HybridOcean.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o"
 	/usr/bin/g++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o -c /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/HybridOcean/HybridOcean.cpp
 
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.i: cmake_force
@@ -439,6 +415,30 @@ CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o.provides: CMakeFil
 .PHONY : CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o.provides
 
 CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o.provides.build: CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o
+
+
+CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o: CMakeFiles/ProcDeferl2.dir/flags.make
+CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o: core/Utils/shaders.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o"
+	/usr/bin/g++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o -c /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Utils/shaders.cpp
+
+CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.i"
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Utils/shaders.cpp > CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.i
+
+CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.s"
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Utils/shaders.cpp -o CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.s
+
+CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o.requires:
+
+.PHONY : CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o.requires
+
+CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o.provides: CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o.requires
+	$(MAKE) -f CMakeFiles/ProcDeferl2.dir/build.make CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o.provides.build
+.PHONY : CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o.provides
+
+CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o.provides.build: CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o
 
 
 CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o: CMakeFiles/ProcDeferl2.dir/flags.make
@@ -478,11 +478,11 @@ ProcDeferl2_OBJECTS = \
 "CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o" \
 "CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o" \
 "CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o" \
-"CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o" \
 "CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o" \
 "CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o" \
 "CMakeFiles/ProcDeferl2.dir/core/HybridOcean/Grid.cpp.o" \
 "CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o" \
+"CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o" \
 "CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o"
 
 # External object files for target ProcDeferl2
@@ -499,11 +499,11 @@ ProcDeferl2: CMakeFiles/ProcDeferl2.dir/core/SPH/Particle.cpp.o
 ProcDeferl2: CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o
 ProcDeferl2: CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o
 ProcDeferl2: CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o
-ProcDeferl2: CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o
 ProcDeferl2: CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o
 ProcDeferl2: CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o
 ProcDeferl2: CMakeFiles/ProcDeferl2.dir/core/HybridOcean/Grid.cpp.o
 ProcDeferl2: CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o
+ProcDeferl2: CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o
 ProcDeferl2: CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o
 ProcDeferl2: CMakeFiles/ProcDeferl2.dir/build.make
 ProcDeferl2: /opt/local/lib/libGLEW.dylib
@@ -533,11 +533,11 @@ CMakeFiles/ProcDeferl2.dir/requires: CMakeFiles/ProcDeferl2.dir/core/SPH/Particl
 CMakeFiles/ProcDeferl2.dir/requires: CMakeFiles/ProcDeferl2.dir/core/SPH/SPH.cpp.o.requires
 CMakeFiles/ProcDeferl2.dir/requires: CMakeFiles/ProcDeferl2.dir/core/SPH/SESPH.cpp.o.requires
 CMakeFiles/ProcDeferl2.dir/requires: CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.o.requires
-CMakeFiles/ProcDeferl2.dir/requires: CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o.requires
 CMakeFiles/ProcDeferl2.dir/requires: CMakeFiles/ProcDeferl2.dir/core/BreakingWave/GridBreaking.cpp.o.requires
 CMakeFiles/ProcDeferl2.dir/requires: CMakeFiles/ProcDeferl2.dir/core/BreakingWave/BreakingWave.cpp.o.requires
 CMakeFiles/ProcDeferl2.dir/requires: CMakeFiles/ProcDeferl2.dir/core/HybridOcean/Grid.cpp.o.requires
 CMakeFiles/ProcDeferl2.dir/requires: CMakeFiles/ProcDeferl2.dir/core/HybridOcean/HybridOcean.cpp.o.requires
+CMakeFiles/ProcDeferl2.dir/requires: CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o.requires
 CMakeFiles/ProcDeferl2.dir/requires: CMakeFiles/ProcDeferl2.dir/ProcDeferl2_automoc.cpp.o.requires
 
 .PHONY : CMakeFiles/ProcDeferl2.dir/requires

@@ -18,7 +18,7 @@ class Grid
 	public : 
 
 		Grid();
-		Grid(Vector3f center, Vector3f min, Vector3f max, float dx, float dy, float dz);
+		Grid(Vector3f min, Vector3f max, float dx, float dy, float dz);
 		virtual ~Grid();
 
 		/**************** GETTERS ***************************/

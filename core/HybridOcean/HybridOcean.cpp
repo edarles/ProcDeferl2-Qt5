@@ -1,15 +1,26 @@
+#include <utils.h>
 #include <HybridOcean.h>
+#include <GL/gl.h>
+#include <shaders.h>
+
+GLuint HybridOcean::m_program = 0;
+float* HybridOcean::posP = new float[4*MAX_PARTICLES];
+float* HybridOcean::colorsP = new float[4*MAX_PARTICLES];
+int    HybridOcean::nP = 0;
 
 /****************************************************************************/
 /****************************************************************************/
 HybridOcean::HybridOcean()
 {
+	if(m_program==0) m_program = _compileProgram(vertexShader, spherePixelShader);
+
 	colorOcean << 0,0,1,1;
 	colorBreakingWaves << 1,1,1,1;
 
 	this->m_waveGroups.clear();
-	m_visuGrid = new GridOcean(Vector3f(0,0,0), Vector3f(-100,0,-100), Vector3f(100,0,100),1.0,1.0);
+	m_visuGrid = new GridOcean(Vector3f(-70,0,-20), Vector3f(-20,0,20),1.0,1.0);
 	m_visuGrid->setColor(colorOcean);	
+
 	dt = 0.01;
 
 	frame = 0;
@@ -17,6 +28,8 @@ HybridOcean::HybridOcean()
 /****************************************************************************/
 HybridOcean::HybridOcean(vector<WaveGroup*> waveGroups, float dt)
 {
+	if(m_program==0) m_program = _compileProgram(vertexShader, spherePixelShader);
+
 	colorOcean << 0,0,1,1;
 	colorBreakingWaves << 1,1,1,1;
 
@@ -24,8 +37,9 @@ HybridOcean::HybridOcean(vector<WaveGroup*> waveGroups, float dt)
 	for(unsigned int i=0; i<waveGroups.size(); i++)
 		addWaveGroup(waveGroups[i]);
 
-	m_visuGrid = new GridOcean(Vector3f(0,0,0), Vector3f(-100,0,-100), Vector3f(100,0,100),1.0,1.0);
-	m_visuGrid->setColor(colorOcean);	
+	m_visuGrid = new GridOcean(Vector3f(-70,0,-20), Vector3f(-20,0,20),1.0,1.0);
+	m_visuGrid->setColor(colorOcean);
+	
 	this->dt = dt;
 
 	frame = 0;
@@ -34,6 +48,8 @@ HybridOcean::HybridOcean(vector<WaveGroup*> waveGroups, float dt)
 /****************************************************************************/
 HybridOcean::HybridOcean(GridOcean* gridOcean, vector<WaveGroup*> waveGroups, float dt)
 {
+	if(m_program==0) m_program = _compileProgram(vertexShader, spherePixelShader);
+
 	colorOcean << 0,0,1,1;
 	colorBreakingWaves << 1,1,1,1;
 	this->m_waveGroups.clear();
@@ -41,7 +57,7 @@ HybridOcean::HybridOcean(GridOcean* gridOcean, vector<WaveGroup*> waveGroups, fl
 		addWaveGroup(waveGroups[i]);
 	m_visuGrid = gridOcean;
 	m_visuGrid->setColor(colorOcean);	
-	
+
 	this->dt = dt;
 
 	frame = 0;
@@ -50,16 +66,23 @@ HybridOcean::HybridOcean(GridOcean* gridOcean, vector<WaveGroup*> waveGroups, fl
 HybridOcean::~HybridOcean()
 {
 	for(unsigned int i=0; i<m_waveGroups.size(); i++)
-		delete(m_waveGroups[i]);
+		delete m_waveGroups[i];
+
 	m_waveGroups.clear();
+	vector<WaveGroup*>().swap(m_waveGroups);
 	m_waveGroups.shrink_to_fit();
-	m_waveGroups.~vector();
+ 
 	delete(m_visuGrid);
+
 	for(unsigned int i=0;i<m_breakingWaves.size();i++)
-		delete(m_breakingWaves[i]);
+		delete m_breakingWaves[i];
+
 	m_breakingWaves.clear();
+	vector<BreakingWave*>().swap(m_breakingWaves);
 	m_breakingWaves.shrink_to_fit();
-	m_breakingWaves.~vector();
+
+	delete[] posP;
+	delete[] colorsP;
 }
 /****************************************************************************/
 /****************************************************************************/
@@ -107,7 +130,7 @@ void HybridOcean::loadSpectrum(const char* filename)
 	FILE * f = fopen(filename,"r");
 	if(f!=NULL){
 		for(unsigned int i=0; i<m_waveGroups.size(); i++)
-			delete(m_waveGroups[i]);
+			delete m_waveGroups[i];
 		m_waveGroups.clear();
 		int nbWaves;
 		fscanf(f,"%d\n",&nbWaves);
@@ -182,7 +205,7 @@ void HybridOcean::mergeBreakingWaves()
 
 					// Critere 2 : distance centreI - centreJ < lambdaMax /8
 					//printf("Trouve ");
-					/*Vector2f d; d << cI[0] - cJ[0], cI[2] - cJ[2] ;
+					Vector2f d; d << cI[0] - cJ[0], cI[2] - cJ[2] ;
 					//cout << "d: " << d.norm() << " " << "lM: " << lambdaMaxI << endl;
 
 					// Critere 3 : si on trouve un pt actif de gBJ tel que distance(ptJ,cI)<distance(ptJ,cJ)
@@ -197,14 +220,15 @@ void HybridOcean::mergeBreakingWaves()
 						k++;
 					}
 					
-					// Test 2 : Critere 2 OU Critere 3
-					//if((d.norm()<lambdaMaxI)||(trouve)) {*/
+					// Test 2 : Critere 2 OU Critere 3//
+					//if((d.norm()<lambdaMaxI)||(trouve)) {
 						// On merge bJ à bI
 						//printf("**** Merging de %d et %d\n ***",i,j);
 						//cout << "D: " << d.norm() << " lMax: " << lambdaMaxI << endl;
 						bI->merge(bJ, dt);
 						delete m_breakingWaves[j];
 						m_breakingWaves.erase(m_breakingWaves.begin()+j);
+						m_breakingWaves.shrink_to_fit();
 						merge = true;
 					//}
 					//else
@@ -245,7 +269,7 @@ void HybridOcean::animate()
 		m_breakingWaves[i]->checkActiveWgs();
 		m_breakingWaves[i]->checkActivePts();
 		m_breakingWaves[i]->transform();
-		m_breakingWaves[i]->update(dt);
+		m_breakingWaves[i]->update(dt,m_visuGrid);
 	}
 
 	for(unsigned int i=0;i<m_breakingWaves.size();i++)
@@ -258,10 +282,29 @@ void HybridOcean::animate()
 			m_breakingWaves.erase(m_breakingWaves.begin()+i);
 		}
 	}
-	
-	//for(int i=0;i<m_breakingWaves.size();i++)
-	//	m_breakingWaves[i]->print();
-	
+	m_breakingWaves.shrink_to_fit();
+
+	//***** POUR AFFICHAGE DES PARTICULES AVEC GLSL ***********/
+	nP = 0;
+	for(unsigned int i=0;i<m_breakingWaves.size();i++){
+		for(int j=0;j<m_breakingWaves[i]->getSolver()->getNbParticles();j++){
+			assert(nP<MAX_PARTICLES);
+			Vector3f pos = m_breakingWaves[i]->getSolver()->getParticle(j)->getPos();
+			Vector3f c = m_breakingWaves[i]->getSolver()->getParticle(j)->getColor();
+			float h = m_breakingWaves[i]->getSolver()->getParticle(j)->getRadius();
+			posP[nP*4] = pos[0]; 
+			posP[nP*4+1] = pos[1]; 
+			posP[nP*4+2] = pos[2]; 
+			posP[nP*4+3] = h;
+			colorsP[nP*4] = c[0];
+			colorsP[nP*4+1] = c[1];
+			colorsP[nP*4+2] = c[2];
+			colorsP[nP*4+3] = 0.9;
+			nP++;
+		}
+	}
+	//*****************************************************/
+
 	frame++;
 	
 }
@@ -273,7 +316,7 @@ void HybridOcean::display()
 
 	for(unsigned int i=0;i<m_breakingWaves.size();i++)
 		m_breakingWaves[i]->display();
-	
+	displaySpheres(m_program,posP,colorsP,nP);
 }
 /****************************************************************************/
 /****************************************************************************/

@@ -5,18 +5,18 @@ using namespace Eigen;
 
 /****************************************************************************/
 /****************************************************************************/
-BreakingWave::BreakingWave(Vector3f center, vector<WaveGroup*> wg_acting, vector<bool> wg_active, float t)
+BreakingWave::BreakingWave(Vector3f center, vector<WaveGroup*> wg_acting, vector<bool> wg_active, float t, float tx, float tz)
 {
 	this->center = center;
 	for(unsigned int i=0;i<wg_acting.size();i++){
 		this->wg_acting.push_back(wg_acting[i]);
 		this->wg_active.push_back(wg_active[i]);
 	}
-	gridBreaking = new GridBreaking(this->center,this->wg_acting,this->wg_active);
+	gridBreaking = new GridBreaking(this->center,this->wg_acting,this->wg_active, tx, tz);
 	
 	Vector3f centerSPH = this->center;
 	centerSPH[0] = centerSPH[0] + (gridBreaking->getMax()[0]-gridBreaking->getMin()[0])/4;
-	solver = new WCSPH(centerSPH,gridBreaking->getMin(),gridBreaking->getMax());
+	solver = new WCSPH(centerSPH, gridBreaking->getMin(),gridBreaking->getMax());
 	solver->getGrid()->setColor(gridBreaking->getColor());	
 
 	gridBreaking->setT(t);
@@ -32,16 +32,18 @@ BreakingWave::BreakingWave(Vector3f center, vector<WaveGroup*> wg_acting, vector
 BreakingWave::~BreakingWave()
 {
 	wg_acting.clear();
+	vector<WaveGroup*>().swap(wg_acting);
 	wg_acting.shrink_to_fit();
-	//wg_acting.~vector();
-
+	
 	wg_active.clear();
+	vector<bool>().swap(wg_active);
 	wg_active.shrink_to_fit();
-	//wg_active.~vector();
+	
+	delete solver;
 
-	delete(solver);
-	isActive = false;
 	delete gridBreaking;
+
+	isActive = false;
 }
 /****************************************************************************/
 /****************************************************************************/
@@ -151,18 +153,28 @@ bool BreakingWave::checkIfActive()
 /****************************************************************************/
 void BreakingWave::generateParticles()
 {
+	checkActivePts();
 	int indexWg = gridBreaking->getIndexMaxLambda();
 	WaveGroup* wg = wg_acting[indexWg];
 	Vector2f ps = Vector2f(wg->getPs()*wg->getCosTheta(), wg->getPs()*wg->getSinTheta());
-	float S = gridBreaking->getDx()*gridBreaking->getDz();
-	
+	Vector3f minAct = gridBreaking->getMinAct();
+	Vector3f maxAct = gridBreaking->getMaxAct();
+	int n = gridBreaking->getNbActivePts();
+	if(n>0){
+	float dx = (maxAct[0]-minAct[0]);
+	float dz = (maxAct[2]-minAct[2]);
+	float S = dx*dz/n;////gridBreaking->getDx()*gridBreaking->getDz();
+	//cout << "dx : " << dx << " dz: " << dz << " S: " << S << endl;
+
 	for(int i=0; i< gridBreaking->getNbActivePts(); i++){
 		int index = gridBreaking->getActivePt(i);
 		Vector3f pos = gridBreaking->getPos(index);
 		Vector3f vel = gridBreaking->getVel(index);
 		Vector3f dVel = gridBreaking->getDVel(index);
 		float mass = solver->getRho0()*S*((float)hypot((double)(vel[0]-ps[0]),(double)(vel[2]-ps[1])));
-		solver->generateParticle(pos,vel,mass);
+		if(mass>0.2)
+			solver->generateParticle(pos,vel,mass);
+	}
 	}
 }
 /****************************************************************************/
@@ -218,30 +230,30 @@ void BreakingWave::merge(BreakingWave *br, float dt)
 
 /****************************************************************************/
 /****************************************************************************/
-void BreakingWave::update(float dt)
+void BreakingWave::update(float dt, GridOcean* ocean)
 {
 	if(gridBreaking) 
 		gridBreaking->update(wg_acting,dt);
 	if(solver)
-		solver->update(wg_acting,gridBreaking->getT(),dt);
+		solver->update(wg_acting,gridBreaking->getT(),dt,ocean);
 
 }
 /****************************************************************************/
 /****************************************************************************/
 void BreakingWave::display()
 {
-	gridBreaking->display();
+	//gridBreaking->display();
 	solver->display();
 }
 /****************************************************************************/
 void BreakingWave::print()
 {
-	/*printf("**** LISTE DES GROUPES AGISSANT ***\n");
-	for(int i=0;i<wg_acting.size();i++){
+	printf("**** LISTE DES GROUPES AGISSANT ***\n");
+	for(unsigned int i=0;i<wg_acting.size();i++){
 		if(wg_active[i]) printf("ACTIF params: ");
 		else printf("NON ACTIF params: ");
 		wg_acting[i]->print();
-	}*/
+	}
 }	
 /****************************************************************************/
 

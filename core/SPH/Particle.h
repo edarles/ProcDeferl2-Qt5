@@ -24,6 +24,7 @@ class Particle
 		float    getRadius();
 		float    getRho();
 		float    getP();
+		Vector3f getColor();
 		short    getVois(unsigned int index);
 		unsigned int getNbVois();
 
@@ -34,12 +35,13 @@ class Particle
 		void     setRadius(float);
 		void     setRho(float);
 		void     setP(float);
+		void     setColor(Vector3f);
 		void     setVois(short);
 		void     clearVois();
 
 	private :
 
-		Vector3f pos, vel, forces;
+		Vector3f pos, vel, forces, color;
 		float mass, radius, rho, p;
 		vector<short> vois;
 };

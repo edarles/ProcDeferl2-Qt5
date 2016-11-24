@@ -568,32 +568,32 @@ core/SPH/WCSPH.cpp.s:
 	$(MAKE) -f CMakeFiles/ProcDeferl2.dir/build.make CMakeFiles/ProcDeferl2.dir/core/SPH/WCSPH.cpp.s
 .PHONY : core/SPH/WCSPH.cpp.s
 
-core/SPH/shaders.o: core/SPH/shaders.cpp.o
+core/Utils/shaders.o: core/Utils/shaders.cpp.o
 
-.PHONY : core/SPH/shaders.o
+.PHONY : core/Utils/shaders.o
 
 # target to build an object file
-core/SPH/shaders.cpp.o:
-	$(MAKE) -f CMakeFiles/ProcDeferl2.dir/build.make CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.o
-.PHONY : core/SPH/shaders.cpp.o
+core/Utils/shaders.cpp.o:
+	$(MAKE) -f CMakeFiles/ProcDeferl2.dir/build.make CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.o
+.PHONY : core/Utils/shaders.cpp.o
 
-core/SPH/shaders.i: core/SPH/shaders.cpp.i
+core/Utils/shaders.i: core/Utils/shaders.cpp.i
 
-.PHONY : core/SPH/shaders.i
+.PHONY : core/Utils/shaders.i
 
 # target to preprocess a source file
-core/SPH/shaders.cpp.i:
-	$(MAKE) -f CMakeFiles/ProcDeferl2.dir/build.make CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.i
-.PHONY : core/SPH/shaders.cpp.i
+core/Utils/shaders.cpp.i:
+	$(MAKE) -f CMakeFiles/ProcDeferl2.dir/build.make CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.i
+.PHONY : core/Utils/shaders.cpp.i
 
-core/SPH/shaders.s: core/SPH/shaders.cpp.s
+core/Utils/shaders.s: core/Utils/shaders.cpp.s
 
-.PHONY : core/SPH/shaders.s
+.PHONY : core/Utils/shaders.s
 
 # target to generate assembly for a file
-core/SPH/shaders.cpp.s:
-	$(MAKE) -f CMakeFiles/ProcDeferl2.dir/build.make CMakeFiles/ProcDeferl2.dir/core/SPH/shaders.cpp.s
-.PHONY : core/SPH/shaders.cpp.s
+core/Utils/shaders.cpp.s:
+	$(MAKE) -f CMakeFiles/ProcDeferl2.dir/build.make CMakeFiles/ProcDeferl2.dir/core/Utils/shaders.cpp.s
+.PHONY : core/Utils/shaders.cpp.s
 
 # Help Target
 help:
@@ -653,9 +653,9 @@ help:
 	@echo "... core/SPH/WCSPH.o"
 	@echo "... core/SPH/WCSPH.i"
 	@echo "... core/SPH/WCSPH.s"
-	@echo "... core/SPH/shaders.o"
-	@echo "... core/SPH/shaders.i"
-	@echo "... core/SPH/shaders.s"
+	@echo "... core/Utils/shaders.o"
+	@echo "... core/Utils/shaders.i"
+	@echo "... core/Utils/shaders.s"
 .PHONY : help
 
 

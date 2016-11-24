@@ -24,14 +24,13 @@ void WCSPH::computeRhoP()
 			int index = particles[i]->getVois(j);
 			Vector3f pos2 = particles[index]->getPos(); 
 			float m2 = particles[index]->getMass();
-			float h2 = particles[index]->getRadius();
-            		float h = (h1+h2)/2;
 			float d = (pos1-pos2).norm();
-			dens += m2*315*powf((h*h)-(d*d),3)/(64*M_PI*powf(h,9));
+			if(d<=h1)
+				dens += m2*315*powf((h1*h1)-(d*d),3)/(64*M_PI*powf(h1,9));
 		}
 		particles[i]->setRho(dens);
 		// Calcul de la pression en utilisation l'équation des gaz parfaits
-		particles[i]->setP(1119.0*(powf(dens/rho0,7)-1));
+		particles[i]->setP(k*(powf(dens/rho0,7)-1));
 	}	
 }
 /****************************************************************************/

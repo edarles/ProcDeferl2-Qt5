@@ -70,6 +70,11 @@ class HybridOcean
 		GridOcean* m_visuGrid;
 		vector<BreakingWave*> m_breakingWaves;
 
+		static GLuint m_program;
+		//Arrays for GLSL shader 
+		static float* posP, *colorsP;
+		static int nP;
+
 		Vector4f colorOcean, colorBreakingWaves;
 
 		float dt;

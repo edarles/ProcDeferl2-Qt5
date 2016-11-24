@@ -20,10 +20,10 @@ Grid::Grid()
 	color << 1,1,1,1;
 }
 /****************************************************************************/
-Grid::Grid(Vector3f center, Vector3f min, Vector3f max, float dx, float dy, float dz)
+Grid::Grid(Vector3f min, Vector3f max, float dx, float dy, float dz)
 {
 	angleRotation = 0;
-	this->m_center = center;
+	this->m_center = Vector3f((max[0]+min[0])/2,(max[1]+min[1])/2,(max[2]+min[2])/2);
 	this->m_min = min;
 	this->m_max = max;
 	this->m_dx = dx;
@@ -37,8 +37,8 @@ Grid::Grid(Vector3f center, Vector3f min, Vector3f max, float dx, float dy, floa
 Grid::~Grid()
 {
 	m_pos.clear();
+	vector<Vector3f>().swap(m_pos);
 	m_pos.shrink_to_fit();
-	//m_pos.~vector();
 }
 /*************************************************/
 /*************************************************/
@@ -109,6 +109,7 @@ Vector4f Grid::getColor()
 {
 	return color;
 }
+/*************************************************/
 float Grid::getAngleRotation()
 {
 	return angleRotation;
@@ -289,6 +290,7 @@ void Grid::rotate(float theta)
 void Grid::createGrid()
 {
 	m_pos.clear();
+	vector<Vector3f>().swap(m_pos);
 
 	float l = m_max[0]-m_min[0]; m_sizeX = l;
 	float w = m_max[1]-m_min[1]; m_sizeY = w;
