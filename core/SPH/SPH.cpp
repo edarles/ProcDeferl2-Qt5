@@ -3,8 +3,7 @@
 #include <iostream>
 /****************************************************************************/
 /****************************************************************************/
-const Vector3f SPH::gravity = Vector3f(0,-9.81,0);
-const float SPH::massMaxi = 500.0;
+const float SPH::massMaxi = 1000.0;
 const float SPH::rho0 = 998.29;
 const float SPH::mu = 3.5;
 const float SPH::tS = 0.0728;
@@ -194,7 +193,7 @@ void SPH::update(vector<WaveGroup*> waveGroups, float time, float dt, GridOcean*
 			computeRhoP();
 			computeForces();
 			integrate(dt);
-			generateBubbles(waveGroups,time,ocean);
+			generateBubblesSprays(waveGroups,time,ocean);
 		}
 	}
 }
@@ -278,12 +277,12 @@ void SPH::integrate(float dt)
 	}
 }
 /****************************************************************************/
-void SPH::generateBubbles(vector<WaveGroup*> waveGroups, float time, GridOcean* ocean)
+void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridOcean* ocean)
 {
 	float lifeTimeMax = 200;
 	float lifeTimeMin = 100;
 	// On supprime les particules du solveur quand elles passent en dessous de la surface
-	Vector3f dP, vel, dVel;
+	Vector3f dP, v, dV;
 
 	QImage tex = ocean->getTexBubbles();
 
@@ -293,10 +292,16 @@ void SPH::generateBubbles(vector<WaveGroup*> waveGroups, float time, GridOcean* 
 		Vector3f pos2 = gridSPH->getLocalRotated(particles[i]->getPos());
 		Vector3f pos = Vector3f(pos2[0],0,pos2[2]);
 		Vector3f dPos(0,0,0);
+		Vector3f dVel(0,0,0);
+		Vector3f vel(0,0,0);
 		for(unsigned int j=0;j<waveGroups.size();j++){
-			waveGroups[j]->computeMovement(pos, time, &dP, &vel, &dVel);
+			waveGroups[j]->computeMovement(pos, time, &dP, &v, &dV);
 			dP[0]*=waveGroups[j]->getCosTheta(); dP[2]*=waveGroups[j]->getSinTheta(); 
+			dV[0]*=waveGroups[j]->getCosTheta(); dV[2]*=waveGroups[j]->getSinTheta(); 
+			v[0]*=waveGroups[j]->getCosTheta(); v[2]*=waveGroups[j]->getSinTheta(); 
 			dPos+=dP;
+			dVel+=dV;
+			vel+=v;
 		}
 		if(pos2[1] + particles[i]->getRadius() < dPos[1]){
 			// On augmente l'alpha dans la texture de la grille de visualisation
@@ -331,6 +336,15 @@ void SPH::generateBubbles(vector<WaveGroup*> waveGroups, float time, GridOcean* 
 						alpha = fmin(alpha+dAlpha,255); 
     						tex.setPixel(xM,yM,qRgba(qRed(rgb),qGreen(rgb),qBlue(rgb),alpha));
 					}
+				}
+			}
+			// Generation des sprays
+			if(SPRAYS == 1){
+				if(vel[2]<0){
+					int nbSprays = particles[i]->getMass()*particles[i]->getVel().norm();
+					Vector3f velP = particles[i]->getVel();
+					velP[1] = -velP[1];
+					ocean->getSprays()->generate(pos2,velP,particles[i]->getMass()/nbSprays,particles[i]->getRadius(),nbSprays);
 				}
 			}
 			// On supprime la particule

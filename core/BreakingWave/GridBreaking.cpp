@@ -1,8 +1,10 @@
+#include <utils.h>
 #include <GridBreaking.h>
 #include <Grid.h>
 #include <GL/gl.h> 
 #include <math.h> 
 #include <iostream>
+#include <noise.h>
 using namespace Eigen;
 
 /****************************************************************************/
@@ -24,6 +26,14 @@ GridBreaking::~GridBreaking()
 	activePts.clear();
 	vector<int>().swap(activePts);
 	activePts.shrink_to_fit();
+
+	m_initPos.clear();
+	vector<Vector3f>().swap(m_initPos);
+	m_initPos.shrink_to_fit();
+
+	m_vel.clear();
+	vector<Vector3f>().swap(m_vel);
+	m_vel.shrink_to_fit();
 }
 /****************************************************************************/
 int GridBreaking::getActivePt(int i)
@@ -67,11 +77,33 @@ Vector3f GridBreaking::getMaxAct()
 	return maxAct;
 }
 /****************************************************************************/
+Vector3f GridBreaking::getVel(int index)
+{
+	assert(index < m_n);
+	return m_vel[index];
+}
+/****************************************************************************/
+float   GridBreaking::getT()
+{
+	return m_t;
+}
+/****************************************************************************/
+/****************************************************************************/
+void    GridBreaking::setT(float t)
+{
+	m_t = t;
+}
+/****************************************************************************/
 /****************************************************************************/
 void GridBreaking::init()
 {
-	GridOcean::init();
 	angleRotation = 0;
+	m_initPos.clear();
+	m_vel.clear();
+	for(int i=0; i<m_n; i++){
+		m_initPos.push_back(m_pos[i]);
+		m_vel.push_back(Vector3f(0,0,0));
+	}
 }
 /****************************************************************************/
 /****************************************************************************/
@@ -108,7 +140,7 @@ void GridBreaking::createGrid(vector<WaveGroup*> wg, vector<bool> wg_active)
 		m_dz = powf((maxLambda/2)*sumA*maxExtens,(1/3.0))*wg[indexMaxLambda]->getN()/tz;
 		m_dy = 0;
 		m_center = (m_min+m_max)/2;
-		GridOcean::createGrid();
+		Grid::createGrid();
 		init();
 	}
 }
@@ -298,13 +330,34 @@ void GridBreaking::rotate(float theta)
 void GridBreaking::merge(GridBreaking* other)
 {
 	Grid::merge(other);
-	GridOcean::init();
+	init();
 }
 /****************************************************************************/
 /****************************************************************************/
 void GridBreaking::update(vector<WaveGroup*> waveGroups, float dt)
 {
-	GridOcean::update(waveGroups,dt);
+	for(int i=0;i<m_nx;i++){
+		for(int j=0;j<m_nz;j++){
+			int index = i + j*m_nx;
+			m_pos[index] = m_initPos[index];	
+			m_vel[index]=Vector3f(0,0,0);
+			for(unsigned int n=0; n<waveGroups.size(); n++)
+			{
+			  	Vector3f dPos(0,0,0);
+			  	Vector3f vel(0,0,0);
+			  	Vector3f dVel(0,0,0);
+			  	waveGroups[n]->computeMovement(m_initPos[index],m_t,&dPos,&vel,&dVel);
+			  	dPos[0]*=waveGroups[n]->getCosTheta(); dPos[2]*=waveGroups[n]->getSinTheta(); 
+				vel[0]*=waveGroups[n]->getCosTheta(); vel[2]*=waveGroups[n]->getSinTheta();
+			  	m_pos[index] += dPos;
+				m_vel[index] += vel;
+			}
+			if(FBM == 1)
+				m_pos[index][1] += SCALE_AMP*perlin_two(m_pos[index][0],m_pos[index][2],GAIN,OCTAVES,tx);
+			
+		}
+	}
+	m_t += dt;
 }
 /****************************************************************************/
 /****************************************************************************/

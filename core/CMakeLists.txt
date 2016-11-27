@@ -2,6 +2,7 @@ include_directories(core)
 include_directories(core/Utils)
 include_directories(core/Ocean)
 include_directories(core/SPH)
+include_directories(core/SPH/Sprays)
 include_directories(core/BreakingWave)
 include_directories(core/HybridOcean)
 include_directories(core/IHM)
@@ -21,6 +22,8 @@ SET(APP_SOURCES
 			core/SPH/SPH.cpp
 			core/SPH/SESPH.cpp
 			core/SPH/WCSPH.cpp
+			core/SPH/Sprays/SprayParticle.cpp
+			core/SPH/Sprays/Sprays.cpp
 
 			core/BreakingWave/GridBreaking.cpp
 			core/BreakingWave/BreakingWave.cpp
@@ -29,5 +32,6 @@ SET(APP_SOURCES
 			core/HybridOcean/HybridOcean.cpp
 
 			core/Utils/shaders.cpp
+			core/Utils/noise.cpp
 )
 

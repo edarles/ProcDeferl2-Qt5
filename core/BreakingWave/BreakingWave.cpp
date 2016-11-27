@@ -161,20 +161,20 @@ void BreakingWave::generateParticles()
 	Vector3f maxAct = gridBreaking->getMaxAct();
 	int n = gridBreaking->getNbActivePts();
 	if(n>0){
-	float dx = (maxAct[0]-minAct[0]);
-	float dz = (maxAct[2]-minAct[2]);
-	float S = dx*dz/n;////gridBreaking->getDx()*gridBreaking->getDz();
-	//cout << "dx : " << dx << " dz: " << dz << " S: " << S << endl;
+		float dx = (maxAct[0]-minAct[0]);
+		float dz = (maxAct[2]-minAct[2]);
+		float S = dx*dz/(2*n);////gridBreaking->getDx()*gridBreaking->getDz();
+		//cout << "dx : " << dx << " dz: " << dz << " S: " << S << endl;
 
-	for(int i=0; i< gridBreaking->getNbActivePts(); i++){
-		int index = gridBreaking->getActivePt(i);
-		Vector3f pos = gridBreaking->getPos(index);
-		Vector3f vel = gridBreaking->getVel(index);
-		Vector3f dVel = gridBreaking->getDVel(index);
-		float mass = solver->getRho0()*S*((float)hypot((double)(vel[0]-ps[0]),(double)(vel[2]-ps[1])));
-		if(mass>0.2)
-			solver->generateParticle(pos,vel,mass);
-	}
+		for(int i=0; i< gridBreaking->getNbActivePts(); i++){
+			int index = gridBreaking->getActivePt(i);
+			Vector3f pos = gridBreaking->getPos(index);
+			Vector3f vel = gridBreaking->getVel(index);
+			
+			float mass = solver->getRho0()*S*((float)hypot((double)(vel[0]-ps[0]),(double)(vel[2]-ps[1])));
+			if(mass>0.2)
+				solver->generateParticle(pos,vel,mass);
+		}
 	}
 }
 /****************************************************************************/

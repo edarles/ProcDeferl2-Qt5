@@ -2,10 +2,27 @@
 #include <iostream>
 #include <math.h>
 #include <QImage>
+#include <Eigen/Dense>
+
 using namespace std;
+using namespace Eigen;
 
 #pragma once
+
 #define MAX_PARTICLES 100000
+
+// ACTIVATE SPRAYS GENERATION
+#define SPRAYS 1
+
+// ACTIVATE FBM
+#define FBM 1
+
+// FBM PARAMETERS
+#define GAIN 0.65
+#define OCTAVES 10
+#define SCALE_AMP 4
+
+const Vector3f gravity = Vector3f(0,-9.81,0);
 
 // fast 1/sqrtf(number) -> ONLY VALID for IEEE754simple precision float
 #pragma once
@@ -95,6 +112,67 @@ inline void displaySpheres(GLuint m_program, float* pos, float* colors, int nbPo
 #pragma once
 inline void displayPatchesWithTexture(GLuint m_program, GLuint tex1, QImage texBubbles, float* pos, float* colors, float* uv, int nb)
 {
+     glEnable(GL_LIGHTING);
+     glEnable(GL_LIGHT0);
+     glEnable(GL_NORMALIZE);
+     
+     // Light model parameters:
+     // -------------------------------------------
+     
+     GLfloat lmKa[] = {0.0, 0.0, 0.0, 0.0 };
+     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmKa);
+     
+     glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, 1.0);
+     glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 0.0);
+     
+     // -------------------------------------------
+     // Spotlight Attenuation
+     
+     GLfloat spot_direction[] = {1.0, -1.0, -1.0 };
+     GLint spot_exponent = 30;
+     GLint spot_cutoff = 180;
+     
+     glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spot_direction);
+     glLighti(GL_LIGHT0, GL_SPOT_EXPONENT, spot_exponent);
+     glLighti(GL_LIGHT0, GL_SPOT_CUTOFF, spot_cutoff);
+    
+     GLfloat Kc = 1.0;
+     GLfloat Kl = 0.0;
+     GLfloat Kq = 0.0;
+     
+     glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION,Kc);
+     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, Kl);
+     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, Kq);
+     
+     
+     // ------------------------------------------- 
+     // Lighting parameters:
+
+     GLfloat light_pos[] = {0.0f, 5.0f, 5.0f, 1.0f};
+     GLfloat light_Ka[]  = {1.0f, 0.5f, 0.5f, 1.0f};
+     GLfloat light_Kd[]  = {1.0f, 0.1f, 0.1f, 1.0f};
+     GLfloat light_Ks[]  = {1.0f, 1.0f, 1.0f, 1.0f};
+
+     glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+     glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ka);
+     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_Kd);
+     glLightfv(GL_LIGHT0, GL_SPECULAR, light_Ks);
+
+     // -------------------------------------------
+     // Material parameters:
+
+     GLfloat material_Ka[] = {0.5f, 0.0f, 0.0f, 1.0f};
+     GLfloat material_Kd[] = {0.4f, 0.4f, 0.5f, 1.0f};
+     GLfloat material_Ks[] = {0.8f, 0.8f, 0.0f, 1.0f};
+     GLfloat material_Ke[] = {0.1f, 0.0f, 0.0f, 0.0f};
+     GLfloat material_Se = 20.0f;
+
+     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, material_Ka);
+     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_Kd);
+     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_Ks);
+     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, material_Ke);
+     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, material_Se);
+
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_ALPHA_TEST);
 	glEnable(GL_BLEND);
@@ -126,7 +204,7 @@ inline void displayPatchesWithTexture(GLuint m_program, GLuint tex1, QImage texB
 	glColorPointer(3, GL_FLOAT, 0, colors);
 	glTexCoordPointer(2,GL_FLOAT,0, uv);
 
-	glDrawArrays(GL_QUADS, 0, nb);
+	glDrawArrays(GL_TRIANGLES, 0, nb);
 	
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
@@ -136,6 +214,10 @@ inline void displayPatchesWithTexture(GLuint m_program, GLuint tex1, QImage texB
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
+
+	glDisable(GL_LIGHTING);
+     	glDisable(GL_LIGHT0);
+     	glDisable(GL_NORMALIZE);
 
 }
 
@@ -153,7 +235,7 @@ inline void displayPatchesWithoutTexture(GLuint m_program, float* pos, float* co
 	glVertexPointer(3, GL_FLOAT, 0, pos);
 	glColorPointer(3, GL_FLOAT, 0, colors);
 
-	glDrawArrays(GL_QUADS, 0, nb);
+	glDrawArrays(GL_TRIANGLES, 0, nb);
 	
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);

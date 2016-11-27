@@ -17,6 +17,8 @@ iostream
 -
 
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/BreakingWave/GridBreaking.cpp
+utils.h
+-
 GridBreaking.h
 -
 Grid.h
@@ -26,6 +28,8 @@ GL/gl.h
 math.h
 -
 iostream
+-
+noise.h
 -
 
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/HybridOcean/Grid.cpp
@@ -107,6 +111,8 @@ GL/gl.h
 -
 shaders.h
 -
+noise.h
+-
 vector
 -
 iostream
@@ -150,10 +156,26 @@ SPH.h
 iostream
 -
 
+/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/Sprays/SprayParticle.cpp
+SprayParticle.h
+-
+
+/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/Sprays/Sprays.cpp
+utils.h
+-
+Sprays.h
+-
+iostream
+-
+
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/SPH/WCSPH.cpp
 WCSPH.h
 -
 iostream
+-
+
+/Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Utils/noise.cpp
+noise.h
 -
 
 /Users/edarles/Desktop/Recherche/ProcDeferl2-Qt5/core/Utils/shaders.cpp
@@ -1727,8 +1749,6 @@ tinyxml.h
 core/IHM/glWidget.h
 QWidget
 -
-QtGui
--
 math.h
 -
 QGLViewer/qglviewer.h
@@ -1764,6 +1784,8 @@ WaveGroup.h
 vector
 -
 QImage
+-
+Sprays.h
 -
 
 core/Ocean/WaveGroup.h
@@ -1801,9 +1823,27 @@ WaveGroup.h
 -
 GridOcean.h
 -
+Sprays.h
+-
+
+core/SPH/Sprays/SprayParticle.h
+Eigen/Dense
+-
+
+core/SPH/Sprays/Sprays.h
+SprayParticle.h
+-
+vector
+-
 
 core/SPH/WCSPH.h
 SESPH.h
+-
+
+core/Utils/noise.h
+stdlib.h
+-
+math.h
 -
 
 core/Utils/shaders.h
@@ -1816,5 +1856,7 @@ iostream
 math.h
 -
 QImage
+-
+Eigen/Dense
 -
 

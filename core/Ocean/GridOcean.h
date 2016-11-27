@@ -7,10 +7,11 @@
 #include <WaveGroup.h>
 #include <vector>
 #include <QImage>
+#include <Sprays.h>
+
 using namespace std;
 
 class BreakingWave;
-
 
 class GridOcean : public Grid
 {
@@ -32,6 +33,8 @@ class GridOcean : public Grid
 		QImage      getTexBubbles();
 		float       getLifeTimeBubbles(int index);
 
+		Sprays*     getSprays();
+		
 		/**************** SETTERS ***************************/
 		void setInitPos(int ix, int iz, Vector3f initPos);
 		void setVel(int ix, int iz, Vector3f vel);
@@ -63,14 +66,22 @@ class GridOcean : public Grid
 		 vector<Vector3f> m_vel;
 		 vector<Vector3f> m_dVel;
 		 vector<float>    lifeTimeBubbles;
-		 float* posDisplay, *colors, *uv;
-		 int nb;
-		 static GLuint m_program1, m_program2, tex1;
+
 		 float m_t;
 		 float tx, tz;
 
+		 int nb;
+		 float* posDisplay, *colors, *uv;
+		 static GLuint m_program1, m_program2, tex1;
+
 		 QImage texBubbles, texOcean;
 		 void initTexture();
+
+		 void storePolygon(int i, int j, int nb);
+		 void storeUV(int i, int j, int nb);
+		 void storeColor(int nb);
+
+		 Sprays *sprays;
 };
 #endif
 /****************************************************************************/

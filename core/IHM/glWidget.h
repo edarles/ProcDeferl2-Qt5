@@ -5,7 +5,6 @@
 //************************************************************************/
 
 #include <QWidget>
-#include <QtGui>
 #include <math.h>
 #include <QGLViewer/qglviewer.h>
 #include <HybridOcean.h>
@@ -37,7 +36,7 @@ using namespace qglviewer;
      virtual void  animate();
      virtual QSize minimumSizeHint() const;
      virtual QSize sizeHint() const;
-     virtual void keyPressEvent( QKeyEvent *e );
+     //virtual void keyPressEvent(QKeyEvent *e);
 
   //******************************************************************************
   // FONCTIONS PROPRES

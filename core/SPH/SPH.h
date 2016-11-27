@@ -7,6 +7,7 @@
 #include <GridSPH.h>
 #include <WaveGroup.h>
 #include <GridOcean.h>
+#include <Sprays.h>
 
 class SPH
 {
@@ -61,7 +62,6 @@ class SPH
 		GridSPH *gridSPH;
 
 		// Statics attributes
-		static const Vector3f gravity;
 		static const float rho0;
 		static const float mu;
 		static const float tS;
@@ -76,7 +76,7 @@ class SPH
 		virtual void computeRhoP() = 0;
 		virtual void computeForces();
 		virtual void integrate(float dt);
-		virtual void generateBubbles(vector<WaveGroup*> waveGroups, float time, GridOcean* ocean);
+		virtual void generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridOcean* ocean);
 };
 #endif
 /****************************************************************************/
