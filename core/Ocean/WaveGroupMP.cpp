@@ -47,7 +47,7 @@ void WaveGroupMP::computeMovement(Vector3f pos, float t, Vector3f *dPos, Vector3
 
   	(*dVel)[0] = (1-k*a*sin(phiTot)*(1+0.5*cos(phiTot)*(1-sin(phiTot))));
   	(*dVel)[1] = (k*a*cos(phi));
-	(*dVel)[2] = (1-k*a*sin(phiTot)*(1+0.5*cos(phiTot)*(1-sin(phiTot))));
+	(*dVel)[2] = 0;//(1-k*a*sin(phiTot)*(1+0.5*cos(phiTot)*(1-sin(phiTot))));
 }
 /****************************************************************************/
 /****************************************************************************/

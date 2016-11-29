@@ -18,7 +18,8 @@ HybridOcean::HybridOcean()
 	colorBreakingWaves << 1,1,1,1;
 
 	this->m_waveGroups.clear();
-	m_visuGrid = new GridOcean(Vector3f(-70,0,-20), Vector3f(-20,0,20),1.0,1.0);
+	//m_visuGrid = new GridOcean(Vector3f(-100,0,-50), Vector3f(100,0,50),0.1,0.1);
+	m_visuGrid = new GridOcean(Vector3f(-70,0,-50), Vector3f(-20,0,50),1,1);
 	m_visuGrid->setColor(colorOcean);	
 
 	dt = 0.01;
@@ -37,7 +38,8 @@ HybridOcean::HybridOcean(vector<WaveGroup*> waveGroups, float dt)
 	for(unsigned int i=0; i<waveGroups.size(); i++)
 		addWaveGroup(waveGroups[i]);
 
-	m_visuGrid = new GridOcean(Vector3f(-70,0,-20), Vector3f(-20,0,20),1.0,1.0);
+	//m_visuGrid = new GridOcean(Vector3f(-100,0,-50), Vector3f(100,0,50),0.1,0.1);
+	m_visuGrid = new GridOcean(Vector3f(-70,0,-50), Vector3f(-20,0,50),0.5,0.5);
 	m_visuGrid->setColor(colorOcean);
 	
 	this->dt = dt;
@@ -273,7 +275,7 @@ void HybridOcean::animate()
 	}
 
 	for(unsigned int i=0;i<m_breakingWaves.size();i++)
-		m_breakingWaves[i]->generateParticles();
+		m_breakingWaves[i]->generateParticles(dt);
 
 	// Suppression des vagues déferlantes qui ne sont plus actifs
 	for(unsigned int i=0;i<m_breakingWaves.size();i++){
@@ -345,13 +347,14 @@ void HybridOcean::exportMitsuba(qglviewer::Camera *cam)
 	if(frame>=10 && frame<100) sprintf(frameF,"%s","00");
 	if(frame>=100 && frame<1000)  sprintf(frameF,"%s","0");
 
-	char filename[100]; sprintf(filename,"sortie/MTS/file_%s.xml",frameF);
-	char filenameMeshHoudini[100]; sprintf(filename,"sortie/Houdini/file_%s.xml",frameF);
+	char filename[100]; sprintf(filename,"sortie/MTS/file_%s%d.xml",frameF,frame-1);
+	char filenameMeshHoudini[100]; sprintf(filenameMeshHoudini,"../Houdini/file_%s%d.xml",frameF,frame-1);
+	char filename2OBJ[100]; sprintf(filename2OBJ,"../OBJ/ocean_%s%d.obj",frameF,frame-1);
 
 	char filenameOBJ[100], filenameP[100];
 	char rep[100]="sortie";
 	exportData(rep, filenameOBJ, filenameP);
-
+	
 	TiXmlDocument doc;
 	TiXmlDeclaration * decl = new TiXmlDeclaration( "1.0", "", "" );
 	doc.LinkEndChild( decl );
@@ -369,22 +372,33 @@ void HybridOcean::exportMitsuba(qglviewer::Camera *cam)
 	shapeObj->SetAttribute("type","obj");
 	TiXmlElement * file = new TiXmlElement( "string");
 	file->SetAttribute("name","filename");
-	file->SetAttribute("value",filenameOBJ);
+	file->SetAttribute("value",filename2OBJ);
 	shapeObj->LinkEndChild(file);
+
 	TiXmlElement * bsdfObj = new TiXmlElement( "bsdf");
-	bsdfObj->SetAttribute("type","twosided");
-	TiXmlElement * bsdf2Obj = new TiXmlElement( "bsdf");
-	bsdf2Obj->SetAttribute("type","diffuse");
+	bsdfObj->SetAttribute("type","diffuse");
 	TiXmlElement * rgbObj = new TiXmlElement( "rgb");
 	rgbObj->SetAttribute("name","diffuseReflectance");
-	rgbObj->SetAttribute("value",".1, .1, .8");
-	bsdf2Obj->LinkEndChild(rgbObj);
-	bsdfObj->LinkEndChild(bsdf2Obj);
+	rgbObj->SetAttribute("value",".1, .5, .4");
+	bsdfObj->LinkEndChild(rgbObj);
 	shapeObj->LinkEndChild(bsdfObj);
+
+	TiXmlElement * bsdf2Obj = new TiXmlElement( "bsdf");
+	bsdf2Obj->SetAttribute("type","dielectric");
+	TiXmlElement * interior = new TiXmlElement( "float");
+	interior->SetAttribute("name","intIOR");
+	interior->SetAttribute("value","1.333");
+	bsdf2Obj->LinkEndChild(interior);
+	TiXmlElement * exterior = new TiXmlElement( "float");
+	exterior->SetAttribute("name","extIOR");
+	exterior->SetAttribute("value","1.0");
+	bsdf2Obj->LinkEndChild(exterior);
+	shapeObj->LinkEndChild(bsdf2Obj);
+
 	scene->LinkEndChild(shapeObj);
 
 	// Add Particle Mesh
-	TiXmlElement * shapeObjP = new TiXmlElement( "shape");
+	/*TiXmlElement * shapeObjP = new TiXmlElement( "shape");
 	shapeObjP->SetAttribute("type","obj");
 	TiXmlElement * fileP = new TiXmlElement( "string");
 	fileP->SetAttribute("name","filename");
@@ -401,6 +415,7 @@ void HybridOcean::exportMitsuba(qglviewer::Camera *cam)
 	bsdfObjP->LinkEndChild(bsdf2ObjP);
 	shapeObjP->LinkEndChild(bsdfObjP);
 	scene->LinkEndChild(shapeObjP);
+	*/
 
 	// Export Camera caracteristics
 	TiXmlElement * sensor = new TiXmlElement( "sensor");
@@ -469,7 +484,7 @@ void HybridOcean::exportMitsuba(qglviewer::Camera *cam)
 	emitter->SetAttribute("id","Area_002-light");
 	TiXmlElement * nameEnvMap = new TiXmlElement( "string");
 	nameEnvMap->SetAttribute("name","filename");
-	nameEnvMap->SetAttribute("value","envmap.exr");
+	nameEnvMap->SetAttribute("value","sky.jpg");
 	emitter->LinkEndChild(nameEnvMap);
 	TiXmlElement * transformEnvMap = new TiXmlElement( "transform");
 	transformEnvMap->SetAttribute("name","toWorld");

@@ -88,8 +88,10 @@ void GLWidget::draw()
 //******************************************************************************
 void GLWidget::animate()
 {
-	if(_hybridOcean)
+	if(_hybridOcean){
 		 _hybridOcean->animate();
+		// _hybridOcean->exportMitsuba(camera());
+	}
 	//stopAnimation();
 }
 //******************************************************************************
@@ -112,27 +114,27 @@ void GLWidget::test2()
 	// Création d'un groupe de vague
 	float k1 = 2*M_PI/13.0; // nombre d'onde : 2pi/lambda
   	float w1 = sqrt(9.81*k1); // pulsation (relation de dispersion par grande profondeur)
-  	float theta1 = 0.1; // direction du vecteur d'onde kx=k.cos(theta), ky=k.sin(theta)
+  	float theta1 = 1.5;//0.1; // direction du vecteur d'onde kx=k.cos(theta), ky=k.sin(theta)
   	float r1 = 1.1/k1; // rayon des plus grosses vagues au centre du groupe (r.k==1 est la cambrure limite du déferlement)
   	float phi01 = 0; // phase initiale de l'onde
-  	float zeta1 = M_PI/3; // phase instantannée maximale (-zeta<dphiw<zeta)
-  	int n1 = 2; // nombre de vagues sous l'enveloppe
+  	float zeta1 = M_PI/6; // phase instantannée maximale (-zeta<dphiw<zeta)
+  	int n1 = 3; // nombre de vagues sous l'enveloppe
 
 	// Création d'un groupe de vague
 	float k2 = 2*M_PI/10.0; // nombre d'onde : 2pi/lambda
   	float w2 = sqrt(9.81*k2); // pulsation (relation de dispersion par grande profondeur)
-  	float theta2 = 0.02; // direction du vecteur d'onde kx=k.cos(theta), ky=k.sin(theta)
+  	float theta2 = -0.2; // direction du vecteur d'onde kx=k.cos(theta), ky=k.sin(theta)
   	float r2 = 1.1/k2; // rayon des plus grosses vagues au centre du groupe (r.k==1 est la cambrure limite du déferlement)
   	float phi02 = 0.01; // phase initiale de l'onde
   	float zeta2 = M_PI/3; // phase instantannée maximale (-zeta<dphiw<zeta)
-  	int n2 = 5; // nombre de vagues sous l'enveloppe
+  	int n2 = 2; // nombre de vagues sous l'enveloppe
 
 	WaveGroupMP *waveGr1 = new WaveGroupMP(n1,k1,theta1,r1,phi01,zeta1);
 	WaveGroupMP *waveGr2 = new WaveGroupMP(n2,k2,theta2,r2,phi02,zeta2);
 
 	_hybridOcean = new HybridOcean();
 	_hybridOcean->addWaveGroup(waveGr1);
-//	_hybridOcean->addWaveGroup(waveGr2);
+	//_hybridOcean->addWaveGroup(waveGr2);
 }
 
 //******************************************************************************

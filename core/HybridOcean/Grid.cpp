@@ -365,12 +365,8 @@ void Grid::exportOBJ(const char* filename)
 		FILE *f = fopen(filename,"w");
 		if(f!=NULL){
 			// Export vertices
-			for(int ix=0; ix<m_nx; ix++){
-				for(int iz=0; iz<m_nz; iz++){
-		 			int indexCell = ix + iz*m_nx;
-					fprintf(f,"v %f %f %f\n",m_pos[indexCell][0],m_pos[indexCell][1],m_pos[indexCell][2]);
-				}
-			}
+			for(int i=0; i<m_n; i++)
+					fprintf(f,"v %f %f %f\n",m_pos[i][0],m_pos[i][2],m_pos[i][1]);
 			// Export Quads
 			for(int i=0;i<m_nx-1;i++){
 				for(int j=0;j<m_nz-1;j++){

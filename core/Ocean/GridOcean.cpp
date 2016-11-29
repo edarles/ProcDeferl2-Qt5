@@ -130,6 +130,14 @@ float GridOcean::getT()
 {
 	return m_t;
 }
+float GridOcean::getTx()
+{
+	return tx;
+}
+float GridOcean::getTz()
+{
+	return tz;
+}
 /****************************************************************************/
 QImage GridOcean::getTexBubbles()
 {
@@ -216,6 +224,8 @@ void GridOcean::init()
 			}
 		}
 	}
+
+	createBorders();
 }
 /****************************************************************************/
 // Version Cuda : A faire directement depuis le GPU
@@ -293,6 +303,125 @@ void GridOcean::storeColor(int nb)
 	colors[(nb+5)*3] = 0; colors[(nb+5)*3+1] = 0; colors[(nb+5)*3+2] = 1;
 }
 /****************************************************************************/
+void GridOcean::createBorders()
+{
+	float miny = -10;
+	float dy = 1;
+        float centery = (m_center[1]+miny+dy)/2;
+
+	float l = m_max[0]-m_min[0]; m_sizeX = l;
+	float w = m_max[1]-miny;
+	m_ny_border = ceil(w/dy); 
+	
+	bordersA.clear();
+	for(int i=0; i< m_n;i++)
+	{
+		Vector3f pos = m_pos[i]; pos[1] = miny+dy;
+		bordersA.push_back(pos);
+	}
+
+	bordersB.clear();
+	for(int i=0;i<m_nx+m_ny_border*m_nx;i++)
+		bordersB.push_back(Vector3f(0,0,0));
+	for(int ix=0; ix<m_nx; ix++)
+	{
+		Vector3f pos = m_pos[ix];
+		for(int iy=0; iy<m_ny_border; iy++){
+			int indexCell = ix + iy*m_nx;
+			Vector3f posB;
+			if(iy==m_ny_border-1) posB = Vector3f(pos[0], pos[1],pos[2]);
+			else  posB = Vector3f(pos[0], centery-(w/2)+(dy/2)+iy*dy,pos[2]);
+			bordersB[indexCell] = posB;
+		}
+	}
+
+	bordersC.clear();
+	for(int i=0;i<m_nx+m_ny_border*m_nx;i++)
+		bordersC.push_back(Vector3f(0,0,0));
+	for(int ix=0; ix<m_nx; ix++)
+	{
+		Vector3f pos = m_pos[ix+(m_nz-1)*m_nx];
+		for(int iy=0; iy<m_ny_border; iy++){
+			int indexCell = ix + iy*m_nx;
+			Vector3f posB;
+			if(iy==m_ny_border-1) posB = Vector3f(pos[0], pos[1],pos[2]);
+			else  posB = Vector3f(pos[0], centery-(w/2)+(dy/2)+iy*dy,pos[2]);
+			bordersC[indexCell] = posB;
+		}
+	}
+
+	bordersD.clear();
+	for(int i=0;i<m_nz+m_ny_border*m_nz;i++)
+		bordersD.push_back(Vector3f(0,0,0));
+
+	for(int iz=0; iz<m_nz; iz++)
+	{
+		Vector3f pos = m_pos[iz*m_nx];
+		for(int iy=0; iy<m_ny_border; iy++){
+			int indexCell = iz + iy*m_nz;
+			Vector3f posB;
+			if(iy==m_ny_border-1) posB = Vector3f(pos[0], pos[1],pos[2]);
+			else  posB = Vector3f(pos[0], centery-(w/2)+(dy/2)+iy*dy,pos[2]);
+			bordersD[indexCell] = posB;
+		}
+	}
+
+	bordersE.clear();
+	for(int i=0;i<m_nz+m_ny_border*m_nz;i++)
+		bordersE.push_back(Vector3f(0,0,0));
+
+	for(int iz=0; iz<m_nz; iz++)
+	{
+		Vector3f pos = m_pos[(m_nx-1)+iz*m_nx];
+		for(int iy=0; iy<m_ny_border; iy++){
+			int indexCell = iz + iy*m_nz;
+			Vector3f posB;
+			if(iy==m_ny_border-1) posB = Vector3f(pos[0], pos[1],pos[2]);
+			else  posB = Vector3f(pos[0], centery-(w/2)+(dy/2)+iy*dy,pos[2]);
+			bordersE[indexCell] = posB;
+		}
+	}
+
+}
+/****************************************************************************/
+void GridOcean::displayBorder(vector<Vector3f> border, int nl1, int nl2)
+{
+	// display borders A
+	glColor4f(1,1,1,1);
+	glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+	for(int i=0;i<nl1-1;i++){
+		for(int j=0;j<nl2-1;j++){
+			int indexs[4];
+			indexs[0] = i + j*nl1;
+			indexs[1] = i + (j+1)*nl1;
+			indexs[2] = (i+1) + (j+1)*nl1;
+			indexs[3] = (i+1) + j*nl1;
+
+			Vector3f pos1 = border[indexs[0]];
+			Vector3f pos2 = border[indexs[1]];
+			Vector3f pos3 = border[indexs[2]];
+			Vector3f pos4 = border[indexs[3]];
+
+			glBegin(GL_QUADS);
+			glVertex3f(pos1[0],pos1[1],pos1[2]);
+			glVertex3f(pos2[0],pos2[1],pos2[2]);
+			glVertex3f(pos3[0],pos3[1],pos3[2]);
+			glVertex3f(pos4[0],pos4[1],pos4[2]);
+			glEnd();	
+		}
+	}
+}
+/****************************************************************************/
+void GridOcean::displayBorders()
+{
+	// display borders
+	displayBorder(bordersA,m_nx,m_nz);
+	displayBorder(bordersB,m_nx,m_ny_border);
+	displayBorder(bordersC,m_nx,m_ny_border);
+	displayBorder(bordersD,m_nz,m_ny_border);
+	displayBorder(bordersE,m_nz,m_ny_border);
+}
+/****************************************************************************/
 /****************************************************************************/
 void GridOcean::update(std::vector<WaveGroup*> waveGroups, float dt)
 {
@@ -314,9 +443,11 @@ void GridOcean::update(std::vector<WaveGroup*> waveGroups, float dt)
 			  	m_pos[index] += dPos;
 			  	m_vel[index] += vel;
 			  	m_dVel[index] += dVel;
+				cout << "G : " << waveGroups[n]->getG() << endl;
 			}
 			if(FBM == 1)
 				m_pos[index][1] += SCALE_AMP*perlin_two(m_pos[index][0],m_pos[index][2],GAIN,OCTAVES,tx);
+			//cout << "deltaPos " << m_pos[index]-m_initPos[index] << endl;
 		}
 	}
 	nb=0;
@@ -333,6 +464,7 @@ void GridOcean::update(std::vector<WaveGroup*> waveGroups, float dt)
 	// updateSprays
 	sprays->update(dt);
 
+	createBorders();
 	m_t += dt;
 }
 /****************************************************************************/
@@ -355,8 +487,7 @@ void GridOcean::generateBreakingWaves(vector<WaveGroup*> waveGroups, vector<Brea
 					GridBreaking* gB = breakingWaves->at(nB)->getGridBreaking();
 					Vector3f min = gB->getMin(); Vector3f max = gB->getMax();
 					Vector3f local = gB->getLocalRotated(m_pos[indexCell]);
-					if(local[0]>=min[0] && local[2]>=min[2] 
-					   && local[0]<=max[0] && local[2]<=max[2])
+					if(local[0]>=min[0] && local[2]>=min[2] && local[0]<=max[0] && local[2]<=max[2])
 						trouve = true;
 					nB++;
 				}
@@ -402,8 +533,8 @@ void GridOcean::relaxBubbles(int ix, int iz)
 {
 	int index = ix + iz*m_nx;
 
-	int nbx = (rand()/(double)RAND_MAX) *2*(texBubbles.width()/(2*getNx()));
- 	int nby = (rand()/(double)RAND_MAX) *2*(texBubbles.height()/(2*getNz()));
+	int nbx = (rand()/(double)RAND_MAX)*2*(texBubbles.width()/(2*getNx()));
+ 	int nby = (rand()/(double)RAND_MAX)*2*(texBubbles.height()/(2*getNz()));
 	
 	int x = (int) floor((ix/(float)(m_nx-1))*texBubbles.width());
 	int y = (int) floor((iz/(float)(m_nz-1))*texBubbles.height());
@@ -424,7 +555,7 @@ void GridOcean::relaxBubbles(int ix, int iz)
 			if(i>=0 && j>=0 && i<texBubbles.width() && j<texBubbles.height()){
 				QRgb rgb = texBubbles.pixel(i,j);
 				int alpha = qAlpha(rgb);
-				float dAlpha = (rand()/(double)RAND_MAX)*5;
+				float dAlpha = (rand()/(double)RAND_MAX);
 				//if(dAlpha>0)cout << "dAlpha " << dAlpha << endl;
 				texBubbles.setPixel(i,j,qRgba(qRed(rgb),qGreen(rgb),qBlue(rgb),fmax(alpha-dAlpha,0)));
 			}
@@ -438,6 +569,19 @@ void GridOcean::display()
 	displayPatchesWithTexture(m_program1,tex1,texBubbles, posDisplay,colors,uv,nb);
 	displayPatchesWithoutTexture(m_program2,posDisplay,colors,nb);
 	if(sprays) sprays->display();
+
+	displayBorders();
+
+	glColor3f(1,0,0);
+	for(int i=0;i<m_n;i++){
+		Vector3f pos = m_pos[i];
+		Vector3f dvel; dvel[0]=-m_dVel[i][1]; dvel[1]=m_dVel[i][0]; dvel[2]=m_dVel[i][2];
+		//dvel.normalize();
+		glBegin(GL_LINES);
+		glVertex3f(pos[0],pos[1],pos[2]);
+		glVertex3f(pos[0]+dvel[0],pos[1]+dvel[1],pos[2]+dvel[2]);
+		glEnd();
+	}
 }
 /****************************************************************************/
 /****************************************************************************/

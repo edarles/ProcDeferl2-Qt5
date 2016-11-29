@@ -151,7 +151,7 @@ bool BreakingWave::checkIfActive()
 	return false;
 }
 /****************************************************************************/
-void BreakingWave::generateParticles()
+void BreakingWave::generateParticles(float dt)
 {
 	checkActivePts();
 	int indexWg = gridBreaking->getIndexMaxLambda();
@@ -163,7 +163,7 @@ void BreakingWave::generateParticles()
 	if(n>0){
 		float dx = (maxAct[0]-minAct[0]);
 		float dz = (maxAct[2]-minAct[2]);
-		float S = dx*dz/(2*n);////gridBreaking->getDx()*gridBreaking->getDz();
+		float S = dx*dz;///(2*n);////gridBreaking->getDx()*gridBreaking->getDz();
 		//cout << "dx : " << dx << " dz: " << dz << " S: " << S << endl;
 
 		for(int i=0; i< gridBreaking->getNbActivePts(); i++){

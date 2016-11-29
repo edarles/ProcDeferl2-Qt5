@@ -12,14 +12,14 @@ using namespace Eigen;
 #define MAX_PARTICLES 100000
 
 // ACTIVATE SPRAYS GENERATION
-#define SPRAYS 1
+#define SPRAYS 0
 
 // ACTIVATE FBM
 #define FBM 1
 
 // FBM PARAMETERS
 #define GAIN 0.65
-#define OCTAVES 10
+#define OCTAVES 20
 #define SCALE_AMP 4
 
 const Vector3f gravity = Vector3f(0,-9.81,0);

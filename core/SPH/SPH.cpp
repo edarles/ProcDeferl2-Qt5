@@ -64,7 +64,7 @@ void SPH::generateParticle(Vector3f pos, Vector3f vel, float mass)
 	int i= particles.size()-1;
 	float h = powf((60*mass)/(4*M_PI*rho0),0.333);
 	Vector3f velP = vel; 
-	velP[0] = 2*powf(vel[0]*0.5,2); velP[1] = -powf(vel[1]*0.5,2); velP[2] = powf(vel[2]*0.5,2);
+	velP[0] = powf(vel[0]*0.5,2); velP[1] = -powf(vel[1]*0.5,2); velP[2] = powf(vel[2]*0.5,2);
 	while(i>=0 && !trouve)
 	{
 		
@@ -323,18 +323,21 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 				ocean->setLifeTimeBubbles(indexC,lifeTime);
 				//cout << "lifeT: " << lifeTime << endl;				
 			}
-			int nbx = (rand()/(double)RAND_MAX) *2*(tex.width()/(2*ocean->getNx()));
- 			int nby = (rand()/(double)RAND_MAX) *2*(tex.height()/(2*ocean->getNz()));
+			int nbx = (int) ((rand()/(double)RAND_MAX)*2*powf(particles[i]->getRadius(),1/3.0)*tex.width()/ocean->getTx());// *(tex.width()/ocean->getNx());
+ 			int nby = (int) ((rand()/(double)RAND_MAX)*2*powf(particles[i]->getRadius(),1/3.0)*tex.height()/ocean->getTz());//(rand()/(double)RAND_MAX);// *(tex.height()/ocean->getNz());
+		        //cout << "nbX: " << nbx << " nbY: " << nby << endl;
 			// Augmentation de la transparence pour chaque pixel du texel
 			for(int xM=x-nbx; xM<=x+nbx; xM++){
 				for(int yM=y-nby; yM<=y+nby; yM++){
+					if(xM>0 && yM>0 && xM <tex.width() && yM < tex.height()){
 					QRgb rgb = tex.pixel(xM,yM);
 					int alpha = qAlpha(rgb);
 					if(alpha<=255){
-						float dAlpha = (rand()/(double)RAND_MAX)*10;//powf((mass/totalMass)*particles[i]->getVel().norm(),0.5)*255;	
+						float dAlpha = (rand()/(double)RAND_MAX)*15;//powf((mass/totalMass)*particles[i]->getVel().norm(),1/3.0)*5;	
 						//cout << "noise " << dAlpha << endl;
 						alpha = fmin(alpha+dAlpha,255); 
     						tex.setPixel(xM,yM,qRgba(qRed(rgb),qGreen(rgb),qBlue(rgb),alpha));
+					}
 					}
 				}
 			}

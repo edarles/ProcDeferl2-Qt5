@@ -30,6 +30,8 @@ class GridOcean : public Grid
 		Vector3f    getDVel(int ix, int iz);
 		Vector3f    getDVel(int indexCell);
 		float       getT();
+		float       getTx();
+		float       getTz();
 		QImage      getTexBubbles();
 		float       getLifeTimeBubbles(int index);
 
@@ -64,8 +66,11 @@ class GridOcean : public Grid
 
 		 vector<Vector3f> m_initPos;
 		 vector<Vector3f> m_vel;
-		 vector<Vector3f> m_dVel;
+		 vector<Vector3f> m_dVel; // m_dVel = pentes 
 		 vector<float>    lifeTimeBubbles;
+
+		 vector<Vector3f> bordersA, bordersB, bordersC, bordersD, bordersE;
+		 int m_ny_border;
 
 		 float m_t;
 		 float tx, tz;
@@ -80,6 +85,10 @@ class GridOcean : public Grid
 		 void storePolygon(int i, int j, int nb);
 		 void storeUV(int i, int j, int nb);
 		 void storeColor(int nb);
+
+		 void createBorders();
+		 void displayBorder(vector<Vector3f> border, int nl1, int nl2);
+		 void displayBorders();
 
 		 Sprays *sprays;
 };

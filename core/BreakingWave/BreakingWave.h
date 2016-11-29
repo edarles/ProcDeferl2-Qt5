@@ -57,7 +57,7 @@ class BreakingWave
 		void merge(BreakingWave *br, float dt);
 
 		/**************** ROUTINE DE GENERATION DES PARTICULES ******/
-		void generateParticles();
+		void generateParticles(float dt);
 
 		/**************** ROUTINE DE MAJ ********************/
 		void update(float dt, GridOcean* gridOcean);
