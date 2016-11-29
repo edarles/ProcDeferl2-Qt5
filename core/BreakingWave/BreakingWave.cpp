@@ -163,7 +163,7 @@ void BreakingWave::generateParticles(float dt)
 	if(n>0){
 		float dx = (maxAct[0]-minAct[0]);
 		float dz = (maxAct[2]-minAct[2]);
-		float S = dx*dz;///(2*n);////gridBreaking->getDx()*gridBreaking->getDz();
+		float S = dx*dz/100;//gridBreaking->getDx()*gridBreaking->getDz();
 		//cout << "dx : " << dx << " dz: " << dz << " S: " << S << endl;
 
 		for(int i=0; i< gridBreaking->getNbActivePts(); i++){
@@ -172,8 +172,7 @@ void BreakingWave::generateParticles(float dt)
 			Vector3f vel = gridBreaking->getVel(index);
 			
 			float mass = solver->getRho0()*S*((float)hypot((double)(vel[0]-ps[0]),(double)(vel[2]-ps[1])));
-			if(mass>0.2)
-				solver->generateParticle(pos,vel,mass);
+			solver->generateParticle(pos,vel,mass);
 		}
 	}
 }
@@ -242,7 +241,7 @@ void BreakingWave::update(float dt, GridOcean* ocean)
 /****************************************************************************/
 void BreakingWave::display()
 {
-	//gridBreaking->display();
+	gridBreaking->display();
 	solver->display();
 }
 /****************************************************************************/

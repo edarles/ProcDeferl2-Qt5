@@ -443,7 +443,7 @@ void GridOcean::update(std::vector<WaveGroup*> waveGroups, float dt)
 			  	m_pos[index] += dPos;
 			  	m_vel[index] += vel;
 			  	m_dVel[index] += dVel;
-				cout << "G : " << waveGroups[n]->getG() << endl;
+				//cout << "dpos : " << dPos << endl;
 			}
 			if(FBM == 1)
 				m_pos[index][1] += SCALE_AMP*perlin_two(m_pos[index][0],m_pos[index][2],GAIN,OCTAVES,tx);
@@ -571,7 +571,7 @@ void GridOcean::display()
 	if(sprays) sprays->display();
 
 	displayBorders();
-
+/*
 	glColor3f(1,0,0);
 	for(int i=0;i<m_n;i++){
 		Vector3f pos = m_pos[i];
@@ -581,7 +581,7 @@ void GridOcean::display()
 		glVertex3f(pos[0],pos[1],pos[2]);
 		glVertex3f(pos[0]+dvel[0],pos[1]+dvel[1],pos[2]+dvel[2]);
 		glEnd();
-	}
+	}*/
 }
 /****************************************************************************/
 /****************************************************************************/

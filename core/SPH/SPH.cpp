@@ -141,13 +141,13 @@ void SPH::constraintGridSPH()
 	{
 		Vector3f pt = gridSPH->getLocalRotated(particles[i]->getPos());
 		
-		min[0] = fmin(min[0],pt[0]-rMax);
-		min[1] = fmin(min[1],pt[1]-rMax);
-		min[2] = fmin(min[2],pt[2]-rMax);
+		min[0] = fmin(min[0],pt[0]-2*rMax);
+		min[1] = fmin(min[1],pt[1]-2*rMax);
+		min[2] = fmin(min[2],pt[2]-2*rMax);
 
-		max[0] = fmax(max[0],pt[0]+rMax);
-		max[1] = fmax(max[1],pt[1]+rMax);
-		max[2] = fmax(max[2],pt[2]+rMax);
+		max[0] = fmax(max[0],pt[0]+2*rMax);
+		max[1] = fmax(max[1],pt[1]+2*rMax);
+		max[2] = fmax(max[2],pt[2]+2*rMax);
 	}
 	if(max0[0]-min0[0]!=0) s[0] = (float)fabs((double)((max[0]-min[0])/(max0[0]-min0[0])));
 	if(max0[1]-min0[1]!=0) s[1] = (float)fabs((double)((max[1]-min[1])/(max0[1]-min0[1])));
@@ -314,6 +314,7 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 			int x = (int) floor((ix/(float)(ocean->getNx()-1))*tex.width());
 			int y = (int) floor((iz/(float)(ocean->getNz()-1))*tex.height());
 
+			if(x>0 && y>0 && x<tex.width() && y<tex.height()){
 			QRgb rgb = tex.pixel(x,y);
 			int alpha = qAlpha(rgb);
 			// Ajout d'une durée de vie par texel
@@ -340,6 +341,7 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 					}
 					}
 				}
+			}
 			}
 			// Generation des sprays
 			if(SPRAYS == 1){

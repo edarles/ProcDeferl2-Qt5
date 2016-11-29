@@ -15,7 +15,7 @@ using namespace Eigen;
 #define SPRAYS 0
 
 // ACTIVATE FBM
-#define FBM 1
+#define FBM 0
 
 // FBM PARAMETERS
 #define GAIN 0.65

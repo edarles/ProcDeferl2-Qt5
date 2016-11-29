@@ -133,11 +133,11 @@ void GridBreaking::createGrid(vector<WaveGroup*> wg, vector<bool> wg_active)
 	}
 	if(toCreate){ 
 		maxExtens /= 2;
-		m_min = Vector3f(m_center[0] - maxLambda/2, m_center[1]-sumA, m_center[2] - maxExtens);
-		m_max = Vector3f(m_center[0] + maxLambda/2, m_center[1]+sumA, m_center[2] + maxExtens);
+		m_min = Vector3f(m_center[0] - maxLambda/2, m_center[1]-2*sumA, m_center[2] - maxExtens);
+		m_max = Vector3f(m_center[0] + maxLambda/2, m_center[1]+2*sumA, m_center[2] + maxExtens);
 		
-		m_dx = powf((maxLambda/2)*sumA*maxExtens,(1/3.0))*wg[indexMaxLambda]->getN()/tx;
-		m_dz = powf((maxLambda/2)*sumA*maxExtens,(1/3.0))*wg[indexMaxLambda]->getN()/tz;
+		m_dx = powf((maxLambda/2)*sumA*maxExtens,(1/3.0))/10;//*wg[indexMaxLambda]->getN()/tx;
+		m_dz = powf((maxLambda/2)*sumA*maxExtens,(1/3.0))/10;//*wg[indexMaxLambda]->getN()/tz;
 		m_dy = 0;
 		m_center = (m_min+m_max)/2;
 		Grid::createGrid();
