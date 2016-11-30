@@ -431,20 +431,24 @@ void GridOcean::update(std::vector<WaveGroup*> waveGroups, float dt)
 			m_pos[index] = m_initPos[index];
 			m_vel[index]=Vector3f(0,0,0);
 			m_dVel[index]=Vector3f(0,0,0);
+			float slope_x=0;
+			float slope_z=0;
 			for(unsigned int n=0; n<waveGroups.size(); n++)
 			{
 			  	Vector3f dPos(0,0,0);
 			  	Vector3f vel(0,0,0);
 			  	Vector3f dVel(0,0,0);
 			  	waveGroups[n]->computeMovement(m_initPos[index],m_t,&dPos,&vel,&dVel);
-			  	dPos[0]*=waveGroups[n]->getCosTheta(); dPos[2]*=waveGroups[n]->getSinTheta(); 
-			  	vel[0]*=waveGroups[n]->getCosTheta(); vel[2]*=waveGroups[n]->getSinTheta();
-			  	dVel[0]*=waveGroups[n]->getCosTheta(); dVel[2]*=waveGroups[n]->getSinTheta();
+			  	dPos[2]=dPos[0]; dPos[0]*=waveGroups[n]->getCosTheta(); dPos[2]*=waveGroups[n]->getSinTheta(); 
+			  	vel[2]=vel[0]; vel[0]*=waveGroups[n]->getCosTheta(); vel[2]*=waveGroups[n]->getSinTheta();
 			  	m_pos[index] += dPos;
 			  	m_vel[index] += vel;
-			  	m_dVel[index] += dVel;
-				//cout << "dpos : " << dPos << endl;
+				float tmp=dVel[1]/dVel[0];
+			        slope_x+=waveGroups[n]->getCosTheta()*tmp;
+				slope_z+=waveGroups[n]->getSinTheta()*tmp;
 			}
+			m_dVel[index][0]=-slope_x; m_dVel[index][1]=1; m_dVel[index][2]=-slope_z;
+			m_dVel[index].normalize();
 			if(FBM == 1)
 				m_pos[index][1] += SCALE_AMP*perlin_two(m_pos[index][0],m_pos[index][2],GAIN,OCTAVES,tx);
 			//cout << "deltaPos " << m_pos[index]-m_initPos[index] << endl;
@@ -571,17 +575,28 @@ void GridOcean::display()
 	if(sprays) sprays->display();
 
 	displayBorders();
-/*
+
 	glColor3f(1,0,0);
 	for(int i=0;i<m_n;i++){
 		Vector3f pos = m_pos[i];
-		Vector3f dvel; dvel[0]=-m_dVel[i][1]; dvel[1]=m_dVel[i][0]; dvel[2]=m_dVel[i][2];
+		Vector3f dvel; dvel[0]=m_dVel[i][0]; dvel[1]=m_dVel[i][1]; dvel[2]=m_dVel[i][2];
 		//dvel.normalize();
 		glBegin(GL_LINES);
 		glVertex3f(pos[0],pos[1],pos[2]);
 		glVertex3f(pos[0]+dvel[0],pos[1]+dvel[1],pos[2]+dvel[2]);
 		glEnd();
-	}*/
+	}
+	/*
+	glColor3f(1,1,0);// vitesses
+	for(int i=0;i<m_n;i++){
+		Vector3f pos = m_pos[i];
+		Vector3f vel; vel[0]=m_vel[i][0]; vel[1]=m_vel[i][1]; vel[2]=m_vel[i][2];
+		glBegin(GL_LINES);
+		glVertex3f(pos[0],pos[1],pos[2]);
+		glVertex3f(pos[0]+vel[0],pos[1]+vel[1],pos[2]+vel[2]);
+		glEnd();
+	}
+	*/
 }
 /****************************************************************************/
 /****************************************************************************/

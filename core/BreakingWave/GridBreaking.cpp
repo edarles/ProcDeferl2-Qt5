@@ -347,8 +347,8 @@ void GridBreaking::update(vector<WaveGroup*> waveGroups, float dt)
 			  	Vector3f vel(0,0,0);
 			  	Vector3f dVel(0,0,0);
 			  	waveGroups[n]->computeMovement(m_initPos[index],m_t,&dPos,&vel,&dVel);
-			  	dPos[0]*=waveGroups[n]->getCosTheta(); dPos[2]*=waveGroups[n]->getSinTheta(); 
-				vel[0]*=waveGroups[n]->getCosTheta(); vel[2]*=waveGroups[n]->getSinTheta();
+			  	dPos[2]=dPos[0]; dPos[0]*=waveGroups[n]->getCosTheta(); dPos[2]*=waveGroups[n]->getSinTheta(); 
+				vel[2]=vel[0]; vel[0]*=waveGroups[n]->getCosTheta(); vel[2]*=waveGroups[n]->getSinTheta();
 			  	m_pos[index] += dPos;
 				m_vel[index] += vel;
 			}

@@ -63,9 +63,9 @@ void WaveGroup::initOtherParams()
 	this->w = sqrt(9.81*k);
 
 	// g -> position initiale du groupe
-	this->g[0] = -50*cosTheta;
+	this->g[0] = 0;// -50*cosTheta;
 	this->g[1] = 0;
-	this->g[2] = 50*sinTheta;
+	this->g[2] = 0;// -50*sinTheta;
 
 	this->ps = w/k;   //vitesse de phase
 	this->fs = w/(2*k); // vitesse de l'enveloppe

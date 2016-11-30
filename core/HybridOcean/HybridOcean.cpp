@@ -19,7 +19,8 @@ HybridOcean::HybridOcean()
 
 	this->m_waveGroups.clear();
 	//m_visuGrid = new GridOcean(Vector3f(-100,0,-50), Vector3f(100,0,50),0.1,0.1);
-	m_visuGrid = new GridOcean(Vector3f(-70,0,-50), Vector3f(-20,0,50),1,1);
+	//m_visuGrid = new GridOcean(Vector3f(-70,0,-50), Vector3f(-20,0,50),1,1);
+	m_visuGrid = new GridOcean(Vector3f(-50,0,-50), Vector3f(50,0,50),1,1);
 	m_visuGrid->setColor(colorOcean);	
 
 	dt = 0.01;
@@ -39,7 +40,8 @@ HybridOcean::HybridOcean(vector<WaveGroup*> waveGroups, float dt)
 		addWaveGroup(waveGroups[i]);
 
 	//m_visuGrid = new GridOcean(Vector3f(-100,0,-50), Vector3f(100,0,50),0.1,0.1);
-	m_visuGrid = new GridOcean(Vector3f(-70,0,-50), Vector3f(-20,0,50),0.5,0.5);
+	//m_visuGrid = new GridOcean(Vector3f(-70,0,-50), Vector3f(-20,0,50),0.5,0.5);
+	m_visuGrid = new GridOcean(Vector3f(-50,0,-50), Vector3f(50,0,50),1,1);
 	m_visuGrid->setColor(colorOcean);
 	
 	this->dt = dt;
