@@ -1,4 +1,4 @@
-#include <utils.h>
+include <utils.h>
 #include <GridBreaking.h>
 #include <Grid.h>
 #include <GL/gl.h> 
@@ -158,8 +158,8 @@ void GridBreaking::checkActiveWgs(vector<WaveGroup*> wgs, vector<bool> *wg_activ
 			int j=0;
 			while(j<m_nz && !actif){
 				int indexCell = i + j*m_nx;
-				float norm = m_vel[indexCell][0]*wg->getPs()*wg->getCosTheta()+m_vel[indexCell][2]*wg->getPs()*wg->getSinTheta();
-				if(norm>=wg->getPs()*wg->getPs()){
+				float norm = m_vel[indexCell][0]*wg->getPs()*wg->getCosTheta()+m_vel[indexCell][2]*wg->getPs()*wg->getSinTheta(); // vitesse particule projetée sur vitesse du groupe
+				if(norm>=wg->getPs()*wg->getPs()){ // la particule va plus vite que la vague
 					actif = true;
 					if(maxLambda<lambda){
 						maxLambda = lambda;
@@ -347,10 +347,13 @@ void GridBreaking::update(vector<WaveGroup*> waveGroups, float dt)
 			  	Vector3f vel(0,0,0);
 			  	Vector3f dVel(0,0,0);
 			  	waveGroups[n]->computeMovement(m_initPos[index],m_t,&dPos,&vel,&dVel);
+				// rotation theta autour axe y (vertical)
 			  	dPos[2]=dPos[0]; dPos[0]*=waveGroups[n]->getCosTheta(); dPos[2]*=waveGroups[n]->getSinTheta(); 
 				vel[2]=vel[0]; vel[0]*=waveGroups[n]->getCosTheta(); vel[2]*=waveGroups[n]->getSinTheta();
+				// accumulation linéaire des effets de chaque groupe
 			  	m_pos[index] += dPos;
 				m_vel[index] += vel;
+				// si besoin des normales, voir GridOcean::update()
 			}
 			if(FBM == 1)
 				m_pos[index][1] += SCALE_AMP*perlin_two(m_pos[index][0],m_pos[index][2],GAIN,OCTAVES,tx);

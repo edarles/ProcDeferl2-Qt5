@@ -439,14 +439,21 @@ void GridOcean::update(std::vector<WaveGroup*> waveGroups, float dt)
 			  	Vector3f vel(0,0,0);
 			  	Vector3f dVel(0,0,0);
 			  	waveGroups[n]->computeMovement(m_initPos[index],m_t,&dPos,&vel,&dVel);
+				// rotation theta autour axe y (vertical)
 			  	dPos[2]=dPos[0]; dPos[0]*=waveGroups[n]->getCosTheta(); dPos[2]*=waveGroups[n]->getSinTheta(); 
 			  	vel[2]=vel[0]; vel[0]*=waveGroups[n]->getCosTheta(); vel[2]*=waveGroups[n]->getSinTheta();
+				// accumulation linéaire des effets de chaque groupe
 			  	m_pos[index] += dPos;
 			  	m_vel[index] += vel;
-				float tmp=dVel[1]/dVel[0];
-			        slope_x+=waveGroups[n]->getCosTheta()*tmp;
-				slope_z+=waveGroups[n]->getSinTheta()*tmp;
+				// calcul des pentes 
+				float tmp=dVel[1]/dVel[0]; // dans le plan vertical contenant le vecteur d'onde k,
+				// sachant qu'en horizontal perpendiculairement à k,
+				// la variation est considérée comme négligeable :
+				// enveloppe varie doucement relativement à l'onde
+			        slope_x+=waveGroups[n]->getCosTheta()*tmp; // sum \partial d/dx
+				slope_z+=waveGroups[n]->getSinTheta()*tmp; // sum \partial d/dz
 			}
+			// normale : (1,d/dx,0)^(0,d/dz,1)
 			m_dVel[index][0]=-slope_x; m_dVel[index][1]=1; m_dVel[index][2]=-slope_z;
 			m_dVel[index].normalize();
 			if(FBM == 1)
