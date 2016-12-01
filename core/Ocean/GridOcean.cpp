@@ -600,3 +600,120 @@ void GridOcean::display()
 }
 /****************************************************************************/
 /****************************************************************************/
+void GridOcean::exportOBJ(const char* filename)
+{
+	if(m_ny==0){
+		FILE *f = fopen(filename,"w");
+		if(f!=NULL){
+			int begin = 1;
+			// Export surface
+			fprintf(f,"o surface\n");
+			fprintf(f,"g surfaceMer\n");
+			// Export vertices
+			for(int i=0;i<m_n;i++)
+					fprintf(f,"v %f %f %f\n",m_pos[i][0],m_pos[i][2],m_pos[i][1]);
+			for(int i=0;i<m_n;i++)
+					fprintf(f,"v %f %f %f\n",bordersA[i][0],bordersA[i][2],bordersA[i][1]);
+			for(int i=0;i<m_nx+m_ny_border*m_nx;i++)
+					fprintf(f,"v %f %f %f\n",bordersB[i][0],bordersB[i][2],bordersB[i][1]);
+			for(int i=0;i<m_nx+m_ny_border*m_nx;i++)
+					fprintf(f,"v %f %f %f\n",bordersC[i][0],bordersC[i][2],bordersC[i][1]);
+			for(int i=0;i<m_nz+m_ny_border*m_nz;i++)
+					fprintf(f,"v %f %f %f\n",bordersD[i][0],bordersD[i][2],bordersD[i][1]);
+			for(int i=0;i<m_nz+m_ny_border*m_nz;i++)
+					fprintf(f,"v %f %f %f\n",bordersE[i][0],bordersE[i][2],bordersE[i][1]);
+
+			// Export normals
+			for(int i=0;i<m_n;i++){
+					Vector3f dvel; dvel[0]=-m_dVel[i][1]; dvel[1]=m_dVel[i][0]; dvel[2]=m_dVel[i][2];
+					dvel.normalize();
+					fprintf(f,"vn %f %f %f\n",dvel[0],dvel[1],dvel[2]);
+			}
+			// Export Quads Surface
+			for(int i=0;i<m_nx-1;i++){
+				for(int j=0;j<m_nz-1;j++){
+					int indexs[4];
+					indexs[0] = i + j*m_nx;
+					indexs[1] = i + (j+1)*m_nx;
+					indexs[2] = (i+1) + (j+1)*m_nx;
+					indexs[3] = (i+1) + j*m_nx;
+					fprintf(f,"f %d// %d// %d// %d//\n",indexs[0]+begin,indexs[1]+begin,indexs[2]+begin,indexs[3]+begin);
+					//indexs[2]+begin,indexs[2]+begin,indexs[3]+begin,indexs[3]+begin);
+
+				}
+			}
+			begin += m_n;
+			// Export Quads Fonds
+			for(int i=0;i<m_nx-1;i++){
+				for(int j=0;j<m_nz-1;j++){
+					int indexs[4];
+					indexs[0] = i + j*m_nx;
+					indexs[1] = i + (j+1)*m_nx;
+					indexs[2] = (i+1) + (j+1)*m_nx;
+					indexs[3] = (i+1) + j*m_nx;
+					fprintf(f,"f %d// %d// %d// %d//\n",indexs[0]+begin,indexs[1]+begin,indexs[2]+begin,indexs[3]+begin);
+
+				}
+			}
+			begin += m_n;
+			// Export Quads BordersB
+			for(int i=0;i<m_nx-1;i++){
+				for(int j=0;j<m_ny_border-1;j++){
+					int indexs[4];
+					indexs[0] = i + j*m_nx;
+					indexs[1] = i + (j+1)*m_nx;
+					indexs[2] = (i+1) + (j+1)*m_nx;
+					indexs[3] = (i+1) + j*m_nx;
+					fprintf(f,"f %d// %d// %d// %d//\n",indexs[0]+begin,indexs[1]+begin,indexs[2]+begin,indexs[3]+begin);
+
+				}
+			}
+			begin += m_nx+m_ny_border*m_nx;
+			// Export Quads BordersC
+			for(int i=0;i<m_nx-1;i++){
+				for(int j=0;j<m_ny_border-1;j++){
+					int indexs[4];
+					indexs[0] = i + j*m_nx;
+					indexs[1] = i + (j+1)*m_nx;
+					indexs[2] = (i+1) + (j+1)*m_nx;
+					indexs[3] = (i+1) + j*m_nx;
+					fprintf(f,"f %d// %d// %d// %d//\n",indexs[0]+begin,indexs[1]+begin,indexs[2]+begin,indexs[3]+begin);
+
+				}
+			}
+			begin += m_nx+m_ny_border*m_nx;
+			// Export Quads BordersD
+			for(int i=0;i<m_nz-1;i++){
+				for(int j=0;j<m_ny_border-1;j++){
+					int indexs[4];
+					indexs[0] = i + j*m_nz;
+					indexs[1] = i + (j+1)*m_nz;
+					indexs[2] = (i+1) + (j+1)*m_nz;
+					indexs[3] = (i+1) + j*m_nz;
+					fprintf(f,"f %d// %d// %d// %d//\n",indexs[0]+begin,indexs[1]+begin,indexs[2]+begin,indexs[3]+begin);
+
+				}
+			}
+			begin += m_nz+m_ny_border*m_nz;
+			// Export Quads BordersE
+			for(int i=0;i<m_nz-1;i++){
+				for(int j=0;j<m_ny_border-1;j++){
+					int indexs[4];
+					indexs[0] = i + j*m_nz;
+					indexs[1] = i + (j+1)*m_nz;
+					indexs[2] = (i+1) + (j+1)*m_nz;
+					indexs[3] = (i+1) + j*m_nz;
+					fprintf(f,"f %d// %d// %d// %d//\n",indexs[0]+begin,indexs[1]+begin,indexs[2]+begin,indexs[3]+begin);
+
+				}
+			}
+			fclose(f);
+		}
+		else
+			std::cout << "Pb Ecriture !" << std::endl;
+	}
+	else
+		std::cout << "Export OBJ Impossible : Grille volumique !" << std::endl;
+}
+/****************************************************************************/
+/****************************************************************************/
