@@ -61,6 +61,9 @@ class GridOcean : public Grid
 		/**************** SURCHARGE METHODE DISPLAY (AVEC TEXTURE) ******/
 		void  display();
 
+		/*************** EXPORT OBJ *********************************/
+		void exportOBJ(const char* filename);
+
 /****************************************************************************/
 	protected : 
 
