@@ -1,0 +1,59 @@
+<?xml version='1.0'?>
+
+<scene version="0.5.0">
+	<integrator type="volpath"/>
+
+	<shape type="obj">
+		<string name="filename" value="../OBJ/ocean_0001.obj"/>
+
+		<bsdf type="diffuse">
+			<rgb name="diffuseReflectance" value=".1, .1, 0.1"/>
+		</bsdf>
+
+		<bsdf type="dielectric">
+		<float name="intIOR" value="1.33"/> <float name="extIOR" value="1.0"/>
+		</bsdf>
+		<medium type="homogeneous" name="interior"> 
+			<rgb name="sigmaS" value="0.3, 0.2, 0.3"/> 
+			<rgb name="sigmaA" value="0.4, 0.2, 0.05"/>
+			<phase type="hg">
+				<float name="g" value="0.7"/>
+			</phase>
+		</medium>
+	</shape>
+
+	<sensor type="perspective">
+		<float name="focusDistance" value="56.3951"/>
+		<float name="fov" value="34.0221"/>
+		<string name="fovAxis" value="x"/>
+		<transform name="toWorld">
+
+			<lookat target="-42.3127, -26.6485, 2.11948" origin="-42.2566, -27.6429, 2.20864" up="0.012966, 0.0900181, 0.995856"/>
+		</transform>
+
+		<sampler type="ldsampler">
+			<integer name="sampleCount" value="512"/>
+		</sampler>
+
+		<film type="ldrfilm">
+			<boolean name="banner" value="false"/>
+			<float name="exposure" value="0"/>
+			<float name="gamma" value="-1"/>
+			<integer name="height" value="512"/>
+			<string name="pixelFormat" value="rgb"/>
+			<string name="tonemapMethod" value="gamma"/>
+			<integer name="width" value="512"/>
+
+			<rfilter type="gaussian"/>
+		</film>
+	</sensor>
+
+	<emitter type="envmap" id="Area_002-light">
+		<string name="filename" value="sea.jpg"/>
+		<transform name="toWorld">
+			<rotate y="1" angle="-180"/>
+			<matrix value="-0.224951 -0.000001 -0.974370 0.000000 -0.974370 0.000000 0.224951 0.000000 0.000000 1.000000 -0.000001 8.870000 0.000000 0.000000 0.000000 1.000000"/>
+		</transform>
+		<float name="scale" value="2"/>
+	</emitter>
+</scene>
