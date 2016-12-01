@@ -39,10 +39,13 @@ Window::Window():QMainWindow()
     menuExport = new QMenu("&Export");
     exportMitsuba_act = new QAction(tr("&Export Mitsuba"),this);
     exportMitsuba_act->setShortcut(tr("e"));
+	
     connect(exportMitsuba_act, SIGNAL(triggered()), this, SLOT(exportMitsuba()));
     exportData_act = new QAction(tr("&Export Data"),this);
     exportData_act->setShortcut(tr("d"));
     connect(exportData_act, SIGNAL(triggered()), this, SLOT(exportData()));
+    menuExport->addAction(exportMitsuba_act);
+     menuExport->addAction(exportData_act);
 
     menuBar->addMenu(menuParticles);
     menuBar->addMenu(menuAnimation);

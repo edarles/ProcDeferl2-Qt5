@@ -58,6 +58,9 @@ class GridOcean : public Grid
 		/**************** ROUTINE DE RELAXATION DE LA MOUSSE ************/
 		void relaxBubbles(int ix, int iz);
 
+		/**************** SURCHARGE DE LA METHODE D'EXPORT AU FORMAT OBJ ***/
+		void exportOBJ(const char* filename);
+
 		/**************** SURCHARGE METHODE DISPLAY (AVEC TEXTURE) ******/
 		void  display();
 

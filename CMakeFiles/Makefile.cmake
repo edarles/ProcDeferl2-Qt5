@@ -64,8 +64,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/opt/local/share/cmake-3.6/Modules/FindPackageHandleStandardArgs.cmake"
   "/opt/local/share/cmake-3.6/Modules/FindPackageMessage.cmake"
   "/opt/local/share/cmake-3.6/Modules/FindQGLViewer.cmake"
-  "/opt/local/share/cmake-3.6/Modules/FindSDL.cmake"
-  "/opt/local/share/cmake-3.6/Modules/FindSDL_IMAGE.cmake"
   "/opt/local/share/cmake-3.6/Modules/FindTinyXML.cmake"
   "/opt/local/share/cmake-3.6/Modules/Platform/Darwin-AppleClang-C.cmake"
   "/opt/local/share/cmake-3.6/Modules/Platform/Darwin-AppleClang-CXX.cmake"
