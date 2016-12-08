@@ -302,21 +302,25 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 	for(unsigned int i=0;i<particles.size();i++)
 	{
 		Vector3f pos2 = gridSPH->getLocalRotated(particles[i]->getPos());
-		Vector3f pos = Vector3f(pos2[0],0,pos2[2]);
-		Vector3f dPos(0,0,0);
-		Vector3f dVel(0,0,0);
-		Vector3f vel(0,0,0);
+		Vector3f m_pos = Vector3f(pos2[0],0,pos2[2]);
+		Vector3f deltaSeaPos(0,0,0);
+		Vector3f seaSpeed(0,0,0);
+		float slope_x=0;
+		float slope_z=0;
 		float A = 0;
 		for(unsigned int j=0;j<waveGroups.size();j++){
-			waveGroups[j]->computeMovement(pos, time, &dP, &v, &dV);
+			waveGroups[j]->computeMovement(m_pos, time, &dP, &v, &dV);
 			A+=waveGroups[j]->getR();
-			dP[0]*=waveGroups[j]->getCosTheta(); dP[2]*=waveGroups[j]->getSinTheta(); 
-			dV[0]*=waveGroups[j]->getCosTheta(); dV[2]*=waveGroups[j]->getSinTheta(); 
-			v[0]*=waveGroups[j]->getCosTheta(); v[2]*=waveGroups[j]->getSinTheta(); 
-			dPos+=dP;
-			dVel+=dV;
-			vel+=v;
+			dP[2]=dP[0]; dP[0]*=waveGroups[j]->getCosTheta(); dP[2]*=waveGroups[j]->getSinTheta(); 
+			v[2]=v[0]; v[0]*=waveGroups[j]->getCosTheta(); v[2]*=waveGroups[j]->getSinTheta();
+			deltaSeaPos+= dP;
+			seaSpeed+= v;
+			float tmp=dV[1]/dV[0];
+			slope_x+=waveGroups[j]->getCosTheta()*tmp;
+			slope_z+=waveGroups[j]->getSinTheta()*tmp;	
 		}
+		Vector3f seaNormal(-slope_x, 1, -slope_z);
+		seaNormal.normalize();
 		if(pos2[1] + particles[i]->getRadius() < -A){//dPos[1]){
 			// On augmente l'alpha dans la texture de la grille de visualisation
 			// Augmentation de la transparence en corrélation avec la masse de la particule et de la vitesse
@@ -359,7 +363,7 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 			}
 			// Generation des sprays
 			if(SPRAYS == 1){
-				if(vel[2]<0){
+				if(seaSpeed[1]<0){
 					int nbSprays = particles[i]->getMass()*particles[i]->getVel().norm();
 					Vector3f velP = particles[i]->getVel();
 					velP[1] = -velP[1];

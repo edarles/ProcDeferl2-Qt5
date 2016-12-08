@@ -117,7 +117,7 @@ void GLWidget::test2()
   	float theta1 = 0.4;//0.1; // direction du vecteur d'onde kx=k.cos(theta), ky=k.sin(theta)
   	float r1 = 0.5/k1; // rayon des plus grosses vagues au centre du groupe (r.k==1 est la cambrure limite du déferlement)
   	float phi01 = 0; // phase initiale de l'onde
-  	float zeta1 = M_PI/7; // phase instantannée maximale (-zeta<dphiw<zeta)
+  	float zeta1 = M_PI/5; // phase instantannée maximale (-zeta<dphiw<zeta)
   	int n1 = 7; // nombre de vagues sous l'enveloppe
 
 	// Création d'un groupe de vague

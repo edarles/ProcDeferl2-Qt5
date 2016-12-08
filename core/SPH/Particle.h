@@ -17,8 +17,8 @@ class Particle
 		Particle(Particle &P);
 		~Particle();
 
-		Vector3f getPos();
-		Vector3f getVel();
+		Vector3f getPos(); // repère local de la grille. Pour coord globales :  gridSPH->getLocalRotated(particle->getPos());
+		Vector3f getVel();; // repère global
 		Vector3f getForces();
 		float 	 getMass();
 		float    getRadius();
