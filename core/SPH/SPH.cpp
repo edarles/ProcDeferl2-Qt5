@@ -13,7 +13,7 @@ const float SPH::ltS = 7.065;
 SPH::SPH(Vector3f origin, Vector3f min, Vector3f max)
 {
 	gridSPH = new GridSPH(min,max,0.5,0.5,0.5); 
-	gridSPH->setCenter(origin);
+	//gridSPH->setCenter(origin);
 	totalMass = 0;
 	particles.clear();
 	srand(time(NULL));
@@ -21,12 +21,13 @@ SPH::SPH(Vector3f origin, Vector3f min, Vector3f max)
 /****************************************************************************/
 SPH::~SPH()
 {
+	cout << "delete breaking waves" << endl;
 	delete gridSPH; 
 	for(unsigned int i=0;i<particles.size();i++)
 		delete particles[i];
 	particles.clear();
-	vector<Particle*>().swap(particles);
-	particles.shrink_to_fit();
+	//vector<Particle*>().swap(particles);
+	//particles.shrink_to_fit();
 }
 /****************************************************************************/
 void SPH::addParticle(Vector3f pos, Vector3f vel, float mass, float radius)
@@ -52,7 +53,7 @@ void SPH::deleteParticle(int index)
 	totalMass -= particles[index]->getMass();
 	delete particles[index];
 	particles.erase(particles.begin()+index);
-	particles.shrink_to_fit();
+	//particles.shrink_to_fit();
 }
 /****************************************************************************/
 void SPH::generateParticle(Vector3f pos, Vector3f vel, float mass)
@@ -64,7 +65,7 @@ void SPH::generateParticle(Vector3f pos, Vector3f vel, float mass)
 	int i= particles.size()-1;
 	float h = powf((60*mass)/(4*M_PI*rho0),0.333);
 	Vector3f velP = vel; 
-	velP[0] = powf(vel[0]*0.5,2); velP[1] = -powf(vel[1]*0.5,2); velP[2] = powf(vel[2]*0.5,2);
+	velP[0] = 1.0*powf(vel[0]*0.5,2); velP[1] = -powf(vel[1]*0.5,2); velP[2] = powf(vel[2]*0.5,2);
 	while(i>=0 && !trouve)
 	{
 		
@@ -127,33 +128,44 @@ void SPH::constraintGridSPH()
 	Vector3f s = Vector3f(1,1,1);
 	float rMax = -INF;
 	Vector3f barycenter(0,0,0);
+	int nb = 0;
 	for(unsigned int i=0;i<particles.size();i++)
 	{
 		Vector3f pt = gridSPH->getLocalRotated(particles[i]->getPos());
-		barycenter+= pt;
-		rMax = fmax(rMax,particles[i]->getRadius());
+		if(!isnan(pt[0]) && !isnan(pt[1]) && !isnan(pt[2])) {
+			barycenter+= pt;
+			rMax = fmax(rMax,particles[i]->getRadius());
+			nb++;
+		}
 	}
-	barycenter/=particles.size();
-	gridSPH->translate(barycenter-gridSPH->getCenter());
-        rMax*=2;
-
-	for(unsigned int i=0;i<particles.size();i++)
-	{
-		Vector3f pt = gridSPH->getLocalRotated(particles[i]->getPos());
+	if(nb>0){
+		barycenter/=nb;
+		gridSPH->translate(barycenter-gridSPH->getCenter());
+        	rMax*=2;
+	
+		min0 = gridSPH->getMin();
+		max0 = gridSPH->getMax();
+		for(unsigned int i=0;i<particles.size();i++)
+		{		
+			Vector3f pt = gridSPH->getLocalRotated(particles[i]->getPos());
+			if(!isnan(pt[0]) && !isnan(pt[1]) && !isnan(pt[2])) {
 		
-		min[0] = fmin(min[0],pt[0]-2*rMax);
-		min[1] = fmin(min[1],pt[1]-2*rMax);
-		min[2] = fmin(min[2],pt[2]-2*rMax);
+			min[0] = fmin(min[0],pt[0]-rMax);
+			min[1] = fmin(min[1],pt[1]-rMax);
+			min[2] = fmin(min[2],pt[2]-rMax);
 
-		max[0] = fmax(max[0],pt[0]+2*rMax);
-		max[1] = fmax(max[1],pt[1]+2*rMax);
-		max[2] = fmax(max[2],pt[2]+2*rMax);
+			max[0] = fmax(max[0],pt[0]+rMax);
+			max[1] = fmax(max[1],pt[1]+rMax);
+			max[2] = fmax(max[2],pt[2]+rMax);
+			}
+		
+		}
+		if(max0[0]-min0[0]!=0) s[0] = (float)fabs((double)((max[0]-min[0])/(max0[0]-min0[0])));
+		if(max0[1]-min0[1]!=0) s[1] = (float)fabs((double)((max[1]-min[1])/(max0[1]-min0[1])));
+		if(max0[2]-min0[2]!=0) s[2] = (float)fabs((double)((max[2]-min[2])/(max0[2]-min0[2])));
+		//cout << "scale: " << s[0] << " " << s[1] << " " << s[2] << endl;
+		gridSPH->scale(s);
 	}
-	if(max0[0]-min0[0]!=0) s[0] = (float)fabs((double)((max[0]-min[0])/(max0[0]-min0[0])));
-	if(max0[1]-min0[1]!=0) s[1] = (float)fabs((double)((max[1]-min[1])/(max0[1]-min0[1])));
-	if(max0[2]-min0[2]!=0) s[2] = (float)fabs((double)((max[2]-min[2])/(max0[2]-min0[2])));
-	gridSPH->scale(s);
-
   }	
 }
 /****************************************************************************/
@@ -260,7 +272,7 @@ void SPH::computeForces()
 		if(lN>=ltS)
 			forces += -fS*tS*N/lN;
 		particles[i]->setForces(forces);
-		particles[i]->clearVois();
+		//particles[i]->clearVois();
 	}
 }
 /****************************************************************************/
@@ -294,8 +306,10 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 		Vector3f dPos(0,0,0);
 		Vector3f dVel(0,0,0);
 		Vector3f vel(0,0,0);
+		float A = 0;
 		for(unsigned int j=0;j<waveGroups.size();j++){
 			waveGroups[j]->computeMovement(pos, time, &dP, &v, &dV);
+			A+=waveGroups[j]->getR();
 			dP[0]*=waveGroups[j]->getCosTheta(); dP[2]*=waveGroups[j]->getSinTheta(); 
 			dV[0]*=waveGroups[j]->getCosTheta(); dV[2]*=waveGroups[j]->getSinTheta(); 
 			v[0]*=waveGroups[j]->getCosTheta(); v[2]*=waveGroups[j]->getSinTheta(); 
@@ -303,7 +317,7 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 			dVel+=dV;
 			vel+=v;
 		}
-		if(pos2[1] + particles[i]->getRadius() < dPos[1]){
+		if(pos2[1] + particles[i]->getRadius() < -A){//dPos[1]){
 			// On augmente l'alpha dans la texture de la grille de visualisation
 			// Augmentation de la transparence en corrélation avec la masse de la particule et de la vitesse
 			float mass = particles[i]->getMass();

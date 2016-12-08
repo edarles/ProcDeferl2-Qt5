@@ -258,8 +258,6 @@ void Grid::scale(Vector3f s)
 			}
 		}
 	}
-	m_center = (m_max+m_min)/2;
-	m_dx*=s[0];m_dy*=s[1];m_dz*=s[2];
 }
 /*************************************************/
 void Grid::rotate(float theta)

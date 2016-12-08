@@ -16,13 +16,19 @@ BreakingWave::BreakingWave(Vector3f center, vector<WaveGroup*> wg_acting, vector
 	
 	Vector3f centerSPH = this->center;
 	centerSPH[0] = centerSPH[0] + (gridBreaking->getMax()[0]-gridBreaking->getMin()[0])/4;
-	solver = new WCSPH(centerSPH, gridBreaking->getMin(),gridBreaking->getMax());
+	Vector3f min = gridBreaking->getMin(); 
+	Vector3f max = gridBreaking->getMax(); 
+	min[0] = min[0] - (max[0]-min[0])/4;
+	max[0] = max[0] + (max[0]-min[0])/4;
+	min[2] = min[2] - (max[2]-min[2])/4;
+	max[2] = max[2] + (max[2]-min[2])/4;
+	solver = new WCSPH(centerSPH, min,max);
 	solver->getGrid()->setColor(gridBreaking->getColor());	
 
 	gridBreaking->setT(t);
 
-	Vector3f min = gridBreaking->getMin(); min[1]=0;
-	Vector3f max = gridBreaking->getMax(); max[1]=0;
+	min = gridBreaking->getMin(); min[1]=0;
+	max = gridBreaking->getMax(); max[1]=0;
 	gridBreaking->setMin(min);gridBreaking->setMax(max);
 
 	isActive = true;
@@ -161,18 +167,15 @@ void BreakingWave::generateParticles(float dt)
 	Vector3f maxAct = gridBreaking->getMaxAct();
 	int n = gridBreaking->getNbActivePts();
 	if(n>0){
-		float dx = (maxAct[0]-minAct[0]);
-		float dz = (maxAct[2]-minAct[2]);
-		float S = dx*dz/100;//gridBreaking->getDx()*gridBreaking->getDz();
-		//cout << "dx : " << dx << " dz: " << dz << " S: " << S << endl;
-
+		float S = gridBreaking->getDx()*gridBreaking->getDz();
 		for(int i=0; i< gridBreaking->getNbActivePts(); i++){
 			int index = gridBreaking->getActivePt(i);
 			Vector3f pos = gridBreaking->getPos(index);
 			Vector3f vel = gridBreaking->getVel(index);
 			
-			float mass = solver->getRho0()*S*((float)hypot((double)(vel[0]-ps[0]),(double)(vel[2]-ps[1])));
-			solver->generateParticle(pos,vel,mass);
+			float mass = solver->getRho0()*S*dt*((float)hypot((double)(vel[0]-ps[0]),(double)(vel[2]-ps[1])));
+			if(mass>0)
+				solver->generateParticle(pos,vel,mass);
 		}
 	}
 }

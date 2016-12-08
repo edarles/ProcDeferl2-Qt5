@@ -123,7 +123,7 @@ void GLWidget::test2()
 	// Création d'un groupe de vague
 	float k2 = 2*M_PI/10.0; // nombre d'onde : 2pi/lambda
   	float w2 = sqrt(9.81*k2); // pulsation (relation de dispersion par grande profondeur)
-  	float theta2 = -0.2; // direction du vecteur d'onde kx=k.cos(theta), ky=k.sin(theta)
+  	float theta2 = -0.1; // direction du vecteur d'onde kx=k.cos(theta), ky=k.sin(theta)
   	float r2 = 0.6/k2; // rayon des plus grosses vagues au centre du groupe (r.k==1 est la cambrure limite du déferlement)
   	float phi02 = 0.01; // phase initiale de l'onde
   	float zeta2 = M_PI/6; // phase instantannée maximale (-zeta<dphiw<zeta)

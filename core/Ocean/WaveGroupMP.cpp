@@ -12,6 +12,18 @@ WaveGroupMP::WaveGroupMP(int n, float k, float theta, float r, float phi0, float
 {
 }
 /****************************************************************************/
+WaveGroupMP::WaveGroupMP(const WaveGroupMP& wg)
+{
+	this->n = wg.n;
+	this->k = wg.k;
+	this->lambda = 2*M_PI/this->k;
+	this->theta = wg.theta;
+	this->r = wg.r;
+	this->phi0 = wg.phi0;
+	this->zeta = wg.zeta;
+	initOtherParams();
+}
+/****************************************************************************/
 WaveGroupMP::~WaveGroupMP()
 {
 }

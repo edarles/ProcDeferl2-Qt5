@@ -13,6 +13,7 @@ class WaveGroupMP : public WaveGroup
 
 		WaveGroupMP();
 		WaveGroupMP(int n, float k, float theta, float r, float phi0, float zeta);
+		WaveGroupMP(const WaveGroupMP& wg);
 		~WaveGroupMP();
 
 		void computeMovement(Vector3f pos, float t, Vector3f *dPos, Vector3f *vel, Vector3f *dVel);

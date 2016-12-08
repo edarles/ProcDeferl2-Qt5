@@ -581,29 +581,17 @@ void GridOcean::display()
 	displayPatchesWithoutTexture(m_program2,posDisplay,colors,nb);
 	if(sprays) sprays->display();
 
-	displayBorders();
+	//displayBorders();
 
-	glColor3f(1,0,0);
+	/*glColor3f(1,0,0);
 	for(int i=0;i<m_n;i++){
 		Vector3f pos = m_pos[i];
 		Vector3f dvel; dvel[0]=m_dVel[i][0]; dvel[1]=m_dVel[i][1]; dvel[2]=m_dVel[i][2];
-		//dvel.normalize();
 		glBegin(GL_LINES);
 		glVertex3f(pos[0],pos[1],pos[2]);
 		glVertex3f(pos[0]+dvel[0],pos[1]+dvel[1],pos[2]+dvel[2]);
 		glEnd();
-	}
-	/*
-	glColor3f(1,1,0);// vitesses
-	for(int i=0;i<m_n;i++){
-		Vector3f pos = m_pos[i];
-		Vector3f vel; vel[0]=m_vel[i][0]; vel[1]=m_vel[i][1]; vel[2]=m_vel[i][2];
-		glBegin(GL_LINES);
-		glVertex3f(pos[0],pos[1],pos[2]);
-		glVertex3f(pos[0]+vel[0],pos[1]+vel[1],pos[2]+vel[2]);
-		glEnd();
-	}
-	*/
+	}*/
 }
 /****************************************************************************/
 /****************************************************************************/

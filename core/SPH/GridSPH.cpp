@@ -22,6 +22,7 @@ GridSPH::~GridSPH()
 /*************************************************/
 void GridSPH::computeNeighborhood(vector<Particle*> particles)
 {
+	//cerr << "Debut fonction " << endl;
 	vector< vector<short> > indexs;
 	int nbMaxPart = 0;
 	// Store particles into cells
@@ -33,15 +34,17 @@ void GridSPH::computeNeighborhood(vector<Particle*> particles)
 			}
 		}
 	}
+	//cerr << "la1" << endl; 
 	for(unsigned int i=0;i<particles.size();i++){
 		Vector3f pos = getLocalRotated(particles[i]->getPos());
 	  	int iC = (int) floor((double)(pos[0]-m_min[0])/m_dx);
 	  	int jC = (int) floor((double)(pos[1]-m_min[1])/m_dy);
 	  	int kC = (int) floor((double)(pos[2]-m_min[2])/m_dz);
 	  	int indexCell = iC + kC*m_nx + jC*m_nx*m_nz;
-		if(indexCell<m_n)
+		if(indexCell>=0 && indexCell<m_n)
 			indexs[indexCell].push_back(i);
 	}
+	//cerr << "la2" << endl; 
 	// Compute neighboorhood for each particle
 	for(unsigned int iP=0;iP<particles.size();iP++){
 
@@ -74,12 +77,16 @@ void GridSPH::computeNeighborhood(vector<Particle*> particles)
 						 		for(unsigned int n=0;n<indexs[indexCell].size();n++)
 						 		{
 									short iP2 = indexs[indexCell][n];
+									if(iP2>particles.size())
+										cout << "Pb " << endl;
+									else{
 									Vector3f pos2 = getLocalRotated(particles[iP2]->getPos());
 									Vector3f PP = pos - pos2;
 									float h2 = particles[iP2]->getRadius();
 									float r = max(h1,h2);
 									if(PP.norm()<=r)
 											particles[iP]->setVois(iP2);
+									}
 								  		
 								}
 							}
@@ -97,6 +104,7 @@ void GridSPH::computeNeighborhood(vector<Particle*> particles)
 	indexs.clear();
 	vector<vector<short>>().swap(indexs);
 	indexs.shrink_to_fit();
+	//cerr << "Fin fonction " << endl;
 	//cout << "Max NEIGH : " << nbMaxPart << endl;
 }
 /****************************************************************************/
