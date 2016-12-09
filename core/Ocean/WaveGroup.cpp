@@ -56,8 +56,8 @@ void WaveGroup::initOtherParams()
 	cosTheta = cos(theta);
 	sinTheta = sin(theta);
 
-	acosTheta = acos(theta);
-	asinTheta = asin(theta);
+	acosTheta = acos(theta); // qu'est ce que c'est que cette horreur ???
+	asinTheta = asin(theta); // ces valeurs n'ont pas de sens, et vallent facilement NaN !
 
 	// update others
 	this->w = sqrt(9.81*k);
