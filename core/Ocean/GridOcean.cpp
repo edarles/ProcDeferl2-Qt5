@@ -584,7 +584,7 @@ void GridOcean::display()
 	//displayBorders();
 	
 	// display normals
-	glColor3f(1,0,0);
+	/*glColor3f(1,0,0);
 	for(int i=0;i<m_n;i++){
 		Vector3f pos = m_pos[i];
 		Vector3f dvel; dvel[0]=m_dVel[i][0]; dvel[1]=m_dVel[i][1]; dvel[2]=m_dVel[i][2];
@@ -592,7 +592,7 @@ void GridOcean::display()
 		glVertex3f(pos[0],pos[1],pos[2]);
 		glVertex3f(pos[0]+dvel[0],pos[1]+dvel[1],pos[2]+dvel[2]);
 		glEnd();
-	}
+	}*/
 }
 /****************************************************************************/
 /****************************************************************************/

@@ -206,6 +206,7 @@ void SPH::update(vector<WaveGroup*> waveGroups, float time, float dt, GridOcean*
 			computeForces();
 			integrate(dt);
 			generateBubblesSprays(waveGroups,time,ocean);
+			displayParticlesByField(1);
 		}
 	}
 }

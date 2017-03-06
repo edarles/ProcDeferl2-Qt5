@@ -140,7 +140,7 @@ void GLWidget::test2()
 
 	WaveGroupMP *waveGr1 = new WaveGroupMP(n1,k1,theta1,r1,phi01,zeta1);
 	WaveGroupMP *waveGr2 = new WaveGroupMP(n2,k2,theta2,r2,phi02,zeta2);
-	//WaveGroupMP *waveGr3 = new WaveGroupMP(n3,k3,theta3,r3,phi03,zeta3); // segfault si instancié
+	WaveGroupMP *waveGr3 = new WaveGroupMP(n3,k3,theta3,r3,phi03,zeta3); // segfault si instancié
 
 	_hybridOcean = new HybridOcean();
 	_hybridOcean->addWaveGroup(waveGr1);

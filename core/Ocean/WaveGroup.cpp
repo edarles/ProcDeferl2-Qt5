@@ -63,7 +63,7 @@ void WaveGroup::initOtherParams()
 	this->w = sqrt(9.81*k);
 
 	// g -> position initiale du groupe
-	this->g[0] = 0;// -50*cosTheta;
+	this->g[0] = 0;//-50*cosTheta;
 	this->g[1] = 0;
 	this->g[2] = 0;// -50*sinTheta;
 

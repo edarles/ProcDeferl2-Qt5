@@ -20,7 +20,7 @@ HybridOcean::HybridOcean()
 	this->m_waveGroups.clear();
 	//m_visuGrid = new GridOcean(Vector3f(-100,0,-50), Vector3f(100,0,50),0.1,0.1);
 	//m_visuGrid = new GridOcean(Vector3f(-70,0,-50), Vector3f(-20,0,50),1,1);
-	m_visuGrid = new GridOcean(Vector3f(-30,0,-30), Vector3f(30,0,30),0.5,0.5);
+	m_visuGrid = new GridOcean(Vector3f(-100,0,-100), Vector3f(100,0,100),1,1);
 	m_visuGrid->setColor(colorOcean);	
 
 	dt = 0.01;
@@ -41,7 +41,7 @@ HybridOcean::HybridOcean(vector<WaveGroup*> waveGroups, float dt)
 
 	//m_visuGrid = new GridOcean(Vector3f(-100,0,-50), Vector3f(100,0,50),0.1,0.1);
 	//m_visuGrid = new GridOcean(Vector3f(-70,0,-50), Vector3f(-20,0,50),0.5,0.5);
-	m_visuGrid = new GridOcean(Vector3f(-50,0,-50), Vector3f(50,0,50),1,1);
+	m_visuGrid = new GridOcean(Vector3f(-100,0,-100), Vector3f(100,0,100),1,1);
 	m_visuGrid->setColor(colorOcean);
 	
 	this->dt = dt;
@@ -190,6 +190,7 @@ void HybridOcean::mergeBreakingWaves()
 
 		for(unsigned int j=0;j<m_breakingWaves.size();j++){
 
+			if(i<m_breakingWaves.size() && j<m_breakingWaves.size()){
 			BreakingWave *bI = m_breakingWaves[i];
 			if(bI!=NULL){
 			GridBreaking *gBI = bI->getGridBreaking();
@@ -240,6 +241,7 @@ void HybridOcean::mergeBreakingWaves()
 				}
 			}
 			}
+		}
 }
 		}
 	}
@@ -299,7 +301,7 @@ void HybridOcean::animate()
 			posP[nP*4] = pos[0]; 
 			posP[nP*4+1] = pos[1]; 
 			posP[nP*4+2] = pos[2]; 
-			posP[nP*4+3] = h;
+			posP[nP*4+3] = 2*h;
 			colorsP[nP*4] = c[0];
 			colorsP[nP*4+1] = c[1];
 			colorsP[nP*4+2] = c[2];

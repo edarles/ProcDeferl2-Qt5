@@ -245,7 +245,7 @@ void BreakingWave::update(float dt, GridOcean* ocean)
 void BreakingWave::display()
 {
 	gridBreaking->display();
-	solver->display();
+	//solver->display();
 }
 /****************************************************************************/
 void BreakingWave::print()
