@@ -20,9 +20,8 @@ GridSPH::~GridSPH()
 }
 /*************************************************/
 /*************************************************/
-void GridSPH::computeNeighborhood(vector<Particle*> particles)
+void GridSPH::computeNeighborhood(vector<SPHParticle*> particles)
 {
-	//cerr << "Debut fonction " << endl;
 	vector< vector<short> > indexs;
 	int nbMaxPart = 0;
 	// Store particles into cells
@@ -34,7 +33,6 @@ void GridSPH::computeNeighborhood(vector<Particle*> particles)
 			}
 		}
 	}
-	//cerr << "la1" << endl; 
 	for(unsigned int i=0;i<particles.size();i++){
 		Vector3f pos = getLocalRotated(particles[i]->getPos());
 	  	int iC = (int) floor((double)(pos[0]-m_min[0])/m_dx);
@@ -44,7 +42,6 @@ void GridSPH::computeNeighborhood(vector<Particle*> particles)
 		if(indexCell>=0 && indexCell<m_n)
 			indexs[indexCell].push_back(i);
 	}
-	//cerr << "la2" << endl; 
 	// Compute neighboorhood for each particle
 	for(unsigned int iP=0;iP<particles.size();iP++){
 
@@ -59,12 +56,12 @@ void GridSPH::computeNeighborhood(vector<Particle*> particles)
 		int ix = (int)floor((double)(x-m_min[0])/m_dx);
 		int iy = (int)floor((double)(y-m_min[1])/m_dy);
 		int iz = (int)floor((double)(z-m_min[2])/m_dz);
-		//cout << "ix: " << ix << " iy: " << iy << " iz: " << iz << endl;
-	        int nbcx = floor(h1/m_dx);
-	        int nbcy = floor(h1/m_dy);
-	        int nbcz = floor(h1/m_dz);
-	        int nbP = 0;
-		//cout << "cx: " << nbcx << " cy: " << nbcy << " cz: " << nbcz << endl;
+
+	    int nbcx = floor(h1/m_dx);
+	    int nbcy = floor(h1/m_dy);
+	    int nbcz = floor(h1/m_dz);
+	    int nbP = 0;
+	
 		if(ix>=0 && iy>=0 && iz>=0 && ix < m_nx && iy < m_ny && iz < m_nz){
 
 			for(int i=ix-nbcx; i<=ix+nbcx; i++){
@@ -104,8 +101,6 @@ void GridSPH::computeNeighborhood(vector<Particle*> particles)
 	indexs.clear();
 	vector<vector<short>>().swap(indexs);
 	indexs.shrink_to_fit();
-	//cerr << "Fin fonction " << endl;
-	//cout << "Max NEIGH : " << nbMaxPart << endl;
 }
 /****************************************************************************/
 /****************************************************************************/

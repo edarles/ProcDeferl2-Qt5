@@ -203,7 +203,6 @@ void GridOcean::init()
 	m_vel.clear();
 	m_dVel.clear();
 	lifeTimeBubbles.clear();
-
 	for(int i=0; i<m_n;i++){
 		Vector3f pos = m_pos[i];
 		m_initPos.push_back(pos);
@@ -211,7 +210,6 @@ void GridOcean::init()
 		m_dVel.push_back(Vector3f(0,0,0));
 		lifeTimeBubbles.push_back(0.0);
 	}
-
 	for(int i=0;i<m_nx;i++){
 		for(int j=0;j<m_nz;j++){
 			int index = i + j*m_nx;
@@ -425,6 +423,7 @@ void GridOcean::displayBorders()
 /****************************************************************************/
 void GridOcean::update(std::vector<WaveGroup*> waveGroups, float dt)
 {
+	#pragma omp parallel for
 	for(int i=0;i<m_nx;i++){
 		for(int j=0;j<m_nz;j++){
 			int index = i + j*m_nx;
@@ -581,7 +580,7 @@ void GridOcean::display()
 	displayPatchesWithoutTexture(m_program2,posDisplay,colors,nb);
 	if(sprays) sprays->display();
 
-	//displayBorders();
+	displayBorders();
 	
 	// display normals
 	/*glColor3f(1,0,0);

@@ -26,23 +26,23 @@ SPH::~SPH()
 	for(unsigned int i=0;i<particles.size();i++)
 		delete particles[i];
 	particles.clear();
-	//vector<Particle*>().swap(particles);
-	//particles.shrink_to_fit();
+	vector<SPHParticle*>().swap(particles);
+	particles.shrink_to_fit();
 }
 /****************************************************************************/
 void SPH::addParticle(Vector3f pos, Vector3f vel, float mass, float radius)
 {
 	if(particles.size()<MAX_PARTICLES){
-		Particle *P = new Particle(pos,vel,mass,radius);
+		SPHParticle *P = new SPHParticle(pos,vel,mass,radius);
 		particles.push_back(P);
 		totalMass += mass;
 	}
 }
 /****************************************************************************/
-void SPH::addParticle(Particle *P2)
+void SPH::addParticle(SPHParticle *P2)
 {
 	if(particles.size()<MAX_PARTICLES){
-		Particle *P = new Particle((*P2));
+		SPHParticle *P = new SPHParticle((*P2));
 		particles.push_back(P);
 		totalMass += P2->getMass();
 	}
@@ -53,7 +53,7 @@ void SPH::deleteParticle(int index)
 	totalMass -= particles[index]->getMass();
 	delete particles[index];
 	particles.erase(particles.begin()+index);
-	//particles.shrink_to_fit();
+	particles.shrink_to_fit();
 }
 /****************************************************************************/
 void SPH::generateParticle(Vector3f pos, Vector3f vel, float mass)
@@ -68,7 +68,6 @@ void SPH::generateParticle(Vector3f pos, Vector3f vel, float mass)
 	velP[0] = 1.0*powf(vel[0]*0.5,2); velP[1] = -powf(vel[1]*0.5,2); velP[2] = powf(vel[2]*0.5,2);
 	while(i>=0 && !trouve)
 	{
-		
 		Vector3f pI_pos = this->particles[i]->getPos() - pos;
 		if(pI_pos.norm()<=h)
 			trouve = true;
@@ -141,7 +140,7 @@ void SPH::constraintGridSPH()
 	if(nb>0){
 		barycenter/=nb;
 		gridSPH->translate(barycenter-gridSPH->getCenter());
-        	rMax*=2;
+        rMax*=2;
 	
 		min0 = gridSPH->getMin();
 		max0 = gridSPH->getMax();
@@ -223,6 +222,7 @@ bool SPH::computeNeighborhood()
 /****************************************************************************/
 void SPH::computeForces()
 {
+	//#pragma omp parallel for
 	for(unsigned int i=0;i<particles.size();i++)
 	{
 		Vector3f fP(0,0,0),fV(0,0,0),N(0,0,0);
@@ -280,14 +280,7 @@ void SPH::computeForces()
 void SPH::integrate(float dt)
 {
 	for(unsigned int i=0;i<particles.size();i++)
-    	{
-      		if(particles[i]->getRho()!=0)
-		{
-	  		// Integration numérique => Euler simplectique
-	  		particles[i]->setVel(particles[i]->getVel()+(particles[i]->getForces()/particles[i]->getRho())*dt);
-	  		particles[i]->setPos(particles[i]->getPos()+particles[i]->getVel()*dt);
-		}
-	}
+			particles[i]->integrate(dt);
 }
 /****************************************************************************/
 void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridOcean* ocean)
@@ -300,9 +293,8 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 
 	QImage tex = ocean->getTexBubbles();
 
-
 	for(unsigned int i=0;i<particles.size();i++) {
-	  Vector3f posPart = gridSPH->getLocalRotated(particles[i]->getPos()); // position de la particule repère global
+	  Vector3f posPart = particles[i]->getPos(); // position de la particule repère global
 	  Vector3f velPart = particles[i]->getVel(); // vitesse de la particule repère global
 	  velPart[1]=0; velPart.normalize(); // on se place dans le plan horizontal
 
@@ -342,9 +334,9 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 	    m2=p2+dSeaPos;
 	    nbIter++;
 	  }
-	  if (i==0) {
-	    cout<<"nbIter (phase grossière)="<<nbIter<<" | ";
-	  }
+	 // if (i==0) {
+	 //   cout<<"nbIter (phase grossière)="<<nbIter<<" | ";
+	 // }
 	  // itérations plus fines (méthode de la sécante)
 	  Vector3f delta=m2-posPart; delta[1]=0;
 	  while (delta.squaredNorm()>0.01*A*A){ // au dixième de l'amplitude totale près
@@ -360,9 +352,9 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 	    delta=m2-posPart; delta[1]=0;
 	    nbIter++;
 	  }
-	  if (i==0) {
-	    cout<<"nbIter (phase fine)="<<nbIter<<endl;
-	  }
+	//  if (i==0) {
+	//    cout<<"nbIter (phase fine)="<<nbIter<<endl;
+	//  }
 	  p2-=((p2-p1).norm()/(m2-m1).norm())*delta;
 	  // On a trouvé le point sous la particule (c'est p2 à 0.1*A près)
 	  Vector3f seaSpeed(0,0,0);
@@ -382,10 +374,7 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 	  Vector3f seaNormal(-slope_x, 1, -slope_z);
 	  seaNormal.normalize();
 	  m2=p2+dSeaPos; // devrait être sous la particule
-	  if (i==0) { // vérification pour la particule particles[0]
-	    delta=m2-posPart;delta[1]=0;
-	    cout << "|delta|=" << delta.norm()<< endl;
-	  }
+	
 	  // surface libre sous la particule : position : m2, vitesse du fluide : seaSpeed, normale à la surface : seaNormal
 	  if(posPart[1]  < dSeaPos[1]){ // if(posPart[1] + particles[i]->getRadius()< dSeaPos[1]){
 	    // on évalue le rebond avec perte de masse et symétrisation de la vitesse
@@ -430,8 +419,8 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 	      //cout << "nbX: " << nbx << " nbY: " << nby << endl;
 	      // Augmentation de la transparence pour chaque pixel du texel
 	      for(int xM=x-nbx; xM<=x+nbx; xM++){
-		for(int yM=y-nby; yM<=y+nby; yM++){
-		  if(xM>0 && yM>0 && xM <tex.width() && yM < tex.height()){
+		    for(int yM=y-nby; yM<=y+nby; yM++){
+		      if(xM>0 && yM>0 && xM <tex.width() && yM < tex.height()){
 		    QRgb rgb = tex.pixel(xM,yM);
 		    int alpha = qAlpha(rgb);
 		    if(alpha<=255){
@@ -446,12 +435,19 @@ void SPH::generateBubblesSprays(vector<WaveGroup*> waveGroups, float time, GridO
 	    }
 	    // Generation des sprays
 	    if(SPRAYS == 1){
-	      if(seaSpeed[1]<0){
-		int nbSprays = particles[i]->getMass()*particles[i]->getVel().norm();
-		Vector3f velP = particles[i]->getVel();
-		velP[1] = -velP[1];
-		ocean->getSprays()->generate(posPart,velP,particles[i]->getMass()/nbSprays,particles[i]->getRadius(),nbSprays);
-	      }
+	      //if(seaSpeed[1]<0 || particles[i]->getMass()<1 || posPart[1] + particles[i]->getRadius()< dSeaPos[1]){
+			if(particles[i]->getMass()<1 || posPart[1] < dSeaPos[1]){
+				int nbSprays = particles[i]->getMass()*particles[i]->getVel().norm();
+				cout << "nbSprays: " << nbSprays << endl;
+				Vector3f velP = particles[i]->getVel();
+				if(posPart[1] < dSeaPos[1] && velP[1]<0)
+				{
+					velP[1]=-velP[1];
+					velP[1]*=2;
+					velP[0] = 2*velP[0];
+				}
+				ocean->getSprays()->generate(gridSPH->getLocalRotated(particles[i]->getPos()),velP,particles[i]->getMass()/nbSprays,particles[i]->getRadius(),nbSprays);
+	      	}
 	    }
 	    // On supprime la particule (éventuellement remplacer 1 pour la masse par un meilleur critère)
 	    if (particles[i]->getMass()<1 || posPart[1] + particles[i]->getRadius()< dSeaPos[1] ) deleteParticle(i);
@@ -484,7 +480,7 @@ void SPH::displayParticlesByField(int field)
 	}*/
 	#pragma omp parallel for
     	for(unsigned i=0;i<particles.size();i++){
-		Particle *p = particles[i];
+		SPHParticle *p = particles[i];
 		float m = p->getMass();
 		float hue = 240 * (mmax - fmin(m,mmax)) / (mmax-mmin);
 		Vector3d Hsv(hue,1,1);
@@ -503,7 +499,7 @@ void SPH::displayParticlesByField(int field)
 	}
 	#pragma omp parallel for
     	for(unsigned i=0;i<particles.size();i++){
-		Particle *p = particles[i];
+		SPHParticle *p = particles[i];
 		float length = p->getVel().norm();
 		float hue = 240 * (vmax - fmin(length,vmax)) / (vmax-vmin);
 		Vector3d Hsv(hue,1,1);
@@ -576,13 +572,13 @@ GridSPH* SPH::getGrid() const
 	return gridSPH;
 }
 /****************************************************************************/
-Particle* SPH::getParticle(int index) const
+SPHParticle* SPH::getParticle(int index) const
 {
 	assert (index < (int)particles.size());
 	return particles[index];
 }
 /****************************************************************************/
-vector<Particle*> SPH::getParticles() const
+vector<SPHParticle*> SPH::getParticles() const
 {
 	return particles;
 }

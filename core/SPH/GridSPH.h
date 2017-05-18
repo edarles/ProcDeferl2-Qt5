@@ -4,7 +4,7 @@
 #define _GRID_SPH_H__
 
 #include <Grid.h>
-#include <Particle.h>
+#include <SPHParticle.h>
 
 class GridSPH : public Grid
 {
@@ -16,7 +16,7 @@ class GridSPH : public Grid
 		virtual ~GridSPH();
 
 		/**************** ROUTINE DE CALCUL DE VOISINAGE *******/
-		void computeNeighborhood(vector<Particle*> particles);
+		void computeNeighborhood(vector<SPHParticle*> particles);
 
 };
 #endif

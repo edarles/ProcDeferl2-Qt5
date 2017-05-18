@@ -3,7 +3,7 @@
 #ifndef _SPH_H__
 #define _SPH_H__
 
-#include <Particle.h>
+#include <SPHParticle.h>
 #include <GridSPH.h>
 #include <WaveGroup.h>
 #include <GridOcean.h>
@@ -18,10 +18,10 @@ class SPH
 		virtual ~SPH();
 
 		/**************** GETTERS ***************************/		
-		Particle* 	   getParticle(int index) const;
-		vector<Particle*>  getParticles() const;
-		int        	   getNbParticles() const;
-		GridSPH*    	   getGrid() const;
+		SPHParticle* 	      getParticle(int index) const;
+		vector<SPHParticle*>  getParticles() const;
+		int        	          getNbParticles() const;
+		GridSPH*    	      getGrid() const;
 		float 	   	   getRho0() const;
 		float 	   	   getMu() const;
 		float 	   	   getTS() const;
@@ -29,7 +29,7 @@ class SPH
 
 		/**************** ROUTINE D'AJOUT / SUPRESSION D'UNE PARTICULE *****/
 		virtual void addParticle(Vector3f pos, Vector3f vel, float mass, float radius);
-		virtual void addParticle(Particle *p);
+		virtual void addParticle(SPHParticle *p);
 		virtual void deleteParticle(int index);
 
 		/**************** ROUTINE DE GENERATION D'UNE PARTICULE *****/
@@ -68,7 +68,7 @@ class SPH
 		static const float ltS;
 		static const float massMaxi;
 		
-		vector<Particle*> particles;
+		vector<SPHParticle*> particles;
 		float totalMass;
 
 		// Protected Methods

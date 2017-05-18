@@ -12,7 +12,8 @@ using namespace Eigen;
 #define MAX_PARTICLES 100000
 
 // ACTIVATE SPRAYS GENERATION
-#define SPRAYS 0
+#define SPRAYS 1
+#define LIFETIME_MAX 100
 
 // ACTIVATE FBM
 #define FBM 0

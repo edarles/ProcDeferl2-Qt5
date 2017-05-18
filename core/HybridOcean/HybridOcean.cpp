@@ -277,7 +277,7 @@ void HybridOcean::animate()
 		m_breakingWaves[i]->transform();
 		m_breakingWaves[i]->update(dt,m_visuGrid);
 	}
-
+	#pragma omp parallel for
 	for(unsigned int i=0;i<m_breakingWaves.size();i++)
 		m_breakingWaves[i]->generateParticles(dt);
 
@@ -346,7 +346,7 @@ void HybridOcean::exportData(const char* rep, char filenameOBJ[100], char filena
 /****************************************************************************/
 void HybridOcean::exportMitsuba(qglviewer::Camera *cam)
 {
-	char frameF[100];  sprintf(frameF,"%s","");;
+	/*char frameF[100];  sprintf(frameF,"%s","");;
 	if(frame<10)  sprintf(frameF,"%s","000");
 	if(frame>=10 && frame<100) sprintf(frameF,"%s","00");
 	if(frame>=100 && frame<1000)  sprintf(frameF,"%s","0");
@@ -422,7 +422,7 @@ void HybridOcean::exportMitsuba(qglviewer::Camera *cam)
 	*/
 
 	// Export Camera caracteristics
-	TiXmlElement * sensor = new TiXmlElement( "sensor");
+	/*TiXmlElement * sensor = new TiXmlElement( "sensor");
 	sensor->SetAttribute("type","perspective");
 	TiXmlElement * transformCamera = new TiXmlElement( "transform");
 	transformCamera->SetAttribute("name","toWorld");
@@ -510,5 +510,5 @@ void HybridOcean::exportMitsuba(qglviewer::Camera *cam)
 
 	scene->LinkEndChild(emitter);
 
-	doc.SaveFile(filename);
+	doc.SaveFile(filename);*/
 }

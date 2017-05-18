@@ -54,17 +54,17 @@ void Sprays::deleteParticle(int index)
 {
 	delete particles[index];
 	particles.erase(particles.begin()+index);
-	//particles.shrink_to_fit();
+	particles.shrink_to_fit();
 }
 /****************************************************************************/
 /****************************************************************************/
 void Sprays::generate(Vector3f pos, Vector3f vel, float mass, float h, int nb)
 {
 	Vector3f SPos, SVel;
-	float hmin = -10*h; float hmax = 10*h;
+	float hmin = -2*h; float hmax = 2*h;
 	for(int i=0;i<nb;i++){
 		SPos[0] = pos[0]+(rand()/(double)RAND_MAX)*(hmax-hmin)+hmin;
-		SPos[1] = pos[1];//+(rand()/(double)RAND_MAX)*(hmax-hmin)+hmin;
+		SPos[1] = pos[1]+(rand()/(double)RAND_MAX)*(hmax-hmin)+hmin;
 		SPos[2] = pos[2]+(rand()/(double)RAND_MAX)*(hmax-hmin)+hmin;
 		SVel[0] = vel[0];
 		SVel[1] = vel[1];
@@ -87,7 +87,7 @@ void Sprays::update(float dt)
 {
 	Vector3f wind;
 	float Amin = -100; float Amax = 100;
-	// Simple gravity action -> rajouter un vent aléatoire
+
 	for(unsigned int i=0; i<particles.size(); i++){
 		
 		wind = Vector3f((rand()/(double)RAND_MAX)*(Amax-Amin)+Amin,(rand()/(double)RAND_MAX)*(Amax-Amin)+Amin,(rand()/(double)RAND_MAX)*(Amax-Amin)+Amin);
@@ -99,7 +99,8 @@ void Sprays::update(float dt)
 
 		// Suppression de la particule de sprays si sa vitesse horizontale devient négative 
 		// ou si durée de vie est inférieure ou égal à 0
-		if(particles[i]->getVel()[1]<0 || particles[i]->getLifeTime()<=0)
+		//if(particles[i]->getVel()[1]<0 || particles[i]->getLifeTime()<=0)
+		if(particles[i]->getLifeTime()<=0)
 			deleteParticle(i);
 	}
 }

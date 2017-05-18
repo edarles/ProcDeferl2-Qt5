@@ -1,25 +1,22 @@
 #include <SprayParticle.h>
+#include <utils.h>
 /****************************************************************************/
 /****************************************************************************/
-SprayParticle::SprayParticle()
+SprayParticle::SprayParticle():Particle()
 {
-	pos = vel = forces = Vector3f(0,0,0);
-	mass =  0;
-	lifetime = 100;
+	lifetime = LIFETIME_MAX;
 	lifetimeInit = lifetime;
+	color = Vector3f(1,1,1);
 }
 /****************************************************************************/
-SprayParticle::SprayParticle(Vector3f pos, Vector3f vel, float mass)
+SprayParticle::SprayParticle(Vector3f pos, Vector3f vel, float mass):Particle(pos,vel,mass)
 {
-	this->pos = pos;
-	this->vel = vel;
-	this->forces = Vector3f(0,0,0);
-	this->mass =  mass;
-	this->lifetime = (rand()/(double)RAND_MAX)*100;
+	color = Vector3f(1,1,1);
+	this->lifetime = (rand()/(double)RAND_MAX)*LIFETIME_MAX;
 	this->lifetimeInit = this->lifetime;
 }
 /****************************************************************************/
-SprayParticle::SprayParticle(SprayParticle &P)
+SprayParticle::SprayParticle(const SprayParticle &P)
 {
 	this->pos = P.pos;
 	this->vel = P.vel;
@@ -34,34 +31,6 @@ SprayParticle::~SprayParticle()
 }
 /****************************************************************************/
 /****************************************************************************/
-void SprayParticle::integrate(float dt)
-{
-	this->vel += (this->forces/mass)*dt;
-	this->pos += this->vel*dt;
-	this->lifetime--;
-}
-/****************************************************************************/
-/****************************************************************************/
-Vector3f SprayParticle::getPos()
-{
-	return pos;
-}
-/****************************************************************************/
-Vector3f SprayParticle::getVel()
-{
-	return vel;
-}
-/****************************************************************************/
-Vector3f SprayParticle::getForces()
-{
-	return forces;
-}
-/****************************************************************************/
-float 	 SprayParticle::getMass()
-{
-	return mass;
-}
-/****************************************************************************/
 float 	 SprayParticle::getLifeTime()
 {
 	return lifetime;
@@ -71,36 +40,19 @@ float 	 SprayParticle::getLifeTimeInit()
 {
 	return lifetimeInit;
 }
-/****************************************************************************/
 /****************************************************************************/		
-void     SprayParticle::setPos(Vector3f pos)
-{
-	this->pos = pos;
-}
-/****************************************************************************/
-void     SprayParticle::setVel(Vector3f vel)
-{
-	this->vel = vel;
-}
-/****************************************************************************/
-void     SprayParticle::setForces(Vector3f forces)
-{
-	this->forces = forces;
-}
-/****************************************************************************/
-void 	 SprayParticle::setMass(float mass)
-{
-	this->mass = mass;
-}
 /****************************************************************************/
 void 	 SprayParticle::setLifeTime(float lifetime)
 {
 	this->lifetime = lifetime;
 }
 /****************************************************************************/
-void     SprayParticle::addForce(Vector3f force)
+/****************************************************************************/
+void SprayParticle::integrate(float dt)
 {
-	this->forces += force;
+	this->vel += (this->forces/mass)*dt;
+	this->pos += this->vel*dt;
+	this->lifetime--;
 }
 /****************************************************************************/
 /****************************************************************************/

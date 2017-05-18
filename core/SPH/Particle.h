@@ -5,44 +5,39 @@
 
 #include <Eigen/Dense>
 #include <vector>
+
 using namespace Eigen;
 using namespace std;
 
 class Particle
 {
-	public :
+	public:
 
 		Particle();
-		Particle(Vector3f pos, Vector3f vel, float mass, float radius);
-		Particle(Particle &P);
+		Particle(Vector3f pos, Vector3f vel, float mass);
+		Particle(const Particle &P);
 		~Particle();
 
 		Vector3f getPos(); // repère local de la grille. Pour coord globales :  gridSPH->getLocalRotated(particle->getPos());
 		Vector3f getVel();; // repère global
 		Vector3f getForces();
+        Vector3f getColor();
 		float 	 getMass();
-		float    getRadius();
-		float    getRho();
-		float    getP();
-		Vector3f getColor();
-		short    getVois(unsigned int index);
-		unsigned int getNbVois();
 
-		void     setPos(Vector3f);
-		void     setVel(Vector3f);
-		void     setForces(Vector3f);
-		void 	 setMass(float);
-		void     setRadius(float);
-		void     setRho(float);
-		void     setP(float);
-		void     setColor(Vector3f);
-		void     setVois(short);
-		void     clearVois();
+		void     setPos(Vector3f pos);
+		void     setVel(Vector3f vel);
+		void     setForces(Vector3f forces);
+        void     setColor(Vector3f color);
+		void 	 setMass(float mass);
+        void     addForce(Vector3f);
 
-	private :
+         /*************** INTEGRATE *************************/
+		virtual void  integrate(float dt) = 0;
+
+	protected:
 
 		Vector3f pos, vel, forces, color;
-		float mass, radius, rho, p;
-		vector<short> vois;
+		float mass;
+
 };
 #endif
